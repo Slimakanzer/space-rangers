@@ -1,11 +1,17 @@
 package com.spaceRangers.service;
 
 import com.spaceRangers.entities.FractionEntity;
+import com.spaceRangers.entities.PoliticsEntity;
 import com.spaceRangers.entities.TaskEntity;
 import com.spaceRangers.entities.UsersEntity;
 
 import java.util.List;
 
+/**
+ * Интерфейс сервиса получения информации об фракции
+ * @version 1.0
+ * @author Ларочкин Г.И.
+ */
 public interface FractionInformationService {
 
     /**
@@ -32,4 +38,13 @@ public interface FractionInformationService {
      * @see FractionEntity
      */
     List<FractionEntity> getFractions();
+
+    /**
+     * Получение политической системы фракции
+     * @param fraction {@link FractionEntity сущность фракции}, политическую систему которой необходимо получить
+     * @return возвращается {@link PoliticsEntity сущность политической системы}
+     * @see FractionEntity
+     * @see PoliticsEntity
+     */
+    PoliticsEntity getPoliticsFraction(FractionEntity fraction);
 }

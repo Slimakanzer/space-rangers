@@ -40,7 +40,7 @@ public interface FractionActivityService {
      * @see UsersEntity#id
      * @see FractionEntity
      */
-    boolean acceptUserToFractionById(FractionEntity fraction, int idUser);
+    boolean acceptUserToFraction(FractionEntity fraction, int idUser);
 
     /**
      * Принятие заявки на вступление во фракцию
@@ -51,7 +51,17 @@ public interface FractionActivityService {
      * @see UsersEntity#login
      * @see FractionEntity
      */
-    boolean acceptUserToFractionByLogin(FractionEntity fraction, String loginUser);
+    boolean acceptUserToFraction(FractionEntity fraction, String loginUser);
+
+    /**
+     * Принятие заявки на вступление во фракцию
+     * @param fraction {@link FractionEntity сущность фракции}, в которой принимается пользователь
+     * @param user {@link UsersEntity сущность пользователя}, которого необходимо принять
+     * @return возвращает true, если транзакция прошла успешно, иначе false
+     * @see UsersEntity
+     * @see FractionEntity
+     */
+    boolean acceptUserToFraction(FractionEntity fraction, UsersEntity user);
 
     /**
      * Добавление задачи фракции
@@ -112,10 +122,23 @@ public interface FractionActivityService {
     boolean setScopeUserInFraction(StatePrivacyEntity statePrivacy, int idUser);
 
     /**
-     *
-     * @param fraction
-     * @param politics
-     * @return
+     * Изменение видимости(какая группа может видеть) пользователя внутри фракции
+     * @param statePrivacy сущность {@link StatePrivacyEntity состояния приватности}, которую необходимо установить
+     * @param user {@link UsersEntity сущность пользователя}, которому необходимо изменить
+     * @return возвращает true, если транзакция прошла успешно, иначе false
+     * @see StatePrivacyEntity
+     * @see UsersEntity
+     * @see FractionEntity
      */
-    boolean changePoliticSFraction(FractionEntity fraction, PoliticsEntity politics);
+    boolean setScopeUserInFraction(StatePrivacyEntity statePrivacy, UsersEntity user);
+
+    /**
+     * Изменение политической системы фракции
+     * @param fraction {@link FractionEntity сущность фракции}, политику которой необходимо изменить
+     * @param politics {@link PoliticsEntity сущность политической системы}
+     * @return возвращает true, если транзакция прошла успешно, иначе false
+     * @see FractionEntity
+     * @see PoliticsEntity
+     */
+    boolean changePoliticsFraction(FractionEntity fraction, PoliticsEntity politics);
 }

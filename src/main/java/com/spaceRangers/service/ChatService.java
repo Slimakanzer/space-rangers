@@ -20,7 +20,7 @@ public interface ChatService {
      * @see ChatEntity
      * @see UsersEntity
      */
-    boolean createChatWithUserById(ChatEntity chat, UsersEntity userFirst, int idUserSecond);
+    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, int idUserSecond);
 
     /**
      * Создание чата между двумя пользователями
@@ -31,17 +31,28 @@ public interface ChatService {
      * @see ChatEntity
      * @see UsersEntity
      */
-    boolean createChatWithUserByLogin(ChatEntity chat, UsersEntity userFirst, String loginUserSecond);
+    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, String loginUserSecond);
+
+    /**
+     * Создание чата между двумя пользователями
+     * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
+     * @param userFirst {@link UsersEntity сущность пользователя}, который создает чат
+     * @param userSecond {@link UsersEntity сущность пользователя}, с которым создается чат
+     * @return возвращает true, если транзакция прошла успешно, иначе false
+     * @see ChatEntity
+     * @see UsersEntity
+     */
+    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, UsersEntity userSecond);
 
     /**
      * Создание чата внутри фракции
      * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
-     * @param idFraction {@link FractionEntity#id идентификатор фракции}, внутри которой создается чат
+     * @param fraction {@link FractionEntity сущность фракции}, внутри которой создается чат
      * @return возвращает true, если транзакция прошла успешно, иначе false
      * @see ChatEntity
-     * @see FractionEntity#id
+     * @see FractionEntity
      */
-    boolean creatChatWithFraction(ChatEntity chat, int idFraction);
+    boolean creatChatWithFraction(ChatEntity chat, FractionEntity fraction);
 
     /**
      * Получение чата между двумя пользователями
@@ -51,7 +62,7 @@ public interface ChatService {
      * @see UsersEntity
      * @see ChatEntity
      */
-    ChatEntity getChatWithUserById(UsersEntity userFirst, int idUserFirst);
+    ChatEntity getChatWithUser(UsersEntity userFirst, int idUserFirst);
 
     /**
      * Получение чата между двумя пользователями
@@ -61,17 +72,27 @@ public interface ChatService {
      * @see UsersEntity
      * @see ChatEntity
      */
-    ChatEntity getChatWithUserByLogin(UsersEntity userFirst, String loginUserFirst);
+    ChatEntity getChatWithUser(UsersEntity userFirst, String loginUserFirst);
+
+    /**
+     * Получение чата между двумя пользователями
+     * @param userFirst {@link UsersEntity сущность пользователя}, который получает чат
+     * @param userSecond {@link UsersEntity сущность пользователя}, с которым получают чат
+     * @return возвращает {@link ChatEntity чат} между пользователями
+     * @see UsersEntity
+     * @see ChatEntity
+     */
+    ChatEntity getChatWithUser(UsersEntity userFirst, UsersEntity userSecond);
 
     /**
      * Получение чата фракции
-     * @param idFraction {@link FractionEntity#id идентификатор фракции}, чат которой необходимо получить
+     * @param fraction {@link FractionEntity сущность фракции}, чат которой необходимо получить
      * @return возвращает {@link ChatEntity чат фракции}
      * @see FractionEntity
      * @see FractionEntity#id
      * @see ChatEntity
      */
-    ChatEntity getChatWithFraction(int idFraction);
+    ChatEntity getChatWithFraction(FractionEntity fraction);
 
     /**
      * Отправление сообщения в чат
