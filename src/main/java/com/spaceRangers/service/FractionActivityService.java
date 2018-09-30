@@ -1,9 +1,6 @@
 package com.spaceRangers.service;
 
-import com.spaceRangers.entities.FractionEntity;
-import com.spaceRangers.entities.StatePrivacyEntity;
-import com.spaceRangers.entities.TaskEntity;
-import com.spaceRangers.entities.UsersEntity;
+import com.spaceRangers.entities.*;
 
 /**
  * Интерфейс сервиса работы с фракцией, принятие новых пользователей,
@@ -113,4 +110,12 @@ public interface FractionActivityService {
      * @see FractionEntity
      */
     boolean setScopeUserInFraction(StatePrivacyEntity statePrivacy, int idUser);
+
+    /**
+     *
+     * @param fraction
+     * @param politics
+     * @return
+     */
+    boolean changePoliticSFraction(FractionEntity fraction, PoliticsEntity politics);
 }

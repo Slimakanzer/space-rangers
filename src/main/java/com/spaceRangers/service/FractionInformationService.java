@@ -1,0 +1,35 @@
+package com.spaceRangers.service;
+
+import com.spaceRangers.entities.FractionEntity;
+import com.spaceRangers.entities.TaskEntity;
+import com.spaceRangers.entities.UsersEntity;
+
+import java.util.List;
+
+public interface FractionInformationService {
+
+    /**
+     * Получение списка пользователей в определенной фракции
+     * @param fraction {@link FractionEntity сущность фракции}, из которой берется список
+     * @return возвращается список {@link UsersEntity объектов пользователей}
+     * @see FractionEntity
+     * @see UsersEntity
+     */
+    List<UsersEntity> getUsersInFraction(FractionEntity fraction);
+
+    /**
+     * Получение списка задач фракции
+     * @param fraction {@link FractionEntity сущность фракции}, задачи которой необходимо получить
+     * @return возвращается список {@link TaskEntity задач фракции}
+     * @see FractionEntity
+     * @see TaskEntity
+     */
+    List<TaskEntity> getTasksInFraction(FractionEntity fraction);
+
+    /**
+     * Получение списка фракций в системе
+     * @return возвращается список {@link FractionEntity фракций}
+     * @see FractionEntity
+     */
+    List<FractionEntity> getFractions();
+}
