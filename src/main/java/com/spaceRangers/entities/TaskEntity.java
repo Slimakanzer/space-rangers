@@ -12,6 +12,7 @@ public class TaskEntity {
     private int idFraction;
     private Integer idType;
     private Integer idState;
+    private Integer privacy;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -111,5 +112,15 @@ public class TaskEntity {
         result = 31 * result + (idType != null ? idType.hashCode() : 0);
         result = 31 * result + (idState != null ? idState.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "privacy", nullable = true)
+    public Integer getPrivacy() {
+        return privacy;
+    }
+
+    public void setPrivacy(Integer privacy) {
+        this.privacy = privacy;
     }
 }

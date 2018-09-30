@@ -124,6 +124,4 @@ public interface ChatService {
      * @see VotingEntity
      */
     ResultsEntity getWinnerResult(VotingEntity voting);
-
-
 }
