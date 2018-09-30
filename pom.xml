@@ -12,33 +12,50 @@
 
     <properties>
         <hibernate-version>5.3.6.Final</hibernate-version>
-        <spring.data-version>2.0.5.RELEASE</spring.data-version>
-        <spring-version>5.0.9.RELEASE</spring-version>
+        <spring-data-version>1.11.15.RELEASE</spring-data-version>
+        <spring-franework-version>4.3.18.RELEASE</spring-franework-version>
         <postgres-version>42.2.2</postgres-version>
     </properties>
 
-    <dependencies>
+    <!--Spring framework and Spring data  -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring-framework-version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring-version}</version>
+            <artifactId>spring-aspects</artifactId>
         </dependency>
 
+        <!-- Hibernate -->
+        <!-- for JPA, use hibernate-entitymanager instead of hibernate-core -->
         <dependency>
-            <groupId>jstl</groupId>
-            <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate-version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>7.0</version>
-            <scope>provided</scope>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgres-version}</version>
         </dependency>
-
 
 
     </dependencies>
