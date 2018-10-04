@@ -2,11 +2,7 @@
 <module version="4">
   <component name="FacetManager">
     <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/resources/applicationContext.xml</file>
-        </fileset>
-      </configuration>
+      <configuration />
     </facet>
     <facet type="jpa" name="JPA">
       <configuration>
@@ -15,9 +11,9 @@
         <datasource-mapping>
           <factory-entry name="NewPersistenceUnit" />
           <factory-entry name="emf" value="b7005706-be46-455d-b142-9cb9f84bfdc0" />
+          <factory-entry name="entityManagerFactory" />
           <factory-entry name="noname-a.xml@0" value="b7005706-be46-455d-b142-9cb9f84bfdc0" />
         </datasource-mapping>
-        <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/java/META-INF/persistence.xml" />
       </configuration>
     </facet>
   </component>
