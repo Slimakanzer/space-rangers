@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(value = "/api/chat")
@@ -21,8 +22,14 @@ public class ChatRestController {
     @RequestMapping(method = RequestMethod.GET, value = "/chat/{id}")
     @ResponseBody
     public ResponseEntity<ChatEntity> chatWithFraction(@PathVariable("id") int id){
-        ChatEntity chat = test.getChat(id);
-        return new ResponseEntity<ChatEntity>(chat, HttpStatus.OK);
+        ChatEntity chat;
+        try {
+            chat = test.getChat(id);
+            return new ResponseEntity<ChatEntity>(chat, HttpStatus.OK);
+        }catch (NoSuchElementException e){
+            chat = null;
+            return new ResponseEntity<ChatEntity>(chat, HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/chat")
