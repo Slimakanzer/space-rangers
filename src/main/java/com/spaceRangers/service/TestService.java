@@ -2,8 +2,12 @@ package com.spaceRangers.service;
 
 import com.spaceRangers.entities.ChatEntity;
 
+import java.util.List;
+
 public interface TestService {
     ChatEntity getChat(int id);
 
-    boolean insertChat(ChatEntity chat);
+    List<ChatEntity> getListChat();
+
+    ChatEntity insertChat(ChatEntity chat);
 }

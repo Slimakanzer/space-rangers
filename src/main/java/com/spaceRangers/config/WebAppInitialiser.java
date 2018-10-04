@@ -1,5 +1,4 @@
 package com.spaceRangers.config;
-import com.spaceRangers.config.rootConfigs.PersistenceConfig;
 import com.spaceRangers.config.rootConfigs.RootConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 

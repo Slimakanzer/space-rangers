@@ -21,7 +21,10 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.spaceRangers")
+@ComponentScan(basePackages = {
+        "com.spaceRangers.repository",
+        "com.spaceRangers.impl"
+})
 @PropertySource("classpath:database.properties")
 @EnableJpaRepositories("com.spaceRangers.repository")
 public class PersistenceConfig {
