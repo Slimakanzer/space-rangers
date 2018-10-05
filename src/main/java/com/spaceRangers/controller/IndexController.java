@@ -11,8 +11,4 @@ public class IndexController{
         return "index";
     }
 
-    @RequestMapping("/kek")
-    public String getKek(){
-        return "index";
-    }
 }
