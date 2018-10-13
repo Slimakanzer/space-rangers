@@ -1,35 +1,29 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users", schema = "public", catalog = "course")
 public class UsersEntity {
-    private int id;
-    private String gameName;
+    private Integer id;
     private String login;
-    private String password;
+    private Integer idState;
+    private String email;
+    private String firstName;
+    private String lastName;
+    private String description;
     private Integer level;
-    private Integer state;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "game_name", nullable = true, length = -1)
-    public String getGameName() {
-        return gameName;
-    }
-
-    public void setGameName(String gameName) {
-        this.gameName = gameName;
     }
 
     @Basic
@@ -43,13 +37,53 @@ public class UsersEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = true, length = -1)
-    public String getPassword() {
-        return password;
+    @Column(name = "id_state", nullable = true)
+    public Integer getIdState() {
+        return idState;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setIdState(Integer idState) {
+        this.idState = idState;
+    }
+
+    @Basic
+    @Column(name = "email", nullable = true, length = 30)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Basic
+    @Column(name = "first_name", nullable = true, length = 30)
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    @Basic
+    @Column(name = "last_name", nullable = true, length = 30)
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    @Basic
+    @Column(name = "description", nullable = true, length = -1)
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Basic
@@ -62,41 +96,23 @@ public class UsersEntity {
         this.level = level;
     }
 
-    @Basic
-    @Column(name = "state", nullable = true)
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UsersEntity that = (UsersEntity) o;
-
-        if (id != that.id) return false;
-        if (gameName != null ? !gameName.equals(that.gameName) : that.gameName != null) return false;
-        if (login != null ? !login.equals(that.login) : that.login != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
-        if (level != null ? !level.equals(that.level) : that.level != null) return false;
-        if (state != null ? !state.equals(that.state) : that.state != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(login, that.login) &&
+                Objects.equals(idState, that.idState) &&
+                Objects.equals(email, that.email) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(level, that.level);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (gameName != null ? gameName.hashCode() : 0);
-        result = 31 * result + (login != null ? login.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (level != null ? level.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        return result;
+        return Objects.hash(id, login, idState, email, firstName, lastName, description, level);
     }
 }

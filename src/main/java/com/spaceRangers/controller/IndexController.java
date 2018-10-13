@@ -8,7 +8,18 @@ public class IndexController{
 
     @RequestMapping("/")
     public String getIndex(){
-        return "index";
+
+        return "login";
+    }
+
+    @RequestMapping("/login")
+    public String getLogin(){
+        return "login";
+    }
+
+    @RequestMapping("/test")
+    public String getTest(){
+        return "test";
     }
 
 }

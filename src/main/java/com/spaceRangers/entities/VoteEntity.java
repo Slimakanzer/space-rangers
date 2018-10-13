@@ -10,6 +10,7 @@ public class VoteEntity {
     private Integer idResult;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

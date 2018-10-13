@@ -11,6 +11,7 @@ public class ChatEntity {
     private Date date;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

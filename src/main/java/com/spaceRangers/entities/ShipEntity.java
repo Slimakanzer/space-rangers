@@ -18,6 +18,7 @@ public class ShipEntity {
     private Integer state;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;

@@ -27,7 +27,7 @@ import java.util.Properties;
 })
 @PropertySource("classpath:database.properties")
 @EnableJpaRepositories("com.spaceRangers.repository")
-public class PersistenceConfig {
+public class PersistenceConfig{
 
     private static final String PROP_DATABASE_DRIVER = "db.driver";
     private static final String PROP_DATABASE_PASSWORD = "db.password";

@@ -11,6 +11,7 @@ public class UserFractionEntity {
     private int idUser;
     private Date date;
     private Boolean actual;
+    private Integer idState;
 
     @Id
     @Column(name = "id_fraction", nullable = false)
@@ -74,5 +75,15 @@ public class UserFractionEntity {
         result = 31 * result + (date != null ? date.hashCode() : 0);
         result = 31 * result + (actual != null ? actual.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "id_state", nullable = true)
+    public Integer getIdState() {
+        return idState;
+    }
+
+    public void setIdState(Integer idState) {
+        this.idState = idState;
     }
 }

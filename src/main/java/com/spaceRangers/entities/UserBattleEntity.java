@@ -18,7 +18,6 @@ public class UserBattleEntity {
     }
 
     @Id
-    @Basic
     @Column(name = "id_battle", nullable = false)
     public Integer getIdBattle() {
         return idBattle;
@@ -29,7 +28,6 @@ public class UserBattleEntity {
     }
 
     @Id
-    @Basic
     @Column(name = "id_user", nullable = false)
     public Integer getIdUser() {
         return idUser;

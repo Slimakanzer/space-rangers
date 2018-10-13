@@ -1,148 +1,75 @@
 package com.spaceRangers.service;
 
-import com.spaceRangers.entities.*;
+import com.spaceRangers.entities.ChatEntity;
+import com.spaceRangers.entities.ChatUserEntity;
+import com.spaceRangers.entities.MessagesEntity;
+import com.spaceRangers.entities.UsersEntity;
 
-/**
- *  Интерфейс сервиса чата для создания чатов между пользователями
- *  , между пользователями внутри фракции, управление голосованиями внутри чатов
- *  и возможность голосования.
- * @version 1.0
- * @author Ларочкин Г.И.
- */
+import java.util.List;
+
 public interface ChatService {
 
     /**
-     * Создание чата между двумя пользователями
-     * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
-     * @param userFirst {@link UsersEntity сущность пользователя}, который создает чат
-     * @param idUserSecond {@link UsersEntity#id идентификатор пользователя}, с кем необходимо создать чат
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see ChatEntity
-     * @see UsersEntity
+     * Создание чата
+     * @param chat
+     * @return
      */
-    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, int idUserSecond);
+    boolean createChat(ChatEntity chat);
 
     /**
-     * Создание чата между двумя пользователями
-     * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
-     * @param userFirst {@link UsersEntity сущность пользователя}, который создает чат
-     * @param loginUserSecond {@link UsersEntity#login логин пользователя}, с которым создается чат
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see ChatEntity
-     * @see UsersEntity
+     * Получение чата по id
+     * @param idChat
+     * @return
      */
-    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, String loginUserSecond);
+    ChatEntity getChat(int idChat);
 
     /**
-     * Создание чата между двумя пользователями
-     * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
-     * @param userFirst {@link UsersEntity сущность пользователя}, который создает чат
-     * @param userSecond {@link UsersEntity сущность пользователя}, с которым создается чат
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see ChatEntity
-     * @see UsersEntity
+     * Получение чатов пользователя
+     * @param idUser
+     * @return
      */
-    boolean createChatWithUser(ChatEntity chat, UsersEntity userFirst, UsersEntity userSecond);
+    List<ChatEntity> getChatsUser(int idUser);
 
     /**
-     * Создание чата внутри фракции
-     * @param chat {@link ChatEntity сущность чата}, которую необходимо создать
-     * @param fraction {@link FractionEntity сущность фракции}, внутри которой создается чат
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see ChatEntity
-     * @see FractionEntity
+     * Получение списка логинов пользователей в чате
+     * @param idChat
+     * @return
      */
-    boolean creatChatWithFraction(ChatEntity chat, FractionEntity fraction);
+    List<UsersEntity> getUsersInChat(int idChat);
 
     /**
-     * Получение чата между двумя пользователями
-     * @param userFirst {@link UsersEntity сущность пользователя}, который получает чат
-     * @param idUserFirst {@link UsersEntity#id идентификатор пользователя}, с которым получают чат
-     * @return возвращает {@link ChatEntity чат} между пользователями
-     * @see UsersEntity
-     * @see ChatEntity
+     * Добавление пользователя в чат
+     * @param chatUser
+     * @return
      */
-    ChatEntity getChatWithUser(UsersEntity userFirst, int idUserFirst);
+    boolean createChatUser(ChatUserEntity chatUser);
 
     /**
-     * Получение чата между двумя пользователями
-     * @param userFirst {@link UsersEntity сущность пользователя}, который получает чат
-     * @param loginUserFirst {@link UsersEntity#login логин пользователя}, с которым получают чат
-     * @return возвращает {@link ChatEntity чат} между пользователями
-     * @see UsersEntity
-     * @see ChatEntity
+     * Удаление пользователя из чата
+     * @param chatUser
+     * @return
      */
-    ChatEntity getChatWithUser(UsersEntity userFirst, String loginUserFirst);
+    boolean dropChatUser(ChatUserEntity chatUser);
 
     /**
-     * Получение чата между двумя пользователями
-     * @param userFirst {@link UsersEntity сущность пользователя}, который получает чат
-     * @param userSecond {@link UsersEntity сущность пользователя}, с которым получают чат
-     * @return возвращает {@link ChatEntity чат} между пользователями
-     * @see UsersEntity
-     * @see ChatEntity
+     *Список сообщений чата
+     * @param idChat
+     * @return
      */
-    ChatEntity getChatWithUser(UsersEntity userFirst, UsersEntity userSecond);
+    List<MessagesEntity> getMessagesOfChat(int idChat);
 
     /**
-     * Получение чата фракции
-     * @param fraction {@link FractionEntity сущность фракции}, чат которой необходимо получить
-     * @return возвращает {@link ChatEntity чат фракции}
-     * @see FractionEntity
-     * @see FractionEntity#id
-     * @see ChatEntity
+     *
+     * Получение сообщения по id
+     * @param idMessage
+     * @return
      */
-    ChatEntity getChatWithFraction(FractionEntity fraction);
+    MessagesEntity getMessageById(int idMessage);
 
     /**
-     * Отправление сообщения в чат
-     * @param messagesEntity {@link MessagesEntity сущность сообщения}, котрое необходимо отправить
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see MessagesEntity
+     * Создание сообщения
+     * @param message
+     * @return
      */
-    boolean sendMessage(MessagesEntity messagesEntity);
-
-    /**
-     * Создание голосования в чате
-     * @param voting {@link VotingEntity сущность голосования}, которую необходимо создать в чате
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see VotingEntity
-     */
-    boolean createVoting(VotingEntity voting);
-
-    /**
-     * Удаления голосования в чате
-     * @param voting {@link VotingEntity сущность голосования}, которую необходимо удалить в чате
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see VotingEntity
-     */
-    boolean dropVoting(VotingEntity voting);
-
-    /**
-     * Создания варианта выбора в голосовании
-     * @param result {@link ResultsEntity сущность выбора}, которую необходимо добавить в голосование
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see ResultsEntity
-     * @see VotingEntity
-     */
-    boolean createResultsVoting(ResultsEntity result);
-
-    /**
-     * Учёт голоса пользователя
-     * @param vote {@link VoteEntity сущность голоса пользователя}, которую необходимо учесть
-     * @return возвращает true, если транзакция прошла успешно, иначе false
-     * @see VoteEntity
-     * @see ResultsEntity
-     * @see VotingEntity
-     */
-    boolean vote(VoteEntity vote);
-
-    /**
-     * Получение наиболее часто выбираемого варианта выбора
-     * @param voting {@link VotingEntity сущность голосования}, из которого необходимо получить победный вариант
-     * @return возвращает {@link ResultsEntity вариант}, который победил в голосовании
-     * @see ResultsEntity
-     * @see VotingEntity
-     */
-    ResultsEntity getWinnerResult(VotingEntity voting);
+    boolean createMessages(MessagesEntity message);
 }

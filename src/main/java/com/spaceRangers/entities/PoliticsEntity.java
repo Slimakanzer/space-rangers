@@ -9,6 +9,7 @@ public class PoliticsEntity {
     private String namePolitics;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public int getId() {
         return id;
