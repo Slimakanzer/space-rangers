@@ -13,7 +13,7 @@ public interface GameChatService {
      * @param voting
      * @return
      */
-    boolean createVoting(VotingEntity voting);
+    VotingEntity createVoting(VotingEntity voting);
 
     /**
      * Получение голосования по id

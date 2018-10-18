@@ -31,12 +31,10 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Transactional
-    public void createUserAccount(String login, String password){
-        UserAccountEntity userAccount = new UserAccountEntity();
-        userAccount.setLogin(login);
-        userAccount.setPassword(password);
-        userAccount.setId(null);
-        userAccountRepository.save(userAccount);
+    public UserAccountEntity getUserAccount(String login){
+        UserAccountEntity userAccountEntity = userAccountRepository.findUserAccountEntityByLogin(login);
+        return userAccountEntity;
+
     }
 
     @Transactional
@@ -48,10 +46,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         userAccountRepository.save(userAccount);
 
-
-
         return userRepository.findById(
-                userAccountRepository.findUserAccountEntityByLogin(login).getId()
+                userAccount.getId()
         ).get();
     }
 }

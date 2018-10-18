@@ -13,6 +13,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -21,6 +22,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.transaction.Transactional;
 
 @DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -28,7 +30,7 @@ import javax.persistence.EntityManagerFactory;
 @WebAppConfiguration
 public class TestAdministrationService {
 
-    Logger log = LogManager.getLogger(TestRegistrationService.class);
+    Logger log = LogManager.getLogger(TestAdministrationService.class);
 
     private UsersEntity usersEntity;
     @Resource
@@ -50,6 +52,7 @@ public class TestAdministrationService {
     }
 
     @Test
+    @Transactional
     public void testUserGroups(){
         log.info("*******************Start administrating user group test *****************");
 
@@ -84,31 +87,19 @@ public class TestAdministrationService {
     }
 
     @Test
+    @Transactional
     public void testDropUser(){
 
-        try {
-            UsersEntity usersEntity = registrationService.createUser("TestDrop", "TestDrop");
-        }catch (Exception e){
-            log.info("ERROR: ошибка регистрации тестового польззователя", e);
-            return;
-        }
+        UsersEntity usersEntity = registrationService.createUser("TestDrop", "TestDrop");
 
+
+        UsersEntity user = registrationService.loginUser("TestDrop", "TestDrop");
+
+        log.info(user.getId() + " "+user.getLevel());
         log.info("Проверка удаления пользователя");
 
-        try{
-            administrationService.dropUser(usersEntity);
-
-            try{
-                registrationService.loginUser("TestDrop", "TestDrop");
-            }catch (Exception e){
-                log.info("Пользователя уже не существует");
-            }
-            log.info("Successful: успешно удалён пользователь");
-        }catch (Exception e){
-            log.info("Ошибка удаления пользователя");
-        }
-
-
+        administrationService.dropUser(usersEntity);
+        log.info("Successful: успешно удалён пользователь");
 
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.transaction.Transactional;
 
 @DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -38,6 +39,7 @@ public class TestRegistrationService {
 
 
     @Test
+    @Transactional
     public void testCreateUserAccount() throws Exception {
         log.info("***********************Started test registration user*************************");
 

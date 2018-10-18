@@ -12,7 +12,10 @@ import org.springframework.web.servlet.view.XmlViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.spaceRangers.controller")
+@ComponentScan({
+        "com.spaceRangers.config.security",
+        "com.spaceRangers.controller"
+})
 public class WebConfig {
 
     @Bean

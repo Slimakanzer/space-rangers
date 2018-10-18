@@ -6,15 +6,16 @@ import com.spaceRangers.entities.MessagesEntity;
 import com.spaceRangers.entities.UsersEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ChatService {
 
     /**
      * Создание чата
-     * @param chat
+     * @param
      * @return
      */
-    ChatEntity createChat(ChatEntity chat);
+    ChatEntity createChat(Map<String, Object> mapObject);
 
     /**
      * Получение чата по id
@@ -22,6 +23,17 @@ public interface ChatService {
      * @return
      */
     ChatEntity getChat(int idChat);
+
+
+    /**
+     * Получение чата по id
+     * @param name
+     * @return
+     */
+    ChatEntity getChatByName(String name);
+
+
+    void dropChat(ChatEntity chatEntity);
 
     /**
      * Получение чатов пользователя
@@ -35,7 +47,7 @@ public interface ChatService {
      * @param
      * @return
      */
-    List<UsersEntity> getUsersInChat(ChatEntity chat);
+    List<UsersEntity> getUsersInChat(int idChat);
 
     /**
      * Добавление пользователя в чат
@@ -56,7 +68,7 @@ public interface ChatService {
      * @param
      * @return
      */
-    List<MessagesEntity> getMessagesOfChat(ChatEntity chat);
+    List<MessagesEntity> getMessagesOfChat(int idChat);
 
     /**
      *

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -24,8 +25,8 @@ public class ChatController {
     private GameChatService gameChatService;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    ResponseEntity createChat(@RequestBody ChatEntity chat){
-        chatService.createChat(chat);
+    ResponseEntity createChat(@RequestBody Map<String, Object> map){
+        chatService.createChat(map);
         return ResponseEntity.ok().build();
     }
 
@@ -39,10 +40,10 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChat(idChat));
     }
 
-//    @RequestMapping(value = "/{id}/users")
-//    ResponseEntity getUsersOfChat(@PathVariable("id") int idChat){
-//        return ResponseEntity.ok(chatService.getUsersInChat(idChat));
-//    }
+    @RequestMapping(value = "/{id}/users")
+    ResponseEntity getUsersOfChat(@PathVariable("id") int idChat){
+        return ResponseEntity.ok(chatService.getUsersInChat(idChat));
+    }
 
     @RequestMapping(value = "/user_chat", method = RequestMethod.POST)
     ResponseEntity createChatUser(@RequestBody ChatUserEntity chatUser){

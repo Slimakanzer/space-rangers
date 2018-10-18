@@ -1,5 +1,6 @@
 package com.spaceRangers.service;
 
+import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
 
 public interface RegistrationService {
@@ -20,5 +21,5 @@ public interface RegistrationService {
      */
     UsersEntity createUser(String login, String password);
 
-    void createUserAccount(String login, String password);
+    UserAccountEntity getUserAccount(String login);
 }

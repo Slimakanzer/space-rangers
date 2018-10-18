@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service("chatService")
@@ -30,9 +31,31 @@ public class ChatServiceImpl implements ChatService {
     MessagesRepository messagesRepository;
 
     @Transactional
-    public ChatEntity createChat(ChatEntity chat) {
+    public ChatEntity createChat(Map<String, Object> mapObject) {
+
+        ChatEntity chat = (ChatEntity) mapObject.get("chat");
+        UsersEntity user = (UsersEntity) mapObject.get("user");
+
         chatRepository.save(chat);
+
+        ChatUserEntity chatUserEntity = new ChatUserEntity();
+        chatUserEntity.setIdChat(chat.getId());
+        chatUserEntity.setIdUser(user.getId());
+
+        chatUserRepository.save(chatUserEntity);
+
         return chat;
+    }
+
+    /**
+     * Получение чата по id
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public ChatEntity getChatByName(String name) {
+        return chatRepository.findChatEntityByName(name);
     }
 
     @Override
@@ -58,14 +81,19 @@ public class ChatServiceImpl implements ChatService {
         return listChats;
     }
 
+    @Transactional
+    public void dropChat(ChatEntity chatEntity) {
+        chatRepository.delete(chatEntity);
+    }
+
     @Override
-    public List<UsersEntity> getUsersInChat(ChatEntity chat) {
+    public List<UsersEntity> getUsersInChat(int idChat) {
         // TODO перенести в репозиторий
         List<String> listUsers = new ArrayList<>();
         chatUserRepository
                 .findAll()
                 .stream()
-                .filter(chatUserEntity -> chatUserEntity.getIdChat() == chat.getId())
+                .filter(chatUserEntity -> chatUserEntity.getIdChat() == idChat)
                 .forEach(chatUserEntity ->
                         listUsers.add(
                                 userRepository.findById(
@@ -89,12 +117,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessagesEntity> getMessagesOfChat(ChatEntity chat) {
+    public List<MessagesEntity> getMessagesOfChat(int idChat) {
         // TODO перенести в репозиторий
         return messagesRepository
                 .findAll()
                 .stream()
-                .filter(messagesEntity -> messagesEntity.getIdChat() == chat.getId())
+                .filter(messagesEntity -> messagesEntity.getIdChat() == idChat)
                 .collect(Collectors.toList());
     }
 

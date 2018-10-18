@@ -3,6 +3,7 @@ package com.spaceRangers.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
@@ -24,10 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        System.out.println(passwordEncoder().encode("abc123"));
-        auth.inMemoryAuthentication().withUser("bill").password(passwordEncoder().encode("abc123")).roles("USER");
-        auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("admin")).roles("USER");
-        auth.inMemoryAuthentication().withUser("dba").password("root123").roles("ADMIN","DBA");
+
     }
 
     @Override
@@ -37,7 +35,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test").access("hasRole('USER')")
                 .and().formLogin()
                     .loginPage("/login")
-                    .successForwardUrl("/")
+                    .successForwardUrl("/test")
                     .failureForwardUrl("/login")
                     .usernameParameter("ssoId")
                     .passwordParameter("password")

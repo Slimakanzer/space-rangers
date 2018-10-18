@@ -21,14 +21,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.sql.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @DirtiesContext
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestPersistenceConfig.class)
 @WebAppConfiguration
+@Transactional
 public class TestChatService {
-    Logger log = LogManager.getLogger(TestRegistrationService.class);
+    Logger log = LogManager.getLogger(TestChatService.class);
 
     @Resource
     ChatService chatService;
@@ -57,69 +61,78 @@ public class TestChatService {
         chatEntity.setName("Test chat entity");
         chatEntity.setDate(new Date(180000000));
 
+        Map map = new HashMap<String, Object>();
+        map.put("chat", chatEntity);
+        map.put("user", usersEntity);
+
+
         log.info("****************Test create chat entity**************************");
-        try {
-            chatService.createChat(chatEntity);
-            log.info("Successful");
-        }catch (Exception e){
-            log.info("Failed create");
-        }
+        chatService.createChat(map);
+
+
+        chatService.getChatsUser(usersEntity.getId())
+                .stream()
+                .forEach(e-> log.info(e.getName() + " "+e.getId()));
+        log.info("Successful");
     }
+
 
     @Test
-    public void testCreateAndGetChatUsers(){
+    public void testChatFunctional(){
+        log.info("*******************Test chat functional**************************");
+
+        UsersEntity userOne = registrationService.createUser("TestChatOne", "TestChatOne");
+
+        UsersEntity userTwo = registrationService.createUser("TestChatTwo", "TestChatTwo");
+        log.info("Created two users");
+
+        ChatEntity chatEntity = new ChatEntity();
+        chatEntity.setName("Test chat entity");
+        chatEntity.setDate(new Date(180000000));
+
+        Map map = new HashMap<String, Object>();
+        map.put("chat", chatEntity);
+        map.put("user", userOne);
+
+        ChatEntity chat = chatService.createChat(map);
+        log.info("Created chat");
+
         ChatUserEntity chatUserEntity = new ChatUserEntity();
-        chatUserEntity.setIdChat(11);
-        chatUserEntity.setIdUser(usersEntity.getId());
+        chatUserEntity.setIdUser(userTwo.getId());
+        chatUserEntity.setIdChat(chat.getId());
 
-        log.info("****************Test create chat user entity**************************");
-        try {
-            chatService.createChatUser(chatUserEntity);
+        chatService.createChatUser(chatUserEntity);
+        log.info("Created chatUser with second user");
 
-            chatService.getChatsUser(usersEntity.getId())
-                    .stream()
-                    .forEach(e-> log.info(e.getName() + " " + e.getDate()));
-            log.info("Successfull");
 
-            chatService.dropChatUser(chatUserEntity);
-        }catch (Exception e){
-            log.info("Failed");
-        }
+        MessagesEntity messagesEntityOne = new MessagesEntity();
+        messagesEntityOne.setIdUser(userOne.getId());
+        messagesEntityOne.setIdChat(chat.getId());
+        messagesEntityOne.setMessage("Hello!");
+
+        MessagesEntity messagesEntityTwo = new MessagesEntity();
+        messagesEntityTwo.setIdChat(chat.getId());
+        messagesEntityTwo.setIdUser(userTwo.getId());
+        messagesEntityTwo.setMessage("Hello dude");
+
+        MessagesEntity messagesEntityThree = new MessagesEntity();
+        messagesEntityThree.setIdChat(chat.getId());
+        messagesEntityThree.setIdUser(userOne.getId());
+        messagesEntityThree.setMessage("How are you");
+
+        chatService.createMessages(messagesEntityOne);
+        chatService.createMessages(messagesEntityTwo);
+        chatService.createMessages(messagesEntityThree);
+        log.info("Created messages");
+
+
+        chatService.getMessagesOfChat(chat.getId())
+                .stream()
+                .forEach(e->log.info(e.getIdChat() +" "+e.getIdUser() +" "+e.getMessage()));
+        log.info("Got messages from chat");
+
+
+
     }
-
-//    @Test
-//    public void testMessagesChat(){
-//        ChatEntity chatEntity = new ChatEntity();
-//        chatEntity.setName("Test_chat");
-//        chatEntity.setDate(new Date(180000000));
-//
-//        log.info("****************Test messages in chat**************************");
-//        try{
-//            chatService.createChat(chatEntity);
-//            //ChatEntity chat = chatService.getChatByName(chatEntity.getName());
-//
-//            ChatUserEntity chatUserEntity = new ChatUserEntity();
-//            chatUserEntity.setIdUser(usersEntity.getId());
-//            chatUserEntity.setIdChat(chat.getId());
-//
-//            chatService.createChatUser(chatUserEntity);
-//
-//            MessagesEntity messagesEntity = new MessagesEntity();
-//            messagesEntity.setIdChat(chat.getId());
-//            messagesEntity.setIdUser(usersEntity.getId());
-//            messagesEntity.setMessage("HELLO WORLD");
-//
-//            chatService.createMessages(messagesEntity);
-//
-//            chatService.getMessagesOfChat(chat)
-//                    .stream()
-//                    .forEach(e->log.info(e.getMessage()));
-//            log.info("Successfull");
-//
-//        }catch (Exception e){
-//            log.info("Failed");
-//            e.printStackTrace();
-//        }
-//    }
 
 }

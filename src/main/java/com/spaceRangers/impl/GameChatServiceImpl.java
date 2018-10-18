@@ -26,10 +26,10 @@ public class GameChatServiceImpl implements GameChatService {
     private VoteRepository voteRepository;
 
     @Override
-    public boolean createVoting(VotingEntity voting) {
+    public VotingEntity createVoting(VotingEntity voting) {
 
         votingRepository.save(voting);
-        return true;
+        return voting;
     }
 
     @Override
