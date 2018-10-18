@@ -1,4 +1,4 @@
-package com.spaceRangers.config.rootConfigs;
+package com.spaceRangers.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         System.out.println(passwordEncoder().encode("abc123"));
-        auth.inMemoryAuthentication().passwordEncoder(passwordEncoder());
         auth.inMemoryAuthentication().withUser("bill").password(passwordEncoder().encode("abc123")).roles("USER");
         auth.inMemoryAuthentication().withUser("admin").password(passwordEncoder().encode("admin")).roles("USER");
         auth.inMemoryAuthentication().withUser("dba").password("root123").roles("ADMIN","DBA");

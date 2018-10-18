@@ -1,17 +1,15 @@
-package com.spaceRangers.config.rootConfigs;
+package com.spaceRangers.config.database.persistence;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.core.env.Environment;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -25,42 +23,60 @@ import java.util.Properties;
         "com.spaceRangers.repository",
         "com.spaceRangers.impl"
 })
-@PropertySource("classpath:database.properties")
 @EnableJpaRepositories("com.spaceRangers.repository")
 public class PersistenceConfig{
-
-    private static final String PROP_DATABASE_DRIVER = "db.driver";
-    private static final String PROP_DATABASE_PASSWORD = "db.password";
-    private static final String PROP_DATABASE_URL = "db.url";
-    private static final String PROP_DATABASE_USERNAME = "db.username";
     private static final String PROP_HIBERNATE_DIALECT = "db.hibernate.dialect";
     private static final String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
-    private static final String PROP_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
     private static final String PROP_HIBERNATE_HBM2DDL_AUTO = "db.hibernate.hbm2ddl.auto";
 
+    @Value("${db.driver}")
+    private String driver;
 
-    @Autowired
-    private Environment environment;
+    @Value("${db.url}")
+    private String url;
+
+    @Value("${db.username}")
+    private String username;
+
+    @Value("${db.password}")
+    private String password;
+
+    @Value("${db.hibernate.dialect}")
+    private String dialect;
+
+    @Value("${db.entitymanager.packages.to.scan}")
+    private String packageToScan;
+
+    @Value("${db.hibernate.show_sql}")
+    private String showSql;
+
+    @Value("${db.hibernate.hbm2ddl.auto}")
+    private String ddl;
+
 
     @Bean
     DataSource getDataSource(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        System.out.println("Started getDataSource");
 
-        dataSource.setDriverClassName(environment.getProperty(PROP_DATABASE_DRIVER));
-        dataSource.setUrl(environment.getProperty(PROP_DATABASE_URL));
-        dataSource.setUsername(environment.getProperty(PROP_DATABASE_USERNAME));
-        dataSource.setPassword(environment.getProperty(PROP_DATABASE_PASSWORD));
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
 
         return dataSource;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
+        System.out.println("Started entity manager factory bean");
+
         LocalContainerEntityManagerFactoryBean managerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
         managerFactoryBean.setDataSource(getDataSource());
         managerFactoryBean.setJpaVendorAdapter(getJpaVendorAdapter());
-        managerFactoryBean.setPackagesToScan(environment.getProperty(PROP_ENTITYMANAGER_PACKAGES_TO_SCAN));
+        managerFactoryBean.setPackagesToScan(packageToScan);
+
 
         managerFactoryBean.setJpaProperties(getHibernateProperties());
 
@@ -76,15 +92,16 @@ public class PersistenceConfig{
 
     private Properties getHibernateProperties() {
         Properties properties = new Properties();
-        properties.put(PROP_HIBERNATE_DIALECT, environment.getRequiredProperty(PROP_HIBERNATE_DIALECT));
-        properties.put(PROP_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROP_HIBERNATE_SHOW_SQL));
-        properties.put(PROP_HIBERNATE_HBM2DDL_AUTO, environment.getRequiredProperty(PROP_HIBERNATE_HBM2DDL_AUTO));
+        properties.put(PROP_HIBERNATE_DIALECT, dialect);
+        properties.put(PROP_HIBERNATE_SHOW_SQL, showSql);
+        properties.put(PROP_HIBERNATE_HBM2DDL_AUTO, ddl);
 
         return properties;
     }
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory){
+        System.out.println("Started transaction manager");
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;

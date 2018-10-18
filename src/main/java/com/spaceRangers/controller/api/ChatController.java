@@ -39,10 +39,10 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChat(idChat));
     }
 
-    @RequestMapping(value = "/{id}/users")
-    ResponseEntity getUsersOfChat(@PathVariable("id") int idChat){
-        return ResponseEntity.ok(chatService.getUsersInChat(idChat));
-    }
+//    @RequestMapping(value = "/{id}/users")
+//    ResponseEntity getUsersOfChat(@PathVariable("id") int idChat){
+//        return ResponseEntity.ok(chatService.getUsersInChat(idChat));
+//    }
 
     @RequestMapping(value = "/user_chat", method = RequestMethod.POST)
     ResponseEntity createChatUser(@RequestBody ChatUserEntity chatUser){
@@ -56,12 +56,12 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/messages", method = RequestMethod.GET)
-    ResponseEntity getMessagesChatById(@RequestParam("id_chat") int idChat){
-        return ResponseEntity.ok(
-          chatService.getMessagesOfChat(idChat)
-        );
-    }
+//    @RequestMapping(value = "/messages", method = RequestMethod.GET)
+//    ResponseEntity getMessagesChatById(@RequestParam("id_chat") int idChat){
+//        return ResponseEntity.ok(
+//          chatService.getMessagesOfChat(idChat)
+//        );
+//    }
 
     @RequestMapping(value = "/messages/{id}", method = RequestMethod.GET)
     ResponseEntity getMessageById(@RequestParam("id_message") int idMessage){

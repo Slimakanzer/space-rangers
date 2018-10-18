@@ -6,6 +6,7 @@ import com.spaceRangers.service.ProfileUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("profileUserService")
@@ -58,11 +59,13 @@ public class ProfileUserServiceImpl implements ProfileUserService {
     @Override
     public List<UsersEntity> getUserListByLevel(int level) {
 
-        return userRepository.findUsersByLevel(level);
-    }
+        return userRepository.findUsersEntitiesByLevel(level)
+;    }
 
     @Override
     public List<UsersEntity> getListUsers() {
-        return userRepository.findAll();
+        List<UsersEntity> list = new ArrayList<>();
+        userRepository.findAll().forEach(e->list.add(e));
+        return list;
     }
 }

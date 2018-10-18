@@ -6,6 +6,8 @@ import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
 import com.spaceRangers.service.RegistrationService;
 import config.TestPersistenceConfig;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,9 +27,7 @@ import javax.persistence.EntityManagerFactory;
 @WebAppConfiguration
 public class TestRegistrationService {
 
-    @Resource
-    private EntityManagerFactory emf;
-    protected EntityManager em;
+    Logger log = LogManager.getLogger(TestRegistrationService.class);
 
     @Resource
     private AdministrationService administrationService;
@@ -36,36 +36,14 @@ public class TestRegistrationService {
     private RegistrationService registrationService;
 
 
-    @Before
-    public void setUp() throws Exception {
-        em = emf.createEntityManager();
-    }
 
     @Test
     public void testCreateUserAccount() throws Exception {
-        UsersEntity usersEntity = registrationService.createUser("Test", "Teset");
-        System.out.println("Created user_account and users:"+usersEntity.getId() +" "+usersEntity.getLevel());
-        administrationService.dropUser(usersEntity);
-        System.out.println("Deleted users");
-    }
+        log.info("***********************Started test registration user*************************");
 
-    @Test
-    public void testLoginAccount() throws Exception{
-        registrationService.createUser("Test", "Teset");
-
-        UsersEntity usersEntity = registrationService.loginUser("Test", "Teset");
-
-        System.out.println("Loggined " + usersEntity.getLevel());
+        UsersEntity usersEntity = registrationService.createUser("Test", "Test");
 
         administrationService.dropUser(usersEntity);
-        System.out.println("Deleted users");
-
-        System.out.println("Test validation:");
-        UsersEntity usersEntity1 = registrationService.loginUser("sdads", "asdas");
-        if (usersEntity1 == null){
-            System.out.println("Test passed");
-        }else {
-            System.out.println("Test failed");
-        }
+        log.info("**********************Success***************************");
     }
 }

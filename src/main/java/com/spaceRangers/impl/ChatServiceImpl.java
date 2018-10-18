@@ -9,6 +9,7 @@ import com.spaceRangers.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +29,10 @@ public class ChatServiceImpl implements ChatService {
     @Autowired
     MessagesRepository messagesRepository;
 
-    @Override
-    public boolean createChat(ChatEntity chat) {
+    @Transactional
+    public ChatEntity createChat(ChatEntity chat) {
         chatRepository.save(chat);
-        return true;
+        return chat;
     }
 
     @Override
@@ -58,13 +59,13 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<UsersEntity> getUsersInChat(int idChat) {
+    public List<UsersEntity> getUsersInChat(ChatEntity chat) {
         // TODO перенести в репозиторий
         List<String> listUsers = new ArrayList<>();
         chatUserRepository
                 .findAll()
                 .stream()
-                .filter(chatUserEntity -> chatUserEntity.getIdChat() == idChat)
+                .filter(chatUserEntity -> chatUserEntity.getIdChat() == chat.getId())
                 .forEach(chatUserEntity ->
                         listUsers.add(
                                 userRepository.findById(
@@ -88,12 +89,12 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<MessagesEntity> getMessagesOfChat(int idChat) {
+    public List<MessagesEntity> getMessagesOfChat(ChatEntity chat) {
         // TODO перенести в репозиторий
         return messagesRepository
                 .findAll()
                 .stream()
-                .filter(messagesEntity -> messagesEntity.getIdChat() == idChat)
+                .filter(messagesEntity -> messagesEntity.getIdChat() == chat.getId())
                 .collect(Collectors.toList());
     }
 

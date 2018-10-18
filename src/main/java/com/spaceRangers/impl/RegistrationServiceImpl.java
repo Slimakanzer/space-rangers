@@ -20,18 +20,23 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Autowired
     UserAccountRepository userAccountRepository;
 
-    @Override
+    @Transactional
     public UsersEntity loginUser(String login, String password) {
-        UserAccountEntity user = userAccountRepository.getUserAccountByLogin(login);
-        try {
+        UserAccountEntity user = userAccountRepository.findUserAccountEntityByLogin(login);
             if (user.getPassword().equals(password)) {
                 return userRepository.findById(
                         user.getId()
                 ).get();
             } else return null;
-        }catch (NullPointerException e){
-            return null;
-        }
+    }
+
+    @Transactional
+    public void createUserAccount(String login, String password){
+        UserAccountEntity userAccount = new UserAccountEntity();
+        userAccount.setLogin(login);
+        userAccount.setPassword(password);
+        userAccount.setId(null);
+        userAccountRepository.save(userAccount);
     }
 
     @Transactional
@@ -44,20 +49,9 @@ public class RegistrationServiceImpl implements RegistrationService {
         userAccountRepository.save(userAccount);
 
 
-        UsersEntity user = new UsersEntity();
-        user.setLevel(1);
-        user.setIdState(1);
 
-
-        userRepository.save(
-            user
-        );
-
-        return userRepository
-                .findById(
-                        userAccountRepository
-                                .getUserAccountByLogin(login)
-                                .getId()
-                ).get();
+        return userRepository.findById(
+                userAccountRepository.findUserAccountEntityByLogin(login).getId()
+        ).get();
     }
 }

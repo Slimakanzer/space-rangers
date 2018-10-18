@@ -14,7 +14,7 @@ public interface ChatService {
      * @param chat
      * @return
      */
-    boolean createChat(ChatEntity chat);
+    ChatEntity createChat(ChatEntity chat);
 
     /**
      * Получение чата по id
@@ -32,10 +32,10 @@ public interface ChatService {
 
     /**
      * Получение списка логинов пользователей в чате
-     * @param idChat
+     * @param
      * @return
      */
-    List<UsersEntity> getUsersInChat(int idChat);
+    List<UsersEntity> getUsersInChat(ChatEntity chat);
 
     /**
      * Добавление пользователя в чат
@@ -53,10 +53,10 @@ public interface ChatService {
 
     /**
      *Список сообщений чата
-     * @param idChat
+     * @param
      * @return
      */
-    List<MessagesEntity> getMessagesOfChat(int idChat);
+    List<MessagesEntity> getMessagesOfChat(ChatEntity chat);
 
     /**
      *

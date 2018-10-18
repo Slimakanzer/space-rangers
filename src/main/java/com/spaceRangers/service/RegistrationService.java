@@ -19,4 +19,6 @@ public interface RegistrationService {
      * @return
      */
     UsersEntity createUser(String login, String password);
+
+    void createUserAccount(String login, String password);
 }

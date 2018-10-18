@@ -1,4 +1,4 @@
-package com.spaceRangers.config;
+package com.spaceRangers.config.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -17,6 +17,7 @@ public class WebConfig {
 
     @Bean
     ViewResolver internalViewResolver(){
+        System.out.println("Started view resolver");
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setOrder(0);
         resolver.setSuffix(".jsp");
@@ -24,7 +25,6 @@ public class WebConfig {
         return resolver;
     }
 
-    @Bean
     ViewResolver xmlViewResolver(){
         XmlViewResolver resolver = new XmlViewResolver();
         resolver.setOrder(1);

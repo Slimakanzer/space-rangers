@@ -1,7 +1,5 @@
 package com.spaceRangers.controller.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.spaceRangers.entities.UserGroupEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
@@ -12,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@RestController()
 @RequestMapping(value = "/api/admin")
 public class AdministrationController {
 

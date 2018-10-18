@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service("administrationService")
 public class AdministrationServiceImpl implements AdministrationService {
@@ -29,10 +28,9 @@ public class AdministrationServiceImpl implements AdministrationService {
             return userGroupRepository.getUsersGroup(user.getId());
     }
 
-    @Override
-    public boolean createUserGroup(UserGroupEntity userGroup) {
+    @Transactional
+    public void createUserGroup(UserGroupEntity userGroup) {
         userGroupRepository.save(userGroup);
-        return true;
     }
 
 
@@ -56,13 +54,13 @@ public class AdministrationServiceImpl implements AdministrationService {
         return true;
     }
 
-    @Override
+    @Transactional
     public boolean updateUser(UsersEntity user) {
         userRepository.save(user);
         return true;
     }
 
-    @Override
+    @Transactional
     public boolean dropUserGroup(UserGroupEntity userGroup) {
         userGroupRepository.delete(userGroup);
         return true;

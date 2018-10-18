@@ -18,7 +18,7 @@ public interface AdministrationService {
      * @param userGroup
      * @return
      */
-    boolean createUserGroup(UserGroupEntity userGroup);
+    void createUserGroup(UserGroupEntity userGroup);
 
     /**
      * Удаление пользователя из группы

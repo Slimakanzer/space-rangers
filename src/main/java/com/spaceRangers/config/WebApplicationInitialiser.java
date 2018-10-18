@@ -1,5 +1,5 @@
 package com.spaceRangers.config;
-import com.spaceRangers.config.rootConfigs.RootConfig;
+import com.spaceRangers.config.web.WebConfig;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.support.AbstractDispatcherServletInitializer;
@@ -8,6 +8,8 @@ public class WebApplicationInitialiser extends AbstractDispatcherServletInitiali
 
     @Override
     protected WebApplicationContext createServletApplicationContext() {
+        System.out.println("Init web context");
+
         AnnotationConfigWebApplicationContext servletConfig = new AnnotationConfigWebApplicationContext();
         servletConfig.register(WebConfig.class);
 
@@ -16,6 +18,7 @@ public class WebApplicationInitialiser extends AbstractDispatcherServletInitiali
 
     @Override
     protected WebApplicationContext createRootApplicationContext() {
+        System.out.println("Init application context");
         AnnotationConfigWebApplicationContext rootConfig = new AnnotationConfigWebApplicationContext();
         rootConfig.register(RootConfig.class);
 
