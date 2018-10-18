@@ -7,26 +7,26 @@ import java.util.Objects;
 @Table(name = "user_group", schema = "public", catalog = "course")
 @IdClass(UserGroupEntityPK.class)
 public class UserGroupEntity {
-    private int idUser;
-    private int idGroup;
+    private Integer idUser;
+    private Integer idGroup;
 
     @Id
     @Column(name = "id_user", nullable = false)
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
     @Id
     @Column(name = "id_group", nullable = false)
-    public int getIdGroup() {
+    public Integer getIdGroup() {
         return idGroup;
     }
 
-    public void setIdGroup(int idGroup) {
+    public void setIdGroup(Integer idGroup) {
         this.idGroup = idGroup;
     }
 
@@ -35,8 +35,8 @@ public class UserGroupEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserGroupEntity that = (UserGroupEntity) o;
-        return idUser == that.idUser &&
-                idGroup == that.idGroup;
+        return Objects.equals(idUser, that.idUser) &&
+                Objects.equals(idGroup, that.idGroup);
     }
 
     @Override

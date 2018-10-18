@@ -1,11 +1,11 @@
-package com.spaceRangers.impl;
+package com.spaceRangers.config.security;
 
 import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.service.RegistrationService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +17,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     Logger log = LogManager.getLogger(UserDetailsServiceImpl.class);
@@ -36,13 +36,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             throw new UsernameNotFoundException("Username not found");
         }
 
-        return new User(userAccount.getLogin(), userAccount.getPassword(), null);
+        return new User(userAccount.getLogin(), userAccount.getPassword(), getGrantedAuthorities(userAccount));
     }
 
 
     private List<GrantedAuthority> getGrantedAuthorities(UserAccountEntity userAccount){
         List authorities = new ArrayList<GrantedAuthority>();
-        return null;
+
+        registrationService.getUserGroupAuthority(userAccount)
+                .stream()
+                .forEach(
+                        e->{
+                            authorities.add(new SimpleGrantedAuthority(e.getName()));
+                            log.info(e.getName());
+                        }
+                );
+
+        return authorities;
 
     }
 }

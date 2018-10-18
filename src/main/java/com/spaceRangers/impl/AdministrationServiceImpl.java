@@ -25,7 +25,7 @@ public class AdministrationServiceImpl implements AdministrationService {
 
     @Override
     public List<UserGroupEntity> getUsersGroups(UsersEntity user) {
-            return userGroupRepository.getUsersGroup(user.getId());
+            return userGroupRepository.findUserGroupEntitiesByIdUser(user.getId());
     }
 
     @Transactional

@@ -6,26 +6,26 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class UserGroupEntityPK implements Serializable {
-    private int idUser;
-    private int idGroup;
+    private Integer idUser;
+    private Integer idGroup;
 
     @Column(name = "id_user", nullable = false)
     @Id
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
     @Column(name = "id_group", nullable = false)
     @Id
-    public int getIdGroup() {
+    public Integer getIdGroup() {
         return idGroup;
     }
 
-    public void setIdGroup(int idGroup) {
+    public void setIdGroup(Integer idGroup) {
         this.idGroup = idGroup;
     }
 
@@ -34,8 +34,8 @@ public class UserGroupEntityPK implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserGroupEntityPK that = (UserGroupEntityPK) o;
-        return idUser == that.idUser &&
-                idGroup == that.idGroup;
+        return Objects.equals(idUser, that.idUser) &&
+                Objects.equals(idGroup, that.idGroup);
     }
 
     @Override

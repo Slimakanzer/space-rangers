@@ -13,7 +13,7 @@
 <body>
     <form action="/login" method="post">
         <label for="username"></label>
-        <input type="text" id="username" name="ssoId" placeholder="Enter Username" required>
+        <input type="text" id="username" name="login" placeholder="Enter Username" required>
 
         <label for="password"></label>
         <input type="password" id="password" name="password" placeholder="Enter Password" required>

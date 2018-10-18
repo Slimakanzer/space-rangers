@@ -1,7 +1,10 @@
 package com.spaceRangers.service;
 
+import com.spaceRangers.entities.GroupAuthorityEntity;
 import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
+
+import java.util.List;
 
 public interface RegistrationService {
 
@@ -22,4 +25,6 @@ public interface RegistrationService {
     UsersEntity createUser(String login, String password);
 
     UserAccountEntity getUserAccount(String login);
+
+    List<GroupAuthorityEntity> getUserGroupAuthority(UserAccountEntity user);
 }

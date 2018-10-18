@@ -1,8 +1,11 @@
 package com.spaceRangers.impl;
 
+import com.spaceRangers.entities.GroupAuthorityEntity;
 import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
+import com.spaceRangers.repository.GroupAuthorityRepository;
 import com.spaceRangers.repository.UserAccountRepository;
+import com.spaceRangers.repository.UserGroupRepository;
 import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.RegistrationService;
 import org.hibernate.Session;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
@@ -19,6 +24,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Autowired
     UserAccountRepository userAccountRepository;
+
+    @Autowired
+    GroupAuthorityRepository groupAuthorityRepository;
+
+    @Autowired
+    UserGroupRepository userGroupRepository;
 
     @Transactional
     public UsersEntity loginUser(String login, String password) {
@@ -49,5 +60,20 @@ public class RegistrationServiceImpl implements RegistrationService {
         return userRepository.findById(
                 userAccount.getId()
         ).get();
+    }
+
+    @Transactional
+    public List<GroupAuthorityEntity> getUserGroupAuthority(UserAccountEntity user) {
+        List authorities = new ArrayList<GroupAuthorityEntity>();
+        userGroupRepository.findUserGroupEntitiesByIdUser(user.getId())
+                .stream()
+                .forEach(
+                        e->authorities.add(
+                                groupAuthorityRepository.findById(
+                                        e.getIdGroup()
+                                )
+                        )
+                        );
+        return authorities;
     }
 }
