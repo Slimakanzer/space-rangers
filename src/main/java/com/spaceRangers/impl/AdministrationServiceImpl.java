@@ -11,17 +11,21 @@ import java.util.List;
 
 @Service("administrationService")
 public class AdministrationServiceImpl implements AdministrationService {
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final UserGroupRepository userGroupRepository;
+
+    private final StateUserRepository stateUserRepository;
+
+    private final UserAccountRepository userAccountRepository;
 
     @Autowired
-    private UserGroupRepository userGroupRepository;
-
-    @Autowired
-    private StateUserRepository stateUserRepository;
-
-    @Autowired
-    private UserAccountRepository userAccountRepository;
+    public AdministrationServiceImpl(UserRepository userRepository, UserGroupRepository userGroupRepository, StateUserRepository stateUserRepository, UserAccountRepository userAccountRepository) {
+        this.userRepository = userRepository;
+        this.userGroupRepository = userGroupRepository;
+        this.stateUserRepository = stateUserRepository;
+        this.userAccountRepository = userAccountRepository;
+    }
 
     @Override
     public List<UserGroupEntity> getUsersGroups(UsersEntity user) {
@@ -29,8 +33,10 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Transactional
-    public void createUserGroup(UserGroupEntity userGroup) {
+    @Override
+    public UserGroupEntity createUserGroup(UserGroupEntity userGroup) {
         userGroupRepository.save(userGroup);
+        return userGroup;
     }
 
 
@@ -38,9 +44,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     @Override
     public StateUserEntity getStateUserByIdUser(int idUser) {
 
-        return stateUserRepository.findById(
-                userRepository.findById(idUser).get().getIdState()
-        ).get();
+        return userRepository.findById(idUser).get().getStateUserByIdState();
     }
 
     @Transactional
@@ -55,12 +59,14 @@ public class AdministrationServiceImpl implements AdministrationService {
     }
 
     @Transactional
-    public boolean updateUser(UsersEntity user) {
+    @Override
+    public UsersEntity updateUser(UsersEntity user) {
         userRepository.save(user);
-        return true;
+        return user;
     }
 
     @Transactional
+    @Override
     public boolean dropUserGroup(UserGroupEntity userGroup) {
         userGroupRepository.delete(userGroup);
         return true;

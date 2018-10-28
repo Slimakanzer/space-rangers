@@ -71,17 +71,5 @@ public class TestProfileUserService {
                         e->log.info("User id:"+e.getId() + " user lvl:" + e.getLevel())
                 );
         log.info("Got all users in system");
-
-
-        profileUserService
-                .getUserListByLevel(1)
-                .stream()
-                .forEach(
-                        e->log.info("User id:"+e.getId()+" user lvl:" + e.getLevel())
-                );
-        log.info("Got list users by lvl");
-
-        UsersEntity user = profileUserService.getUser("Gamer");
-        log.info("Got users by login:" + user.getId() +" "+user.getLogin() + " "+user.getDescription() );
     }
 }

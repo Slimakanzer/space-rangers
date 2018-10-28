@@ -1,30 +1,33 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "ship", schema = "public", catalog = "course")
 public class ShipEntity {
-    private int id;
+    private Integer id;
     private Integer hp;
     private String nameShip;
-    private Integer idBase;
-    private Integer idSystem;
-    private Integer idUser;
     private Integer locationShipX;
     private Integer locationShipY;
     private Integer speed;
     private Integer protection;
-    private Integer state;
+    private BaseEntity baseByIdBase;
+    private SystemEntity systemByIdSystem;
+    private UsersEntity usersByIdUser;
+    private StateShipEntity stateShipByState;
+    private Collection<ShipBattleEntity> shipBattlesById;
+    private Collection<UserFractionEntity> userFractionsById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -46,36 +49,6 @@ public class ShipEntity {
 
     public void setNameShip(String nameShip) {
         this.nameShip = nameShip;
-    }
-
-    @Basic
-    @Column(name = "id_base", nullable = true)
-    public Integer getIdBase() {
-        return idBase;
-    }
-
-    public void setIdBase(Integer idBase) {
-        this.idBase = idBase;
-    }
-
-    @Basic
-    @Column(name = "id_system", nullable = true)
-    public Integer getIdSystem() {
-        return idSystem;
-    }
-
-    public void setIdSystem(Integer idSystem) {
-        this.idSystem = idSystem;
-    }
-
-    @Basic
-    @Column(name = "id_user", nullable = true)
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
     }
 
     @Basic
@@ -118,53 +91,62 @@ public class ShipEntity {
         this.protection = protection;
     }
 
-    @Basic
-    @Column(name = "state", nullable = true)
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ShipEntity that = (ShipEntity) o;
-
-        if (id != that.id) return false;
-        if (hp != null ? !hp.equals(that.hp) : that.hp != null) return false;
-        if (nameShip != null ? !nameShip.equals(that.nameShip) : that.nameShip != null) return false;
-        if (idBase != null ? !idBase.equals(that.idBase) : that.idBase != null) return false;
-        if (idSystem != null ? !idSystem.equals(that.idSystem) : that.idSystem != null) return false;
-        if (idUser != null ? !idUser.equals(that.idUser) : that.idUser != null) return false;
-        if (locationShipX != null ? !locationShipX.equals(that.locationShipX) : that.locationShipX != null)
-            return false;
-        if (locationShipY != null ? !locationShipY.equals(that.locationShipY) : that.locationShipY != null)
-            return false;
-        if (speed != null ? !speed.equals(that.speed) : that.speed != null) return false;
-        if (protection != null ? !protection.equals(that.protection) : that.protection != null) return false;
-        if (state != null ? !state.equals(that.state) : that.state != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(hp, that.hp) &&
+                Objects.equals(nameShip, that.nameShip) &&
+                Objects.equals(locationShipX, that.locationShipX) &&
+                Objects.equals(locationShipY, that.locationShipY) &&
+                Objects.equals(speed, that.speed) &&
+                Objects.equals(protection, that.protection);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (hp != null ? hp.hashCode() : 0);
-        result = 31 * result + (nameShip != null ? nameShip.hashCode() : 0);
-        result = 31 * result + (idBase != null ? idBase.hashCode() : 0);
-        result = 31 * result + (idSystem != null ? idSystem.hashCode() : 0);
-        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
-        result = 31 * result + (locationShipX != null ? locationShipX.hashCode() : 0);
-        result = 31 * result + (locationShipY != null ? locationShipY.hashCode() : 0);
-        result = 31 * result + (speed != null ? speed.hashCode() : 0);
-        result = 31 * result + (protection != null ? protection.hashCode() : 0);
-        result = 31 * result + (state != null ? state.hashCode() : 0);
-        return result;
+        return Objects.hash(id, hp, nameShip, locationShipX, locationShipY, speed, protection);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_base", referencedColumnName = "id")
+    public BaseEntity getBaseByIdBase() {
+        return baseByIdBase;
+    }
+
+    public void setBaseByIdBase(BaseEntity baseByIdBase) {
+        this.baseByIdBase = baseByIdBase;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_system", referencedColumnName = "id")
+    public SystemEntity getSystemByIdSystem() {
+        return systemByIdSystem;
+    }
+
+    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
+        this.systemByIdSystem = systemByIdSystem;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id")
+    public UsersEntity getUsersByIdUser() {
+        return usersByIdUser;
+    }
+
+    public void setUsersByIdUser(UsersEntity usersByIdUser) {
+        this.usersByIdUser = usersByIdUser;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "state", referencedColumnName = "id")
+    public StateShipEntity getStateShipByState() {
+        return stateShipByState;
+    }
+
+    public void setStateShipByState(StateShipEntity stateShipByState) {
+        this.stateShipByState = stateShipByState;
     }
 }

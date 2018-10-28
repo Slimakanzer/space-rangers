@@ -3,28 +3,29 @@ package com.spaceRangers.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class UserFractionEntityPK implements Serializable {
-    private int idFraction;
-    private int idUser;
+    private Integer idFraction;
+    private Integer idUser;
 
     @Column(name = "id_fraction", nullable = false)
     @Id
-    public int getIdFraction() {
+    public Integer getIdFraction() {
         return idFraction;
     }
 
-    public void setIdFraction(int idFraction) {
+    public void setIdFraction(Integer idFraction) {
         this.idFraction = idFraction;
     }
 
     @Column(name = "id_user", nullable = false)
     @Id
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
@@ -32,19 +33,13 @@ public class UserFractionEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserFractionEntityPK that = (UserFractionEntityPK) o;
-
-        if (idFraction != that.idFraction) return false;
-        if (idUser != that.idUser) return false;
-
-        return true;
+        return Objects.equals(idFraction, that.idFraction) &&
+                Objects.equals(idUser, that.idUser);
     }
 
     @Override
     public int hashCode() {
-        int result = idFraction;
-        result = 31 * result + idUser;
-        return result;
+        return Objects.hash(idFraction, idUser);
     }
 }

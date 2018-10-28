@@ -12,7 +12,7 @@ public interface FractionService {
      * @param userFraction
      * @return
      */
-    boolean createUserFraction(UserFractionEntity userFraction);
+    UserFractionEntity createUserFraction(UserFractionEntity userFraction);
 
     /**
      *
@@ -41,54 +41,6 @@ public interface FractionService {
      * @return
      */
     List<UsersEntity> getListUsersInFraction(int idFraction);
-
-    /**
-     * Получение списка пользователей, которые находятся в данной фракции
-     * с определенным их состоянием
-     * @param idFraction
-     * @return
-     */
-    List<UsersEntity> getListUsersInFractionAndUserState(int idFraction, int idStateUserFraction);
-
-    /**
-     * Получение типа задания по id
-     * @param idTypeTask
-     * @return
-     */
-    TypeTaskEntity getTypeTask(int idTypeTask);
-
-    /**
-     * Получение типа задания по name
-     * @return
-     */
-    TypeTaskEntity getTypeTask(String name);
-
-    /**
-     * Получение состояния задания по id
-     * @param id
-     * @return
-     */
-    StateTaskEntity getStateTask(int id);
-
-    /**
-     * Получение состояния задания по имени
-     * @param name
-     * @return
-     */
-    StateTaskEntity getStateTask(String name);
-
-    /**
-     * Получение состояния приватности задания по id
-     * @param id
-     * @return
-     */
-    StatePrivacyEntity getStatePrivacy(int id);
-
-    /**
-     * Получение состояния приватности задания по имени
-     * @return
-     */
-    StatePrivacyEntity getStatePrivacy(String name);
 
     /**
      * Получение задач, поставленных фракцией (Для обычных пользователей только их область видимости)

@@ -1,31 +1,32 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "chat_user", schema = "public", catalog = "course")
 @IdClass(ChatUserEntityPK.class)
 public class ChatUserEntity {
-    private int idUser;
-    private int idChat;
+    private Integer idUser;
+    private Integer idChat;
 
     @Id
     @Column(name = "id_user", nullable = false)
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
     @Id
     @Column(name = "id_chat", nullable = false)
-    public int getIdChat() {
+    public Integer getIdChat() {
         return idChat;
     }
 
-    public void setIdChat(int idChat) {
+    public void setIdChat(Integer idChat) {
         this.idChat = idChat;
     }
 
@@ -33,19 +34,13 @@ public class ChatUserEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ChatUserEntity that = (ChatUserEntity) o;
-
-        if (idUser != that.idUser) return false;
-        if (idChat != that.idChat) return false;
-
-        return true;
+        return Objects.equals(idUser, that.idUser) &&
+                Objects.equals(idChat, that.idChat);
     }
 
     @Override
     public int hashCode() {
-        int result = idUser;
-        result = 31 * result + idChat;
-        return result;
+        return Objects.hash(idUser, idChat);
     }
 }

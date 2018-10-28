@@ -11,25 +11,32 @@ import java.util.List;
 @Service("statisticService")
 public class StatisticServiceImpl implements StatisticService {
 
-    @Autowired
-    ShipRepository shipRepository;
+    private final ShipRepository shipRepository;
+
+    private final BattleRepository battleRepository;
+
+    private final FractionRepository fractionRepository;
+
+    private final PlanetRepository planetRepository;
+
+    private final GroupsRepository groupsRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    BattleRepository battleRepository;
-
-    @Autowired
-    FractionRepository fractionRepository;
-
-    @Autowired
-    PlanetRepository planetRepository;
-
-    @Autowired
-    GroupsRepository groupsRepository;
+    public StatisticServiceImpl(ShipRepository shipRepository, BattleRepository battleRepository, FractionRepository fractionRepository, PlanetRepository planetRepository, GroupsRepository groupsRepository, UserRepository userRepository) {
+        this.shipRepository = shipRepository;
+        this.battleRepository = battleRepository;
+        this.fractionRepository = fractionRepository;
+        this.planetRepository = planetRepository;
+        this.groupsRepository = groupsRepository;
+        this.userRepository = userRepository;
+    }
 
 
     @Override
     public List<ShipEntity> getListShipsUsers(int idUser) {
-        return shipRepository.getListShipsUser(idUser);
+        return shipRepository.findShipEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
     }
 
     @Override
@@ -44,7 +51,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<PlanetEntity> getListPlanetUsers(int idUser) {
-        return planetRepository.getListPlanetUser(idUser);
+        return planetRepository.findPlanetEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
     }
 
     @Override

@@ -54,8 +54,8 @@ public class PersistenceConfig{
     private String ddl;
 
 
-    @Bean
-    DataSource getDataSource(){
+    @Bean("dataSource")
+    public DataSource getDataSource(){
         System.out.println("Started getDataSource");
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();

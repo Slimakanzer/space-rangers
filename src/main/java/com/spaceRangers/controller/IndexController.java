@@ -22,4 +22,9 @@ public class IndexController{
         return "test";
     }
 
+    @RequestMapping("/denied")
+    public String getFailed(){
+        return "denied";
+    }
+
 }

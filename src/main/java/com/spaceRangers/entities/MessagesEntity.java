@@ -1,44 +1,29 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "messages", schema = "public", catalog = "course")
 public class MessagesEntity {
-    private int id;
-    private Integer idChat;
-    private Integer idUser;
+    private Integer id;
+    private ChatEntity chatByIdChat;
     private String message;
+    private ComplainEntity complainById;
+    private UsersEntity usersByIdUser;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "id_chat", nullable = true)
-    public Integer getIdChat() {
-        return idChat;
-    }
-
-    public void setIdChat(Integer idChat) {
-        this.idChat = idChat;
-    }
-
-    @Basic
-    @Column(name = "id_user", nullable = true)
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
     }
 
     @Basic
@@ -55,23 +40,43 @@ public class MessagesEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         MessagesEntity that = (MessagesEntity) o;
-
-        if (id != that.id) return false;
-        if (idChat != null ? !idChat.equals(that.idChat) : that.idChat != null) return false;
-        if (idUser != null ? !idUser.equals(that.idUser) : that.idUser != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (idChat != null ? idChat.hashCode() : 0);
-        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        return result;
+        return Objects.hash(id, message);
     }
+
+
+    @OneToOne(mappedBy = "messagesById")
+    public ComplainEntity getComplainById() {
+        return complainById;
+    }
+
+    public void setComplainById(ComplainEntity complainById) {
+        this.complainById = complainById;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id")
+    @JsonBackReference
+    public UsersEntity getUsersByIdUser() {
+        return usersByIdUser;
+    }
+
+    public void setUsersByIdUser(UsersEntity usersByIdUser) {
+        this.usersByIdUser = usersByIdUser;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat", referencedColumnName = "id")
+    @JsonBackReference
+    public ChatEntity getChatByIdChat(){return chatByIdChat;}
+
+    public void setChatByIdChat(ChatEntity chatByIdChat){this.chatByIdChat=chatByIdChat;}
 }

@@ -4,10 +4,7 @@ import com.spaceRangers.entities.BaseEntity;
 import com.spaceRangers.entities.PlanetEntity;
 import com.spaceRangers.entities.ResourceEntity;
 import com.spaceRangers.entities.ShipEntity;
-import com.spaceRangers.repository.BaseRepository;
-import com.spaceRangers.repository.PlanetRepository;
-import com.spaceRangers.repository.ResourceRepository;
-import com.spaceRangers.repository.ShipRepository;
+import com.spaceRangers.repository.*;
 import com.spaceRangers.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,17 +15,25 @@ import java.util.stream.Collectors;
 @Service("gameService")
 public class GameServiceImpl implements GameService {
 
-    @Autowired
-    PlanetRepository planetRepository;
+    private final PlanetRepository planetRepository;
+
+    private final ResourceRepository resourceRepository;
+
+    private final BaseRepository baseRepository;
+
+    private final ShipRepository shipRepository;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    ResourceRepository resourceRepository;
+    public GameServiceImpl(PlanetRepository planetRepository, ResourceRepository resourceRepository, BaseRepository baseRepository, ShipRepository shipRepository, UserRepository userRepository) {
+        this.planetRepository = planetRepository;
+        this.resourceRepository = resourceRepository;
+        this.baseRepository = baseRepository;
+        this.shipRepository = shipRepository;
+        this.userRepository = userRepository;
+    }
 
-    @Autowired
-    BaseRepository baseRepository;
-
-    @Autowired
-    ShipRepository shipRepository;
     /**
      * Получение планеты
      *
@@ -36,7 +41,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public PlanetEntity getPlanetById(int idPlanet) {
+    public PlanetEntity getPlanet(int idPlanet) {
         return planetRepository.findById(idPlanet).get();
 
     }
@@ -48,9 +53,8 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public PlanetEntity getPlanetIdByName(String name) {
-        // TODO в репозиторий
-        return null;
+    public PlanetEntity getPlanet(String name) {
+        return planetRepository.findPlanetEntityByNamePlanet(name);
     }
 
     /**
@@ -61,9 +65,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public boolean updatePlanet(PlanetEntity planet) {
+    public PlanetEntity updatePlanet(PlanetEntity planet) {
         planetRepository.save(planet);
-        return true;
+        return planet;
     }
 
     /**
@@ -78,7 +82,7 @@ public class GameServiceImpl implements GameService {
         return resourceRepository
                 .findAll()
                 .stream()
-                .filter(resourceEntity -> resourceEntity.getIdPlanet() == idPlanet)
+                .filter(resourceEntity -> resourceEntity.getPlanetByIdPlanet().getId() == idPlanet)
                 .collect(Collectors.toList());
     }
 
@@ -114,10 +118,11 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public List<BaseEntity> getListBaseUsers(int idUser) {
+        // TODO в репозиторий
         return baseRepository
                 .findAll()
                 .stream()
-                .filter(baseEntity -> baseEntity.getIdUser() == idUser)
+                .filter(baseEntity -> baseEntity.getUsersByIdUser().getId() == idUser)
                 .collect(Collectors.toList());
     }
 
@@ -128,9 +133,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public boolean createBase(BaseEntity base) {
+    public BaseEntity createBase(BaseEntity base) {
         baseRepository.save(base);
-        return true;
+        return base;
     }
 
     /**
@@ -141,9 +146,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public boolean updateBase(BaseEntity base) {
+    public BaseEntity updateBase(BaseEntity base) {
         baseRepository.save(base);
-        return true;
+        return base;
     }
 
     /**
@@ -153,9 +158,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public boolean createShip(ShipEntity ship) {
+    public ShipEntity createShip(ShipEntity ship) {
         shipRepository.save(ship);
-        return true;
+        return ship;
     }
 
     /**
@@ -165,9 +170,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public boolean updateShip(ShipEntity ship) {
+    public ShipEntity updateShip(ShipEntity ship) {
         shipRepository.save(ship);
-        return true;
+        return ship;
     }
 
     /**
@@ -190,8 +195,7 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public List<ShipEntity> getListShipByIdBase(int idBase) {
-        // TODO перенести в репозиторий
-        return null;
+        return shipRepository.findShipEntitiesByBaseByIdBase( baseRepository.findById(idBase).get());
     }
 
     /**
@@ -202,20 +206,43 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public List<ShipEntity> getListShipByIdUser(int idUser) {
-        // TODO перенести в репозиторий
-        return null;
+
+        return shipRepository.findShipEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
     }
 
     /**
-     * Получение кораблей пользователя в определенном состоянии
+     * Создание планеты
      *
-     * @param idUser
-     * @param idStateShip
+     * @param planet
      * @return
      */
     @Override
-    public List<ShipEntity> getListShypByIdUserAndIdStateShip(int idUser, int idStateShip) {
-        //TODO в репозиторий
-        return null;
+    public PlanetEntity createPlanet(PlanetEntity planet) {
+        planetRepository.save(planet);
+        return planet;
+    }
+
+    /**
+     * Содание ресурса
+     *
+     * @param resource
+     * @return
+     */
+    @Override
+    public ResourceEntity createResource(ResourceEntity resource) {
+        resourceRepository.saveAndFlush(resource);
+        return resource;
+    }
+
+    /**
+     * Удаление корабля
+     *
+     * @param ship
+     * @return
+     */
+    @Override
+    public boolean dropShip(ShipEntity ship) {
+        shipRepository.delete(ship);
+        return true;
     }
 }

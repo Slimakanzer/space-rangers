@@ -9,5 +9,5 @@ public interface AdvisersPlayerFractionService extends PlayerFractionService {
      * @param task
      * @return
      */
-    boolean createTask(TaskEntity task);
+    TaskEntity createTask(TaskEntity task);
 }

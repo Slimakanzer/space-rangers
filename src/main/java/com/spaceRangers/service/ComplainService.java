@@ -9,7 +9,7 @@ public interface ComplainService {
      * @param complainEntity
      * @return
      */
-    boolean createComplain(ComplainEntity complainEntity);
+    ComplainEntity createComplain(ComplainEntity complainEntity);
 
 
     /**
@@ -17,5 +17,5 @@ public interface ComplainService {
      * @param complainEntity
      * @return
      */
-    boolean updateComplain(ComplainEntity complainEntity);
+    ComplainEntity updateComplain(ComplainEntity complainEntity);
 }

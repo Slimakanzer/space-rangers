@@ -11,7 +11,7 @@ public interface ProfileUserService {
      * @param user
      * @return
      */
-    boolean updateUser(UsersEntity user);
+    UsersEntity updateUser(UsersEntity user);
 
     /**
      * Получение профиля игрока
@@ -26,15 +26,12 @@ public interface ProfileUserService {
      * @param userLogin
      * @return
      */
-    // TODO вынести запрос в Repository
     UsersEntity getUser(String userLogin);
 
     /**
      * Получение списка игроков по уровню
-     * @param level
      * @return
      */
-    List<UsersEntity> getUserListByLevel(int level);
 
     List<UsersEntity> getListUsers();
 }

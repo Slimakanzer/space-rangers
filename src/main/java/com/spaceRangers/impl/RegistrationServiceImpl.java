@@ -19,17 +19,21 @@ import java.util.List;
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final UserAccountRepository userAccountRepository;
+
+    private final GroupAuthorityRepository groupAuthorityRepository;
+
+    private final UserGroupRepository userGroupRepository;
 
     @Autowired
-    UserAccountRepository userAccountRepository;
-
-    @Autowired
-    GroupAuthorityRepository groupAuthorityRepository;
-
-    @Autowired
-    UserGroupRepository userGroupRepository;
+    public RegistrationServiceImpl(UserRepository userRepository, UserAccountRepository userAccountRepository, GroupAuthorityRepository groupAuthorityRepository, UserGroupRepository userGroupRepository) {
+        this.userRepository = userRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.groupAuthorityRepository = groupAuthorityRepository;
+        this.userGroupRepository = userGroupRepository;
+    }
 
     @Transactional
     public UsersEntity loginUser(String login, String password) {
@@ -71,7 +75,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                         e->authorities.add(
                                 groupAuthorityRepository.findById(
                                         e.getIdGroup()
-                                )
+                                ).get()
                         )
                         );
         return authorities;

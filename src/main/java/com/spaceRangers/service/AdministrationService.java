@@ -18,7 +18,7 @@ public interface AdministrationService {
      * @param userGroup
      * @return
      */
-    void createUserGroup(UserGroupEntity userGroup);
+    UserGroupEntity createUserGroup(UserGroupEntity userGroup);
 
     /**
      * Удаление пользователя из группы
@@ -46,5 +46,5 @@ public interface AdministrationService {
      * @param user
      * @return
      */
-    boolean updateUser(UsersEntity user);
+    UsersEntity updateUser(UsersEntity user);
 }

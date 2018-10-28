@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -8,6 +9,8 @@ import java.util.Objects;
 public class GroupsEntity {
     private Integer id;
     private String name;
+    private GroupAuthorityEntity groupAuthorityById;
+    private Collection<UserGroupEntity> userGroupsById;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -42,4 +45,15 @@ public class GroupsEntity {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    public GroupAuthorityEntity getGroupAuthorityById() {
+        return groupAuthorityById;
+    }
+
+    public void setGroupAuthorityById(GroupAuthorityEntity groupAuthorityById) {
+        this.groupAuthorityById = groupAuthorityById;
+    }
+
 }

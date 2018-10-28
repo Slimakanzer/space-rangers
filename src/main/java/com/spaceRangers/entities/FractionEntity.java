@@ -1,22 +1,25 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "fraction", schema = "public", catalog = "course")
 public class FractionEntity {
-    private int id;
+    private Integer id;
     private String nameFraction;
-    private int idPolitics;
+    private PoliticsEntity politicsByIdPolitics;
+    private Collection<PlanetEntity> planetsById;
+    private Collection<TaskEntity> tasksById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -30,35 +33,45 @@ public class FractionEntity {
         this.nameFraction = nameFraction;
     }
 
-    @Basic
-    @Column(name = "id_politics", nullable = false)
-    public int getIdPolitics() {
-        return idPolitics;
-    }
-
-    public void setIdPolitics(int idPolitics) {
-        this.idPolitics = idPolitics;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         FractionEntity that = (FractionEntity) o;
-
-        if (id != that.id) return false;
-        if (idPolitics != that.idPolitics) return false;
-        if (nameFraction != null ? !nameFraction.equals(that.nameFraction) : that.nameFraction != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(nameFraction, that.nameFraction);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (nameFraction != null ? nameFraction.hashCode() : 0);
-        result = 31 * result + idPolitics;
-        return result;
+        return Objects.hash(id, nameFraction);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_politics", referencedColumnName = "id", nullable = false)
+    public PoliticsEntity getPoliticsByIdPolitics() {
+        return politicsByIdPolitics;
+    }
+
+    public void setPoliticsByIdPolitics(PoliticsEntity politicsByIdPolitics) {
+        this.politicsByIdPolitics = politicsByIdPolitics;
+    }
+
+    @OneToMany(mappedBy = "fractionByIdFraction")
+    public Collection<PlanetEntity> getPlanetsById() {
+        return planetsById;
+    }
+
+    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
+        this.planetsById = planetsById;
+    }
+
+    @OneToMany(mappedBy = "fractionByIdFraction")
+    public Collection<TaskEntity> getTasksById() {
+        return tasksById;
+    }
+
+    public void setTasksById(Collection<TaskEntity> tasksById) {
+        this.tasksById = tasksById;
     }
 }

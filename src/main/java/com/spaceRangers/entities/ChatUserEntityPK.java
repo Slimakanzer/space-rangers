@@ -3,28 +3,29 @@ package com.spaceRangers.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ChatUserEntityPK implements Serializable {
-    private int idUser;
-    private int idChat;
+    private Integer idUser;
+    private Integer idChat;
 
     @Column(name = "id_user", nullable = false)
     @Id
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
     @Column(name = "id_chat", nullable = false)
     @Id
-    public int getIdChat() {
+    public Integer getIdChat() {
         return idChat;
     }
 
-    public void setIdChat(int idChat) {
+    public void setIdChat(Integer idChat) {
         this.idChat = idChat;
     }
 
@@ -32,19 +33,13 @@ public class ChatUserEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ChatUserEntityPK that = (ChatUserEntityPK) o;
-
-        if (idUser != that.idUser) return false;
-        if (idChat != that.idChat) return false;
-
-        return true;
+        return Objects.equals(idUser, that.idUser) &&
+                Objects.equals(idChat, that.idChat);
     }
 
     @Override
     public int hashCode() {
-        int result = idUser;
-        result = 31 * result + idChat;
-        return result;
+        return Objects.hash(idUser, idChat);
     }
 }

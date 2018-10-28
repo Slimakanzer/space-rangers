@@ -13,7 +13,7 @@ public interface LeaderPlayerFractionService extends AdvisersPlayerFractionServi
      * @param task
      * @return
      */
-    boolean updateTask(TaskEntity task);
+    TaskEntity updateTask(TaskEntity task);
 
     /**
      * Удаление задачи фракции
@@ -28,5 +28,5 @@ public interface LeaderPlayerFractionService extends AdvisersPlayerFractionServi
      * или принятие пользователя
      * @return
      */
-    boolean updateStateUserFraction(UserFractionEntity userFractionEntity);
+    UserFractionEntity updateStateUserFraction(UserFractionEntity userFractionEntity);
 }

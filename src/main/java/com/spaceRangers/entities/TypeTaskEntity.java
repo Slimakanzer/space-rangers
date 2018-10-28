@@ -1,20 +1,23 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "type_task", schema = "public", catalog = "course")
 public class TypeTaskEntity {
-    private int id;
+    private Integer id;
     private String nameState;
+    private Collection<TaskEntity> tasksById;
 
     @Id
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -32,19 +35,22 @@ public class TypeTaskEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         TypeTaskEntity that = (TypeTaskEntity) o;
-
-        if (id != that.id) return false;
-        if (nameState != null ? !nameState.equals(that.nameState) : that.nameState != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(nameState, that.nameState);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (nameState != null ? nameState.hashCode() : 0);
-        return result;
+        return Objects.hash(id, nameState);
+    }
+
+    @OneToMany(mappedBy = "typeTaskByIdType")
+    public Collection<TaskEntity> getTasksById() {
+        return tasksById;
+    }
+
+    public void setTasksById(Collection<TaskEntity> tasksById) {
+        this.tasksById = tasksById;
     }
 }

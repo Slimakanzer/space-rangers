@@ -9,6 +9,8 @@ import java.util.Objects;
 public class UserGroupEntity {
     private Integer idUser;
     private Integer idGroup;
+    private UsersEntity usersByIdUser;
+    private GroupsEntity groupsByIdGroup;
 
     @Id
     @Column(name = "id_user", nullable = false)

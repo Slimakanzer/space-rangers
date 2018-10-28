@@ -16,14 +16,18 @@ import java.util.stream.Collectors;
 @Service("gameChatService")
 public class GameChatServiceImpl implements GameChatService {
 
-    @Autowired
-    private VotingRepository votingRepository;
+    private final VotingRepository votingRepository;
+
+    private final ResultsRepository resultsRepository;
+
+    private final VoteRepository voteRepository;
 
     @Autowired
-    private ResultsRepository resultsRepository;
-
-    @Autowired
-    private VoteRepository voteRepository;
+    public GameChatServiceImpl(VotingRepository votingRepository, ResultsRepository resultsRepository, VoteRepository voteRepository) {
+        this.votingRepository = votingRepository;
+        this.resultsRepository = resultsRepository;
+        this.voteRepository = voteRepository;
+    }
 
     @Override
     public VotingEntity createVoting(VotingEntity voting) {
@@ -33,7 +37,7 @@ public class GameChatServiceImpl implements GameChatService {
     }
 
     @Override
-    public VotingEntity getVotingById(int idVoting) {
+    public VotingEntity getVoting(int idVoting) {
         return votingRepository.findById(idVoting).get();
     }
 
@@ -42,14 +46,14 @@ public class GameChatServiceImpl implements GameChatService {
         return votingRepository
                 .findAll()
                 .stream()
-                .filter(votingEntity -> votingEntity.getIdChat() == idChat)
+                .filter(votingEntity -> votingEntity.getChatByIdChat().getId() == idChat)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean createResults(ResultsEntity results) {
+    public ResultsEntity createResults(ResultsEntity results) {
         resultsRepository.save(results);
-        return true;
+        return results;
     }
 
     @Override
@@ -63,14 +67,14 @@ public class GameChatServiceImpl implements GameChatService {
         return resultsRepository
                 .findAll()
                 .stream()
-                .filter(resultsEntity -> resultsEntity.getIdVoting() == idVoting)
+                .filter(resultsEntity -> resultsEntity.getVotingByIdVoting().getId() == idVoting)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public boolean createVote(VoteEntity vote) {
+    public VoteEntity createVote(VoteEntity vote) {
         voteRepository.save(vote);
-        return true;
+        return vote;
     }
 
     @Override
@@ -78,7 +82,7 @@ public class GameChatServiceImpl implements GameChatService {
         return voteRepository
                 .findAll()
                 .stream()
-                .filter(voteEntity -> voteEntity.getIdResult() == idResult)
+                .filter(voteEntity -> voteEntity.getResultsByIdResult().getId() == idResult)
                 .collect(Collectors.toList());
 
     }

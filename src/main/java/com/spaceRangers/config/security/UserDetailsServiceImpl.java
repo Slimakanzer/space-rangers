@@ -41,16 +41,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 
     private List<GrantedAuthority> getGrantedAuthorities(UserAccountEntity userAccount){
+
+        log.info("User was found " + userAccount.getLogin());
+
         List authorities = new ArrayList<GrantedAuthority>();
 
+
         registrationService.getUserGroupAuthority(userAccount)
-                .stream()
                 .forEach(
                         e->{
-                            authorities.add(new SimpleGrantedAuthority(e.getName()));
                             log.info(e.getName());
+                            authorities.add(new SimpleGrantedAuthority(e.getName()));
                         }
                 );
+
+        log.info("Count of authorities of user:"+authorities.size());
 
         return authorities;
 

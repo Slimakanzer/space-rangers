@@ -149,6 +149,8 @@ CREATE TABLE public.messages (
     message text
 );
 
+create table Resourc(
+ID integer PRIMARY KEY,
 
 ALTER TABLE public.messages OWNER TO postgres;
 
@@ -702,6 +704,8 @@ ALTER TABLE ONLY public.chat_user
 --
 
 ALTER TABLE ONLY public.fraction
+create table Resourc(
+ID integer PRIMARY KEY,
     ADD CONSTRAINT fraction_pkey PRIMARY KEY (id);
 
 

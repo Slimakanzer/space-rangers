@@ -12,8 +12,12 @@ import java.util.List;
 @Service("profileUserService")
 public class ProfileUserServiceImpl implements ProfileUserService {
 
+    private final UserRepository userRepository;
+
     @Autowired
-    UserRepository userRepository;
+    public ProfileUserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     /**
      * Обновление пользовтеля
@@ -22,9 +26,9 @@ public class ProfileUserServiceImpl implements ProfileUserService {
      * @return
      */
     @Override
-    public boolean updateUser(UsersEntity user) {
+    public UsersEntity updateUser(UsersEntity user) {
         userRepository.save(user);
-        return true;
+        return user;
     }
 
     /**
@@ -49,18 +53,6 @@ public class ProfileUserServiceImpl implements ProfileUserService {
     public UsersEntity getUser(String userLogin) {
         return userRepository.findUsersEntityByLogin(userLogin);
     }
-
-    /**
-     * Получение списка игроков по уровню
-     *
-     * @param level
-     * @return
-     */
-    @Override
-    public List<UsersEntity> getUserListByLevel(int level) {
-
-        return userRepository.findUsersEntitiesByLevel(level)
-;    }
 
     @Override
     public List<UsersEntity> getListUsers() {

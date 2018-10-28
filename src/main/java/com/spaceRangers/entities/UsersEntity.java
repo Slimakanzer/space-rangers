@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -8,15 +9,24 @@ import java.util.Objects;
 public class UsersEntity {
     private Integer id;
     private String login;
-    private Integer idState;
     private String email;
     private String firstName;
     private String lastName;
     private String description;
     private Integer level;
+    private Collection<BaseEntity> basesById;
+    private Collection<ChatUserEntity> chatUsersById;
+    private Collection<MessagesEntity> messagesById;
+    private Collection<PlanetEntity> planetsById;
+    private Collection<ShipEntity> shipsById;
+    private Collection<UserBattleEntity> userBattlesById;
+    private Collection<UserFractionEntity> userFractionsById;
+    private Collection<UserGroupEntity> userGroupsById;
+    private UserAccountEntity userAccountById;
+    private StateUserEntity stateUserByIdState;
+    private Collection<VoteEntity> votesById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -34,16 +44,6 @@ public class UsersEntity {
 
     public void setLogin(String login) {
         this.login = login;
-    }
-
-    @Basic
-    @Column(name = "id_state", nullable = true)
-    public Integer getIdState() {
-        return idState;
-    }
-
-    public void setIdState(Integer idState) {
-        this.idState = idState;
     }
 
     @Basic
@@ -103,7 +103,6 @@ public class UsersEntity {
         UsersEntity that = (UsersEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(login, that.login) &&
-                Objects.equals(idState, that.idState) &&
                 Objects.equals(email, that.email) &&
                 Objects.equals(firstName, that.firstName) &&
                 Objects.equals(lastName, that.lastName) &&
@@ -113,6 +112,71 @@ public class UsersEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, idState, email, firstName, lastName, description, level);
+        return Objects.hash(id, login, email, firstName, lastName, description, level);
+    }
+
+    @OneToMany(mappedBy = "usersByIdUser")
+    public Collection<BaseEntity> getBasesById() {
+        return basesById;
+    }
+
+    public void setBasesById(Collection<BaseEntity> basesById) {
+        this.basesById = basesById;
+    }
+
+    @OneToMany(mappedBy = "usersByIdUser")
+    public Collection<MessagesEntity> getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(Collection<MessagesEntity> messagesById) {
+        this.messagesById = messagesById;
+    }
+
+    @OneToMany(mappedBy = "usersByIdUser")
+    public Collection<PlanetEntity> getPlanetsById() {
+        return planetsById;
+    }
+
+    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
+        this.planetsById = planetsById;
+    }
+
+    @OneToMany(mappedBy = "usersByIdUser")
+    public Collection<ShipEntity> getShipsById() {
+        return shipsById;
+    }
+
+    public void setShipsById(Collection<ShipEntity> shipsById) {
+        this.shipsById = shipsById;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    public UserAccountEntity getUserAccountById() {
+        return userAccountById;
+    }
+
+    public void setUserAccountById(UserAccountEntity userAccountById) {
+        this.userAccountById = userAccountById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_state", referencedColumnName = "id")
+    public StateUserEntity getStateUserByIdState() {
+        return stateUserByIdState;
+    }
+
+    public void setStateUserByIdState(StateUserEntity stateUserByIdState) {
+        this.stateUserByIdState = stateUserByIdState;
+    }
+
+    @OneToMany(mappedBy = "usersByIdUser")
+    public Collection<VoteEntity> getVotesById() {
+        return votesById;
+    }
+
+    public void setVotesById(Collection<VoteEntity> votesById) {
+        this.votesById = votesById;
     }
 }

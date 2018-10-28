@@ -1,33 +1,25 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "voting", schema = "public", catalog = "course")
 public class VotingEntity {
-    private int id;
-    private Integer idChat;
+    private Integer id;
     private String message;
+    private Collection<ResultsEntity> resultsById;
+    private ChatEntity chatByIdChat;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "id_chat", nullable = true)
-    public Integer getIdChat() {
-        return idChat;
-    }
-
-    public void setIdChat(Integer idChat) {
-        this.idChat = idChat;
     }
 
     @Basic
@@ -44,21 +36,32 @@ public class VotingEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         VotingEntity that = (VotingEntity) o;
-
-        if (id != that.id) return false;
-        if (idChat != null ? !idChat.equals(that.idChat) : that.idChat != null) return false;
-        if (message != null ? !message.equals(that.message) : that.message != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(message, that.message);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (idChat != null ? idChat.hashCode() : 0);
-        result = 31 * result + (message != null ? message.hashCode() : 0);
-        return result;
+        return Objects.hash(id, message);
+    }
+
+    @OneToMany(mappedBy = "votingByIdVoting")
+    public Collection<ResultsEntity> getResultsById() {
+        return resultsById;
+    }
+
+    public void setResultsById(Collection<ResultsEntity> resultsById) {
+        this.resultsById = resultsById;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat", referencedColumnName = "id")
+    public ChatEntity getChatByIdChat() {
+        return chatByIdChat;
+    }
+
+    public void setChatByIdChat(ChatEntity chatByIdChat) {
+        this.chatByIdChat = chatByIdChat;
     }
 }

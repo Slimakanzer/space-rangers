@@ -12,6 +12,5 @@ public interface UserRepository extends CrudRepository<UsersEntity, Integer> {
 
     UsersEntity findUsersEntityByLogin(String login);
 
-    List<UsersEntity> findUsersEntitiesByLevel(int level);
 
 }

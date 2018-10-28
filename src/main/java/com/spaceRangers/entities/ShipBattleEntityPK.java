@@ -3,28 +3,29 @@ package com.spaceRangers.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class ShipBattleEntityPK implements Serializable {
-    private int idShip;
-    private int idBattle;
+    private Integer idShip;
+    private Integer idBattle;
 
     @Column(name = "id_ship", nullable = false)
     @Id
-    public int getIdShip() {
+    public Integer getIdShip() {
         return idShip;
     }
 
-    public void setIdShip(int idShip) {
+    public void setIdShip(Integer idShip) {
         this.idShip = idShip;
     }
 
     @Column(name = "id_battle", nullable = false)
     @Id
-    public int getIdBattle() {
+    public Integer getIdBattle() {
         return idBattle;
     }
 
-    public void setIdBattle(int idBattle) {
+    public void setIdBattle(Integer idBattle) {
         this.idBattle = idBattle;
     }
 
@@ -32,19 +33,13 @@ public class ShipBattleEntityPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ShipBattleEntityPK that = (ShipBattleEntityPK) o;
-
-        if (idShip != that.idShip) return false;
-        if (idBattle != that.idBattle) return false;
-
-        return true;
+        return Objects.equals(idShip, that.idShip) &&
+                Objects.equals(idBattle, that.idBattle);
     }
 
     @Override
     public int hashCode() {
-        int result = idShip;
-        result = 31 * result + idBattle;
-        return result;
+        return Objects.hash(idShip, idBattle);
     }
 }

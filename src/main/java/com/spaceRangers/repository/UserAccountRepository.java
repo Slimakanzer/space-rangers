@@ -8,6 +8,5 @@ import org.springframework.data.repository.query.Param;
 
 public interface UserAccountRepository extends CrudRepository<UserAccountEntity, Integer> {
 
-
     UserAccountEntity findUserAccountEntityByLogin(String login);
 }

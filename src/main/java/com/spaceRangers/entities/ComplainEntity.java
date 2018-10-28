@@ -10,9 +10,9 @@ public class ComplainEntity {
     private Integer id;
     private Date date;
     private Boolean state;
+    private MessagesEntity messagesById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -55,5 +55,15 @@ public class ComplainEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, date, state);
+    }
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    public MessagesEntity getMessagesById() {
+        return messagesById;
+    }
+
+    public void setMessagesById(MessagesEntity messagesById) {
+        this.messagesById = messagesById;
     }
 }

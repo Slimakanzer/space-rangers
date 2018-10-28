@@ -8,6 +8,7 @@ import java.util.Objects;
 public class GroupAuthorityEntity {
     private Integer id;
     private String name;
+    private GroupsEntity groupsById;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -41,5 +42,14 @@ public class GroupAuthorityEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @OneToOne(mappedBy = "groupAuthorityById")
+    public GroupsEntity getGroupsById() {
+        return groupsById;
+    }
+
+    public void setGroupsById(GroupsEntity groupsById) {
+        this.groupsById = groupsById;
     }
 }

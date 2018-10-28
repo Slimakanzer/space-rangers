@@ -1,27 +1,29 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "planet", schema = "public", catalog = "course")
 public class PlanetEntity {
-    private int id;
+    private Integer id;
     private String namePlanet;
-    private Integer idSystem;
-    private Integer idFraction;
     private Integer locationPlanetX;
     private Integer locationPlanetY;
-    private Integer idUser;
-    private Integer typeWeather;
+    private SystemEntity systemByIdSystem;
+    private FractionEntity fractionByIdFraction;
+    private UsersEntity usersByIdUser;
+    private TypeWeatherEntity typeWeatherByTypeWeather;
+    private Collection<ResourceEntity> resourcesById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,26 +35,6 @@ public class PlanetEntity {
 
     public void setNamePlanet(String namePlanet) {
         this.namePlanet = namePlanet;
-    }
-
-    @Basic
-    @Column(name = "id_system", nullable = true)
-    public Integer getIdSystem() {
-        return idSystem;
-    }
-
-    public void setIdSystem(Integer idSystem) {
-        this.idSystem = idSystem;
-    }
-
-    @Basic
-    @Column(name = "id_fraction", nullable = true)
-    public Integer getIdFraction() {
-        return idFraction;
-    }
-
-    public void setIdFraction(Integer idFraction) {
-        this.idFraction = idFraction;
     }
 
     @Basic
@@ -75,57 +57,68 @@ public class PlanetEntity {
         this.locationPlanetY = locationPlanetY;
     }
 
-    @Basic
-    @Column(name = "id_user", nullable = true)
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
-
-    @Basic
-    @Column(name = "type_weather", nullable = true)
-    public Integer getTypeWeather() {
-        return typeWeather;
-    }
-
-    public void setTypeWeather(Integer typeWeather) {
-        this.typeWeather = typeWeather;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         PlanetEntity that = (PlanetEntity) o;
-
-        if (id != that.id) return false;
-        if (namePlanet != null ? !namePlanet.equals(that.namePlanet) : that.namePlanet != null) return false;
-        if (idSystem != null ? !idSystem.equals(that.idSystem) : that.idSystem != null) return false;
-        if (idFraction != null ? !idFraction.equals(that.idFraction) : that.idFraction != null) return false;
-        if (locationPlanetX != null ? !locationPlanetX.equals(that.locationPlanetX) : that.locationPlanetX != null)
-            return false;
-        if (locationPlanetY != null ? !locationPlanetY.equals(that.locationPlanetY) : that.locationPlanetY != null)
-            return false;
-        if (idUser != null ? !idUser.equals(that.idUser) : that.idUser != null) return false;
-        if (typeWeather != null ? !typeWeather.equals(that.typeWeather) : that.typeWeather != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(namePlanet, that.namePlanet) &&
+                Objects.equals(locationPlanetX, that.locationPlanetX) &&
+                Objects.equals(locationPlanetY, that.locationPlanetY);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (namePlanet != null ? namePlanet.hashCode() : 0);
-        result = 31 * result + (idSystem != null ? idSystem.hashCode() : 0);
-        result = 31 * result + (idFraction != null ? idFraction.hashCode() : 0);
-        result = 31 * result + (locationPlanetX != null ? locationPlanetX.hashCode() : 0);
-        result = 31 * result + (locationPlanetY != null ? locationPlanetY.hashCode() : 0);
-        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
-        result = 31 * result + (typeWeather != null ? typeWeather.hashCode() : 0);
-        return result;
+        return Objects.hash(id, namePlanet, locationPlanetX, locationPlanetY);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_system", referencedColumnName = "id")
+    public SystemEntity getSystemByIdSystem() {
+        return systemByIdSystem;
+    }
+
+    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
+        this.systemByIdSystem = systemByIdSystem;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_fraction", referencedColumnName = "id")
+    public FractionEntity getFractionByIdFraction() {
+        return fractionByIdFraction;
+    }
+
+    public void setFractionByIdFraction(FractionEntity fractionByIdFraction) {
+        this.fractionByIdFraction = fractionByIdFraction;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id")
+    public UsersEntity getUsersByIdUser() {
+        return usersByIdUser;
+    }
+
+    public void setUsersByIdUser(UsersEntity usersByIdUser) {
+        this.usersByIdUser = usersByIdUser;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "type_weather", referencedColumnName = "id")
+    public TypeWeatherEntity getTypeWeatherByTypeWeather() {
+        return typeWeatherByTypeWeather;
+    }
+
+    public void setTypeWeatherByTypeWeather(TypeWeatherEntity typeWeatherByTypeWeather) {
+        this.typeWeatherByTypeWeather = typeWeatherByTypeWeather;
+    }
+
+    @OneToMany(mappedBy = "planetByIdPlanet")
+    public Collection<ResourceEntity> getResourcesById() {
+        return resourcesById;
+    }
+
+    public void setResourcesById(Collection<ResourceEntity> resourcesById) {
+        this.resourcesById = resourcesById;
     }
 }

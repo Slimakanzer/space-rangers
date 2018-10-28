@@ -1,21 +1,23 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
 @Table(name = "state_user_fraction", schema = "public", catalog = "course")
 public class StateUserFractionEntity {
-    private int id;
+    private Integer id;
     private String name;
+    private Collection<UserFractionEntity> userFractionsById;
 
     @Id
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -34,12 +36,21 @@ public class StateUserFractionEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StateUserFractionEntity that = (StateUserFractionEntity) o;
-        return id == that.id &&
+        return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    @OneToMany(mappedBy = "stateUserFractionByIdState")
+    public Collection<UserFractionEntity> getUserFractionsById() {
+        return userFractionsById;
+    }
+
+    public void setUserFractionsById(Collection<UserFractionEntity> userFractionsById) {
+        this.userFractionsById = userFractionsById;
     }
 }

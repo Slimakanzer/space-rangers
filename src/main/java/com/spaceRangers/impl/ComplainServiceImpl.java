@@ -10,8 +10,12 @@ import org.springframework.stereotype.Service;
 @Service("complainService")
 public class ComplainServiceImpl implements ComplainService {
 
+    private final ComplainRepository complainRepository;
+
     @Autowired
-    private ComplainRepository complainRepository;
+    public ComplainServiceImpl(ComplainRepository complainRepository) {
+        this.complainRepository = complainRepository;
+    }
 
     /**
      * Создание жалобы
@@ -20,9 +24,9 @@ public class ComplainServiceImpl implements ComplainService {
      * @return
      */
     @Override
-    public boolean createComplain(ComplainEntity complainEntity) {
+    public ComplainEntity createComplain(ComplainEntity complainEntity) {
         complainRepository.save(complainEntity);
-        return true;
+        return complainEntity;
     }
 
     /**
@@ -32,8 +36,8 @@ public class ComplainServiceImpl implements ComplainService {
      * @return
      */
     @Override
-    public boolean updateComplain(ComplainEntity complainEntity) {
+    public ComplainEntity updateComplain(ComplainEntity complainEntity) {
         complainRepository.save(complainEntity);
-        return true;
+        return complainEntity;
     }
 }

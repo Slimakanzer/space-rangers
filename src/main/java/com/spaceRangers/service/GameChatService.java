@@ -20,7 +20,7 @@ public interface GameChatService {
      * @param idVoting
      * @return
      */
-    VotingEntity getVotingById(int idVoting);
+    VotingEntity getVoting(int idVoting);
 
     /**
      * Получение списка голосований в данном чате
@@ -34,7 +34,7 @@ public interface GameChatService {
      * @param results
      * @return
      */
-    boolean createResults(ResultsEntity results);
+    ResultsEntity createResults(ResultsEntity results);
 
     /**
      *
@@ -56,7 +56,7 @@ public interface GameChatService {
      * @param vote
      * @return
      */
-    boolean createVote(VoteEntity vote);
+    VoteEntity createVote(VoteEntity vote);
 
     /**
      * Получение списка голосов у определенного варианта выбора

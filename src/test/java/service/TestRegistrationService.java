@@ -2,6 +2,7 @@ package service;
 
 
 import com.spaceRangers.entities.StateUserEntity;
+import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
 import com.spaceRangers.service.RegistrationService;
@@ -47,5 +48,17 @@ public class TestRegistrationService {
 
         administrationService.dropUser(usersEntity);
         log.info("**********************Success***************************");
+    }
+
+    @Test
+    @Transactional
+    public void testUsersAuthority(){
+        log.info("**********************************test authority**********************************");
+
+        UserAccountEntity userAccountEntity = registrationService.getUserAccount("TestSecurity");
+        log.info(userAccountEntity.getId());
+
+        registrationService.getUserGroupAuthority(userAccountEntity)
+                .forEach(e->log.info(e.getName()));
     }
 }

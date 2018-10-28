@@ -18,17 +18,21 @@ import java.util.stream.Collectors;
 @Service("chatService")
 public class ChatServiceImpl implements ChatService {
 
-    @Autowired
-    ChatRepository chatRepository;
+    private final ChatRepository chatRepository;
+
+    private final UserRepository userRepository;
+
+    private final ChatUserRepository chatUserRepository;
+
+    private final MessagesRepository messagesRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    ChatUserRepository chatUserRepository;
-
-    @Autowired
-    MessagesRepository messagesRepository;
+    public ChatServiceImpl(ChatRepository chatRepository, UserRepository userRepository, ChatUserRepository chatUserRepository, MessagesRepository messagesRepository) {
+        this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
+        this.chatUserRepository = chatUserRepository;
+        this.messagesRepository = messagesRepository;
+    }
 
     @Transactional
     public ChatEntity createChat(Map<String, Object> mapObject) {
@@ -54,7 +58,7 @@ public class ChatServiceImpl implements ChatService {
      * @return
      */
     @Override
-    public ChatEntity getChatByName(String name) {
+    public ChatEntity getChat(String name) {
         return chatRepository.findChatEntityByName(name);
     }
 
@@ -82,8 +86,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Transactional
-    public void dropChat(ChatEntity chatEntity) {
+    @Override
+    public boolean dropChat(ChatEntity chatEntity) {
         chatRepository.delete(chatEntity);
+        return true;
     }
 
     @Override
@@ -105,9 +111,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public boolean createChatUser(ChatUserEntity chatUser) {
+    public ChatUserEntity createChatUser(ChatUserEntity chatUser) {
         chatUserRepository.save(chatUser);
-        return true;
+        return chatUser;
     }
 
     @Override
@@ -122,18 +128,18 @@ public class ChatServiceImpl implements ChatService {
         return messagesRepository
                 .findAll()
                 .stream()
-                .filter(messagesEntity -> messagesEntity.getIdChat() == idChat)
+                .filter(messagesEntity -> messagesEntity.getChatByIdChat().getId() == idChat)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MessagesEntity getMessageById(int idMessage) {
+    public MessagesEntity getMessage(int idMessage) {
         return messagesRepository.findById(idMessage).get();
     }
 
     @Override
-    public boolean createMessages(MessagesEntity message) {
+    public MessagesEntity createMessages(MessagesEntity message) {
         messagesRepository.save(message);
-        return true;
+        return message;
     }
 }

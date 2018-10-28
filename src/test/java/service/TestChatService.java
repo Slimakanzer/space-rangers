@@ -106,18 +106,18 @@ public class TestChatService {
 
 
         MessagesEntity messagesEntityOne = new MessagesEntity();
-        messagesEntityOne.setIdUser(userOne.getId());
-        messagesEntityOne.setIdChat(chat.getId());
+        messagesEntityOne.setUsersByIdUser(userOne);
+        messagesEntityOne.setChatByIdChat(chat);
         messagesEntityOne.setMessage("Hello!");
 
         MessagesEntity messagesEntityTwo = new MessagesEntity();
-        messagesEntityTwo.setIdChat(chat.getId());
-        messagesEntityTwo.setIdUser(userTwo.getId());
+        messagesEntityTwo.setChatByIdChat(chat);
+        messagesEntityTwo.setUsersByIdUser(userTwo);
         messagesEntityTwo.setMessage("Hello dude");
 
         MessagesEntity messagesEntityThree = new MessagesEntity();
-        messagesEntityThree.setIdChat(chat.getId());
-        messagesEntityThree.setIdUser(userOne.getId());
+        messagesEntityThree.setChatByIdChat(chat);
+        messagesEntityThree.setUsersByIdUser(userOne);
         messagesEntityThree.setMessage("How are you");
 
         chatService.createMessages(messagesEntityOne);
@@ -128,7 +128,7 @@ public class TestChatService {
 
         chatService.getMessagesOfChat(chat.getId())
                 .stream()
-                .forEach(e->log.info(e.getIdChat() +" "+e.getIdUser() +" "+e.getMessage()));
+                .forEach(e->log.info(e.getChatByIdChat().getId() +" "+e.getUsersByIdUser().getId() +" "+e.getMessage()));
         log.info("Got messages from chat");
 
 

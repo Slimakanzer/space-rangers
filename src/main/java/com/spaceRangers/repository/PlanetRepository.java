@@ -1,15 +1,16 @@
 package com.spaceRangers.repository;
 
 import com.spaceRangers.entities.PlanetEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.spaceRangers.entities.UsersEntity;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PlanetRepository extends JpaRepository<PlanetEntity, Integer> {
+public interface PlanetRepository extends CrudRepository<PlanetEntity, Integer> {
 
+    List<PlanetEntity> findPlanetEntitiesByUsersByIdUser(UsersEntity UsersByIdUser);
 
-    @Query("SELECT planet from PlanetEntity planet where planet.idUser = :idUser")
-    List<PlanetEntity> getListPlanetUser(@Param("idUser") int idUser);
+    PlanetEntity findPlanetEntityByNamePlanet(String namePlanet);
 }

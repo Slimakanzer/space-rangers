@@ -1,33 +1,25 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "results", schema = "public", catalog = "course")
 public class ResultsEntity {
-    private int id;
-    private Integer idVoting;
+    private Integer id;
     private String name;
+    private VotingEntity votingByIdVoting;
+    private Collection<VoteEntity> votesById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    @Basic
-    @Column(name = "id_voting", nullable = true)
-    public Integer getIdVoting() {
-        return idVoting;
-    }
-
-    public void setIdVoting(Integer idVoting) {
-        this.idVoting = idVoting;
     }
 
     @Basic
@@ -44,21 +36,32 @@ public class ResultsEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ResultsEntity that = (ResultsEntity) o;
-
-        if (id != that.id) return false;
-        if (idVoting != null ? !idVoting.equals(that.idVoting) : that.idVoting != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (idVoting != null ? idVoting.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return Objects.hash(id, name);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_voting", referencedColumnName = "id")
+    public VotingEntity getVotingByIdVoting() {
+        return votingByIdVoting;
+    }
+
+    public void setVotingByIdVoting(VotingEntity votingByIdVoting) {
+        this.votingByIdVoting = votingByIdVoting;
+    }
+
+    @OneToMany(mappedBy = "resultsByIdResult")
+    public Collection<VoteEntity> getVotesById() {
+        return votesById;
+    }
+
+    public void setVotesById(Collection<VoteEntity> votesById) {
+        this.votesById = votesById;
     }
 }

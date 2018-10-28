@@ -10,5 +10,5 @@ public interface PlayerFractionService extends FractionService {
      * (когда хочет покинуть её)
      * @return
      */
-    boolean updateStateUserFraction(UserFractionEntity userFractionEntity);
+    UserFractionEntity updateStateUserFraction(UserFractionEntity userFractionEntity);
 }

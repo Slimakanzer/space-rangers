@@ -13,17 +13,22 @@ import java.util.stream.Collectors;
 @Service("battleService")
 public class BattleServiceImpl implements BattleService {
 
-    @Autowired
-    BattleRepository battleRepository;
+    private final BattleRepository battleRepository;
+
+    private final UserBattleRepository userBattleRepository;
+
+    private final ShipBattleRepository shipBattleRepository;
+
+    private final ShipRepository shipRepository;
 
     @Autowired
-    UserBattleRepository userBattleRepository;
+    public BattleServiceImpl(BattleRepository battleRepository, UserBattleRepository userBattleRepository, ShipBattleRepository shipBattleRepository, ShipRepository shipRepository) {
+        this.battleRepository = battleRepository;
+        this.userBattleRepository = userBattleRepository;
+        this.shipBattleRepository = shipBattleRepository;
+        this.shipRepository = shipRepository;
+    }
 
-    @Autowired
-    ShipBattleRepository shipBattleRepository;
-
-    @Autowired
-    ShipRepository shipRepository;
     /**
      * Получение userBattle по id
      *
@@ -52,9 +57,9 @@ public class BattleServiceImpl implements BattleService {
      * @return
      */
     @Override
-    public boolean createBattle(BattleEntity battle) {
+    public BattleEntity createBattle(BattleEntity battle) {
         battleRepository.save(battle);
-        return true;
+        return battle;
     }
 
     /**
@@ -64,9 +69,9 @@ public class BattleServiceImpl implements BattleService {
      * @return
      */
     @Override
-    public boolean createBattleUser(UserBattleEntity userBattle) {
+    public UserBattleEntity createBattleUser(UserBattleEntity userBattle) {
         userBattleRepository.save(userBattle);
-        return true;
+        return userBattle;
     }
 
     /**
@@ -77,9 +82,9 @@ public class BattleServiceImpl implements BattleService {
      * @return
      */
     @Override
-    public boolean updateBattleUser(UserBattleEntity userBattle) {
+    public UserBattleEntity updateBattleUser(UserBattleEntity userBattle) {
         userBattleRepository.save(userBattle);
-        return true;
+        return userBattle;
     }
 
     /**
@@ -100,19 +105,19 @@ public class BattleServiceImpl implements BattleService {
      * @return
      */
     @Override
-    public boolean createShipBattle(ShipBattleEntity shipBattle) {
+    public ShipBattleEntity createShipBattle(ShipBattleEntity shipBattle) {
         shipBattleRepository.save(shipBattle);
-        return true;
+        return shipBattle;
     }
 
     /**
      * Получение списка кораблей пользователя в битве
      *
-     * @param idUser
+     * @param
      * @return
      */
-    @Override
-    public List<ShipEntity> getListShipInbattleByIdUser(int idUser, int idBattle) {
-        return shipBattleRepository.getListShipinBattleByIdUser(idBattle, idUser);
-    }
+//    @Override
+//    public List<ShipEntity> getListShipInBattle(int idBattle) {
+//        return shipBattleRepository.findShipsInBattle(idBattle);
+//    }
 }

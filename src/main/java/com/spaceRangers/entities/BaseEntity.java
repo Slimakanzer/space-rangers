@@ -1,25 +1,27 @@
 package com.spaceRangers.entities;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Objects;
 
 @Entity
 @Table(name = "base", schema = "public", catalog = "course")
 public class BaseEntity {
-    private int id;
+    private Integer id;
     private String nameBase;
-    private Integer idUser;
-    private Integer idSystem;
     private Integer locationBaseX;
     private Integer locationBaseY;
+    private UsersEntity usersByIdUser;
+    private SystemEntity systemByIdSystem;
+    private Collection<ShipEntity> shipsById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -31,26 +33,6 @@ public class BaseEntity {
 
     public void setNameBase(String nameBase) {
         this.nameBase = nameBase;
-    }
-
-    @Basic
-    @Column(name = "id_user", nullable = true)
-    public Integer getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(Integer idUser) {
-        this.idUser = idUser;
-    }
-
-    @Basic
-    @Column(name = "id_system", nullable = true)
-    public Integer getIdSystem() {
-        return idSystem;
-    }
-
-    public void setIdSystem(Integer idSystem) {
-        this.idSystem = idSystem;
     }
 
     @Basic
@@ -77,29 +59,44 @@ public class BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         BaseEntity that = (BaseEntity) o;
-
-        if (id != that.id) return false;
-        if (nameBase != null ? !nameBase.equals(that.nameBase) : that.nameBase != null) return false;
-        if (idUser != null ? !idUser.equals(that.idUser) : that.idUser != null) return false;
-        if (idSystem != null ? !idSystem.equals(that.idSystem) : that.idSystem != null) return false;
-        if (locationBaseX != null ? !locationBaseX.equals(that.locationBaseX) : that.locationBaseX != null)
-            return false;
-        if (locationBaseY != null ? !locationBaseY.equals(that.locationBaseY) : that.locationBaseY != null)
-            return false;
-
-        return true;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(nameBase, that.nameBase) &&
+                Objects.equals(locationBaseX, that.locationBaseX) &&
+                Objects.equals(locationBaseY, that.locationBaseY);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + (nameBase != null ? nameBase.hashCode() : 0);
-        result = 31 * result + (idUser != null ? idUser.hashCode() : 0);
-        result = 31 * result + (idSystem != null ? idSystem.hashCode() : 0);
-        result = 31 * result + (locationBaseX != null ? locationBaseX.hashCode() : 0);
-        result = 31 * result + (locationBaseY != null ? locationBaseY.hashCode() : 0);
-        return result;
+        return Objects.hash(id, nameBase, locationBaseX, locationBaseY);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id")
+    public UsersEntity getUsersByIdUser() {
+        return usersByIdUser;
+    }
+
+    public void setUsersByIdUser(UsersEntity usersByIdUser) {
+        this.usersByIdUser = usersByIdUser;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_system", referencedColumnName = "id")
+    public SystemEntity getSystemByIdSystem() {
+        return systemByIdSystem;
+    }
+
+    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
+        this.systemByIdSystem = systemByIdSystem;
+    }
+
+    @OneToMany(mappedBy = "baseByIdBase")
+    public Collection<ShipEntity> getShipsById() {
+        return shipsById;
+    }
+
+    public void setShipsById(Collection<ShipEntity> shipsById) {
+        this.shipsById = shipsById;
     }
 }

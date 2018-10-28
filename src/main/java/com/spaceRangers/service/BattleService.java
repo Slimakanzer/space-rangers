@@ -18,7 +18,7 @@ public interface BattleService {
 
     /**
      * Получение по названию
-     * @param login
+     * @param
      * @return
      */
     StateUserFractionEntity getUserBattleByName(String name);
@@ -27,14 +27,14 @@ public interface BattleService {
      * @param battle
      * @return
      */
-    boolean createBattle(BattleEntity battle);
+    BattleEntity createBattle(BattleEntity battle);
 
     /**
      * Добавление участника в битву (может быть несколько пользователей в битве)
      * @param userBattle
      * @return
      */
-    boolean createBattleUser(UserBattleEntity userBattle);
+    UserBattleEntity createBattleUser(UserBattleEntity userBattle);
 
     /**
      * Обновление состояния игрока в битве
@@ -42,7 +42,7 @@ public interface BattleService {
      * @param userBattle
      * @return
      */
-    boolean updateBattleUser(UserBattleEntity userBattle);
+    UserBattleEntity updateBattleUser(UserBattleEntity userBattle);
 
     /**
      * Получение списка пользователей в битве
@@ -56,12 +56,11 @@ public interface BattleService {
      * @param shipBattle
      * @return
      */
-    boolean createShipBattle(ShipBattleEntity shipBattle);
+    ShipBattleEntity createShipBattle(ShipBattleEntity shipBattle);
 
     /**
      * Получение списка кораблей пользователя в битве
-     * @param idUser
      * @return
      */
-    List<ShipEntity> getListShipInbattleByIdUser(int idUser, int idBattle);
+//    List<ShipEntity> getListShipInBattle(int idBattle);
 }

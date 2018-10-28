@@ -9,9 +9,9 @@ public class UserAccountEntity {
     private Integer id;
     private String login;
     private String password;
+    private UsersEntity usersById;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -54,5 +54,14 @@ public class UserAccountEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, login, password);
+    }
+
+    @OneToOne(mappedBy = "userAccountById")
+    public UsersEntity getUsersById() {
+        return usersById;
+    }
+
+    public void setUsersById(UsersEntity usersById) {
+        this.usersById = usersById;
     }
 }

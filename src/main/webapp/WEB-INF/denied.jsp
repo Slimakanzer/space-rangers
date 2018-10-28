@@ -13,9 +13,11 @@
 </head>
 <body>
 
-    <div id="test" onclick="clicks();">
-        It's users page :0
-        <c:if test="${pageContext.request.userPrincipal.name != null}">${pageContext.request.userPrincipal.name} ${pageContext.request.userPrincipal.toString()}</c:if>
+    <div>
+        Sry, but u was denied
+        <a href="/login">
+            Return to login
+        </a>
     </div>
 </body>
 </html>

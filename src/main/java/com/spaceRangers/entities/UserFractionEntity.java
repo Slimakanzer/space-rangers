@@ -2,34 +2,36 @@ package com.spaceRangers.entities;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user_fraction", schema = "public", catalog = "course")
 @IdClass(UserFractionEntityPK.class)
 public class UserFractionEntity {
-    private int idFraction;
-    private int idUser;
+    private Integer idFraction;
+    private Integer idUser;
     private Date date;
-    private Boolean actual;
-    private Integer idState;
+    private ShipEntity shipByIdFraction;
+    private UsersEntity usersByIdUser;
+    private StateUserFractionEntity stateUserFractionByIdState;
 
     @Id
     @Column(name = "id_fraction", nullable = false)
-    public int getIdFraction() {
+    public Integer getIdFraction() {
         return idFraction;
     }
 
-    public void setIdFraction(int idFraction) {
+    public void setIdFraction(Integer idFraction) {
         this.idFraction = idFraction;
     }
 
     @Id
     @Column(name = "id_user", nullable = false)
-    public int getIdUser() {
+    public Integer getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(int idUser) {
+    public void setIdUser(Integer idUser) {
         this.idUser = idUser;
     }
 
@@ -43,47 +45,28 @@ public class UserFractionEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "actual", nullable = true)
-    public Boolean getActual() {
-        return actual;
-    }
-
-    public void setActual(Boolean actual) {
-        this.actual = actual;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         UserFractionEntity that = (UserFractionEntity) o;
-
-        if (idFraction != that.idFraction) return false;
-        if (idUser != that.idUser) return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (actual != null ? !actual.equals(that.actual) : that.actual != null) return false;
-
-        return true;
+        return Objects.equals(idFraction, that.idFraction) &&
+                Objects.equals(idUser, that.idUser) &&
+                Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        int result = idFraction;
-        result = 31 * result + idUser;
-        result = 31 * result + (date != null ? date.hashCode() : 0);
-        result = 31 * result + (actual != null ? actual.hashCode() : 0);
-        return result;
+        return Objects.hash(idFraction, idUser, date);
     }
 
-    @Basic
-    @Column(name = "id_state", nullable = true)
-    public Integer getIdState() {
-        return idState;
+    @ManyToOne
+    @JoinColumn(name = "id_state", referencedColumnName = "id")
+    public StateUserFractionEntity getStateUserFractionByIdState() {
+        return stateUserFractionByIdState;
     }
 
-    public void setIdState(Integer idState) {
-        this.idState = idState;
+    public void setStateUserFractionByIdState(StateUserFractionEntity stateUserFractionByIdState) {
+        this.stateUserFractionByIdState = stateUserFractionByIdState;
     }
 }

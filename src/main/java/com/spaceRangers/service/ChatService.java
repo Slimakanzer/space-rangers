@@ -30,10 +30,10 @@ public interface ChatService {
      * @param name
      * @return
      */
-    ChatEntity getChatByName(String name);
+    ChatEntity getChat(String name);
 
 
-    void dropChat(ChatEntity chatEntity);
+    boolean dropChat(ChatEntity chatEntity);
 
     /**
      * Получение чатов пользователя
@@ -54,7 +54,7 @@ public interface ChatService {
      * @param chatUser
      * @return
      */
-    boolean createChatUser(ChatUserEntity chatUser);
+    ChatUserEntity createChatUser(ChatUserEntity chatUser);
 
     /**
      * Удаление пользователя из чата
@@ -76,12 +76,12 @@ public interface ChatService {
      * @param idMessage
      * @return
      */
-    MessagesEntity getMessageById(int idMessage);
+    MessagesEntity getMessage(int idMessage);
 
     /**
      * Создание сообщения
      * @param message
      * @return
      */
-    boolean createMessages(MessagesEntity message);
+    MessagesEntity createMessages(MessagesEntity message);
 }

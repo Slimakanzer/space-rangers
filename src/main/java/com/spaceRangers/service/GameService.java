@@ -1,25 +1,31 @@
 package com.spaceRangers.service;
 
 import com.spaceRangers.entities.*;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface GameService {
 
     /**
+     * Создание планеты
+     * @param planet
+     * @return
+     */
+    PlanetEntity createPlanet(PlanetEntity planet);
+
+    /**
      * Получение планеты
      * @param idPlanet
      * @return
      */
-    PlanetEntity getPlanetById(int idPlanet);
+    PlanetEntity getPlanet(int idPlanet);
 
     /**
      * Получение планеты по названию
      * @param name
      * @return
      */
-    PlanetEntity getPlanetIdByName(String name);
+    PlanetEntity getPlanet(String name);
 
     /**
      * Обновление планеты
@@ -27,7 +33,15 @@ public interface GameService {
      * @param planet
      * @return
      */
-    boolean updatePlanet(PlanetEntity planet);
+    PlanetEntity updatePlanet(PlanetEntity planet);
+
+
+    /**
+     * Содание ресурса
+     * @param resource
+     * @return
+     */
+    ResourceEntity createResource(ResourceEntity resource);
 
     /**
      * Получение списка ресурсов планеты
@@ -62,7 +76,7 @@ public interface GameService {
      * @param base
      * @return
      */
-    boolean createBase(BaseEntity base);
+    BaseEntity createBase(BaseEntity base);
 
     /**
      * Обновление базы
@@ -70,7 +84,7 @@ public interface GameService {
      * @param base
      * @return
      */
-    boolean updateBase(BaseEntity base);
+    BaseEntity updateBase(BaseEntity base);
 
     /**
      * Получение корабля по id
@@ -84,14 +98,21 @@ public interface GameService {
      * @param ship
      * @return
      */
-    boolean createShip(ShipEntity ship);
+    ShipEntity createShip(ShipEntity ship);
 
     /**
      * Обновление  корабля
      * @param ship
      * @return
      */
-    boolean updateShip(ShipEntity ship);
+    ShipEntity updateShip(ShipEntity ship);
+
+    /**
+     * Удаление корабля
+     * @param ship
+     * @return
+     */
+    boolean dropShip(ShipEntity ship);
 
 
     /**
@@ -108,14 +129,5 @@ public interface GameService {
      * @return
      */
     List<ShipEntity> getListShipByIdUser(int idUser);
-
-
-    /**
-     * Получение кораблей пользователя в определенном состоянии
-     * @param idUser
-     * @param idStateShip
-     * @return
-     */
-    List<ShipEntity> getListShypByIdUserAndIdStateShip(int idUser, int idStateShip);
 
 }
