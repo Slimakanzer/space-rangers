@@ -56,6 +56,8 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<GroupsEntity> getListGroupsUsers(int idUser) {
-        return groupsRepository.getListGroupsUser(idUser);
+        //return groupsRepository.getListGroupsUser(idUser);
+        return null;
+        //TODO переделать
     }
 }

@@ -1,5 +1,9 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -15,18 +19,15 @@ public class UsersEntity {
     private String description;
     private Integer level;
     private Collection<BaseEntity> basesById;
-    private Collection<ChatUserEntity> chatUsersById;
-    private Collection<MessagesEntity> messagesById;
     private Collection<PlanetEntity> planetsById;
     private Collection<ShipEntity> shipsById;
-    private Collection<UserBattleEntity> userBattlesById;
-    private Collection<UserFractionEntity> userFractionsById;
-    private Collection<UserGroupEntity> userGroupsById;
-    private UserAccountEntity userAccountById;
+    private UserAccountEntity userAccount;
     private StateUserEntity stateUserByIdState;
-    private Collection<VoteEntity> votesById;
+    private Collection<VoteEntity> votes;
+    private Collection<ChatEntity> chats;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -115,7 +116,23 @@ public class UsersEntity {
         return Objects.hash(id, login, email, firstName, lastName, description, level);
     }
 
+    @ManyToMany
+    @JoinTable(
+            name = "chat_user",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_chat")}
+    )
+    @JsonManagedReference
+    public Collection<ChatEntity> getChats(){
+        return chats;
+    }
+
+    public void setChats(Collection<ChatEntity> chats) {
+        this.chats = chats;
+    }
+
     @OneToMany(mappedBy = "usersByIdUser")
+    @JsonIgnore
     public Collection<BaseEntity> getBasesById() {
         return basesById;
     }
@@ -125,15 +142,7 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "usersByIdUser")
-    public Collection<MessagesEntity> getMessagesById() {
-        return messagesById;
-    }
-
-    public void setMessagesById(Collection<MessagesEntity> messagesById) {
-        this.messagesById = messagesById;
-    }
-
-    @OneToMany(mappedBy = "usersByIdUser")
+    @JsonIgnore
     public Collection<PlanetEntity> getPlanetsById() {
         return planetsById;
     }
@@ -143,6 +152,7 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "usersByIdUser")
+    @JsonIgnore
     public Collection<ShipEntity> getShipsById() {
         return shipsById;
     }
@@ -153,30 +163,23 @@ public class UsersEntity {
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    public UserAccountEntity getUserAccountById() {
-        return userAccountById;
+    @JsonBackReference
+    public UserAccountEntity getUserAccount() {
+        return userAccount;
     }
 
-    public void setUserAccountById(UserAccountEntity userAccountById) {
-        this.userAccountById = userAccountById;
+    public void setUserAccount(UserAccountEntity userAccount) {
+        this.userAccount = userAccount;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
+    @JsonIgnore
     public StateUserEntity getStateUserByIdState() {
         return stateUserByIdState;
     }
 
     public void setStateUserByIdState(StateUserEntity stateUserByIdState) {
         this.stateUserByIdState = stateUserByIdState;
-    }
-
-    @OneToMany(mappedBy = "usersByIdUser")
-    public Collection<VoteEntity> getVotesById() {
-        return votesById;
-    }
-
-    public void setVotesById(Collection<VoteEntity> votesById) {
-        this.votesById = votesById;
     }
 }

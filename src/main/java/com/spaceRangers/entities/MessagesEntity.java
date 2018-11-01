@@ -5,18 +5,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Objects;
 
 @Entity
 @Table(name = "messages", schema = "public", catalog = "course")
 public class MessagesEntity {
     private Integer id;
-    private ChatEntity chatByIdChat;
+    private Integer idUser;
+    private ChatEntity chat;
     private String message;
-    private ComplainEntity complainById;
-    private UsersEntity usersByIdUser;
+    private ComplainEntity complain;
+    private Integer idChat;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -32,8 +35,45 @@ public class MessagesEntity {
         return message;
     }
 
+    @Basic
+    @Column(name = "id_user", nullable = false)
+    public  Integer getIdUser(){
+        return idUser;
+    }
+
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
+
+    @Basic
+    @Column(name = "id_chat", nullable = false)
+    public Integer getIdChat(){
+        return idChat;
+    }
+
+    public void setIdChat(Integer idChat){
+        this.idChat = idChat;
+    }
+
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonBackReference
+    public ChatEntity getChat(){return chat;}
+
+    public void setChat(ChatEntity chatByIdChat){this.chat=chat;}
+
+    @OneToOne(mappedBy = "message")
+    @JsonBackReference
+    public ComplainEntity getComplain() {
+        return complain;
+    }
+
+    public void setComplain(ComplainEntity complain) {
+        this.complain = complain;
     }
 
     @Override
@@ -49,34 +89,4 @@ public class MessagesEntity {
     public int hashCode() {
         return Objects.hash(id, message);
     }
-
-
-    @OneToOne(mappedBy = "messagesById")
-    public ComplainEntity getComplainById() {
-        return complainById;
-    }
-
-    public void setComplainById(ComplainEntity complainById) {
-        this.complainById = complainById;
-    }
-
-
-    @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @JsonBackReference
-    public UsersEntity getUsersByIdUser() {
-        return usersByIdUser;
-    }
-
-    public void setUsersByIdUser(UsersEntity usersByIdUser) {
-        this.usersByIdUser = usersByIdUser;
-    }
-
-
-    @ManyToOne
-    @JoinColumn(name = "id_chat", referencedColumnName = "id")
-    @JsonBackReference
-    public ChatEntity getChatByIdChat(){return chatByIdChat;}
-
-    public void setChatByIdChat(ChatEntity chatByIdChat){this.chatByIdChat=chatByIdChat;}
 }

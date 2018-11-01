@@ -1,5 +1,9 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -7,10 +11,12 @@ import java.util.Objects;
 @Table(name = "vote", schema = "public", catalog = "course")
 public class VoteEntity {
     private Integer id;
-    private UsersEntity usersByIdUser;
-    private ResultsEntity resultsByIdResult;
+    private Integer idUser;
+    private Integer idResult;
+    private ResultsEntity results;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -18,6 +24,24 @@ public class VoteEntity {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    @Column(name = "id_user", nullable = false)
+    public Integer getIdUser(){
+        return this.idUser;
+    }
+
+    public void setIdUser(Integer idUser) {
+        this.idUser = idUser;
+    }
+
+    @Column(name = "id_result", nullable = false)
+    public Integer getIdResult(){
+        return idResult;
+    }
+
+    public void setIdResult(Integer idResult) {
+        this.idResult = idResult;
     }
 
     @Override
@@ -34,22 +58,13 @@ public class VoteEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id")
-    public UsersEntity getUsersByIdUser() {
-        return usersByIdUser;
+    @JoinColumn(name = "id_result", referencedColumnName = "id", updatable = false, insertable = false)
+    @JsonBackReference
+    public ResultsEntity getResults() {
+        return results;
     }
 
-    public void setUsersByIdUser(UsersEntity usersByIdUser) {
-        this.usersByIdUser = usersByIdUser;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "id_result", referencedColumnName = "id")
-    public ResultsEntity getResultsByIdResult() {
-        return resultsByIdResult;
-    }
-
-    public void setResultsByIdResult(ResultsEntity resultsByIdResult) {
-        this.resultsByIdResult = resultsByIdResult;
+    public void setResults(ResultsEntity results) {
+        this.results = results;
     }
 }

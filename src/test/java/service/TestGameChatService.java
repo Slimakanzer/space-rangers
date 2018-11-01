@@ -68,7 +68,7 @@ public class TestGameChatService {
         log.info("Created chat");
 
         VotingEntity votingEntity = new VotingEntity();
-        votingEntity.setChatByIdChat(chat);
+        votingEntity.setChat(chat);
         votingEntity.setMessage("Голосование: металл или дерево");
 
         votingEntity = gameChatService.createVoting(votingEntity);
@@ -76,11 +76,11 @@ public class TestGameChatService {
         log.info("Created voting");
 
         ResultsEntity resultsEntity = new ResultsEntity();
-        resultsEntity.setVotingByIdVoting(votingEntity);
+        resultsEntity.setVoting(votingEntity);
         resultsEntity.setName("Metall");
 
         ResultsEntity resultsEntity1 = new ResultsEntity();
-        resultsEntity1.setVotingByIdVoting(votingEntity);
+        resultsEntity1.setVoting(votingEntity);
         resultsEntity1.setName("Tree");
 
         gameChatService.createResults(resultsEntity);
@@ -92,19 +92,19 @@ public class TestGameChatService {
         gameChatService.getListResultsByIdVoting(votingEntity.getId())
                 .stream()
                 .forEach(
-                        e->log.info(e.getVotingByIdVoting().getId() + " " + e.getName())
+                        e->log.info(e.getVoting().getId() + " " + e.getName())
                 );
 
         VoteEntity voteEntity = new VoteEntity();
-        voteEntity.setResultsByIdResult(resultsEntity);
-        voteEntity.setUsersByIdUser(usersEntity);
+        voteEntity.setResults(resultsEntity);
+        voteEntity.setIdUser(usersEntity.getId());
         gameChatService.createVote(voteEntity);
         log.info("Created vote for metall");
 
         gameChatService.getListVoteByIdResult(resultsEntity.getId())
                 .stream()
                 .forEach(
-                        e->log.info(e.getUsersByIdUser().getId())
+                        e->log.info(e.getIdUser())
                 );
     }
 }

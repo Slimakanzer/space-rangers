@@ -13,31 +13,28 @@ import java.util.List;
 public class AdministrationServiceImpl implements AdministrationService {
     private final UserRepository userRepository;
 
-    private final UserGroupRepository userGroupRepository;
-
     private final StateUserRepository stateUserRepository;
 
     private final UserAccountRepository userAccountRepository;
 
     @Autowired
-    public AdministrationServiceImpl(UserRepository userRepository, UserGroupRepository userGroupRepository, StateUserRepository stateUserRepository, UserAccountRepository userAccountRepository) {
+    public AdministrationServiceImpl(UserRepository userRepository, StateUserRepository stateUserRepository, UserAccountRepository userAccountRepository) {
         this.userRepository = userRepository;
-        this.userGroupRepository = userGroupRepository;
         this.stateUserRepository = stateUserRepository;
         this.userAccountRepository = userAccountRepository;
     }
 
-    @Override
-    public List<UserGroupEntity> getUsersGroups(UsersEntity user) {
-            return userGroupRepository.findUserGroupEntitiesByIdUser(user.getId());
-    }
-
-    @Transactional
-    @Override
-    public UserGroupEntity createUserGroup(UserGroupEntity userGroup) {
-        userGroupRepository.save(userGroup);
-        return userGroup;
-    }
+//    @Override
+//    public List<UserGroupEntity> getUsersGroups(UsersEntity user) {
+//            return userGroupRepository.findUserGroupEntitiesByIdUser(user.getId());
+//    }
+//
+//    @Transactional
+//    @Override
+//    public UserGroupEntity createUserGroup(UserGroupEntity userGroup) {
+//        userGroupRepository.save(userGroup);
+//        return userGroup;
+//    }
 
 
 
@@ -65,11 +62,11 @@ public class AdministrationServiceImpl implements AdministrationService {
         return user;
     }
 
-    @Transactional
-    @Override
-    public boolean dropUserGroup(UserGroupEntity userGroup) {
-        userGroupRepository.delete(userGroup);
-        return true;
-    }
+//    @Transactional
+//    @Override
+//    public boolean dropUserGroup(UserGroupEntity userGroup) {
+//        userGroupRepository.delete(userGroup);
+//        return true;
+//    }
 
 }

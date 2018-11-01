@@ -1,7 +1,6 @@
 package service;
 
 
-import com.spaceRangers.entities.UserGroupEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
 import com.spaceRangers.service.ProfileUserService;
@@ -28,6 +27,7 @@ import javax.transaction.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestPersistenceConfig.class)
 @WebAppConfiguration
+@Transactional
 public class TestAdministrationService {
 
     Logger log = LogManager.getLogger(TestAdministrationService.class);
@@ -51,43 +51,41 @@ public class TestAdministrationService {
         administrationService.dropUser(usersEntity);
     }
 
+//    @Test
+//    public void testUserGroups(){
+//        log.info("*******************Start administrating user group test *****************");
+//
+//
+//        UserGroupEntity userGroupEntity = new UserGroupEntity();
+//        userGroupEntity.setIdGroup(1);
+//        userGroupEntity.setIdUser(usersEntity.getId());
+//
+//        log.info("Проверка создания группы пользователя");
+//        try {
+//            administrationService.createUserGroup(userGroupEntity);
+//            log.info("Successful: выполнилось правильно");
+//        }catch (Exception e){
+//            log.info("ERROR: ошибка при создании гуппы пользователя");
+//        }
+//
+//        log.info("Проверка поиска групп пользователя");
+//        try{
+//            administrationService.getUsersGroups(usersEntity);
+//            log.info("Successful: проверка прошла успешно");
+//        }catch (Exception e){
+//            log.info("Ошибка при поиске групп пользователя");
+//        }
+//
+//        administrationService.getUsersGroups(usersEntity)
+//                .forEach(e-> log.info("id user: "+e.getIdUser()+" id group: "+e.getIdGroup()));
+//
+//        administrationService.dropUserGroup(userGroupEntity);
+//
+//
+//        log.info("*********************End test******************************");
+//    }
+
     @Test
-    @Transactional
-    public void testUserGroups(){
-        log.info("*******************Start administrating user group test *****************");
-
-
-        UserGroupEntity userGroupEntity = new UserGroupEntity();
-        userGroupEntity.setIdGroup(1);
-        userGroupEntity.setIdUser(usersEntity.getId());
-
-        log.info("Проверка создания группы пользователя");
-        try {
-            administrationService.createUserGroup(userGroupEntity);
-            log.info("Successful: выполнилось правильно");
-        }catch (Exception e){
-            log.info("ERROR: ошибка при создании гуппы пользователя");
-        }
-
-        log.info("Проверка поиска групп пользователя");
-        try{
-            administrationService.getUsersGroups(usersEntity);
-            log.info("Successful: проверка прошла успешно");
-        }catch (Exception e){
-            log.info("Ошибка при поиске групп пользователя");
-        }
-
-        administrationService.getUsersGroups(usersEntity)
-                .forEach(e-> log.info("id user: "+e.getIdUser()+" id group: "+e.getIdGroup()));
-
-        administrationService.dropUserGroup(userGroupEntity);
-
-
-        log.info("*********************End test******************************");
-    }
-
-    @Test
-    @Transactional
     public void testDropUser(){
 
         UsersEntity usersEntity = registrationService.createUser("TestDrop", "TestDrop");

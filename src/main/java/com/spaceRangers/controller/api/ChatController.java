@@ -135,7 +135,7 @@ public class ChatController {
 
     @RequestMapping(value = "/voting/{id}/results", method = RequestMethod.POST)
     ResponseEntity createResultsVoting(@PathVariable("id") int idVoting, @RequestBody ResultsEntity result){
-        if (result.getVotingByIdVoting().getId() == idVoting) {
+        if (result.getVoting().getId() == idVoting) {
             gameChatService.createResults(result);
             return ResponseEntity.ok().build();
         }else {
@@ -145,7 +145,7 @@ public class ChatController {
 
     @RequestMapping(value = "/voting/{id}/results", method = RequestMethod.DELETE)
     ResponseEntity dropResultsVoting(@PathVariable("id") int idVoting, @RequestBody ResultsEntity result){
-        if (result.getVotingByIdVoting().getId() == idVoting) {
+        if (result.getVoting().getId() == idVoting) {
             gameChatService.dropResults(result);
             return ResponseEntity.ok().build();
         }else {

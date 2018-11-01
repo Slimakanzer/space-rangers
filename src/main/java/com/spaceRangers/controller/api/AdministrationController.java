@@ -1,6 +1,5 @@
 package com.spaceRangers.controller.api;
 
-import com.spaceRangers.entities.UserGroupEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
 import com.spaceRangers.service.ProfileUserService;
@@ -45,40 +44,6 @@ public class AdministrationController {
             );
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-    @RequestMapping(value = "/user/groups", method = RequestMethod.GET)
-    @ResponseBody
-    ResponseEntity getUsersGroups(@RequestParam(value = "id_user") int idUser){
-        try{
-            return ResponseEntity.ok(
-                    administrationService.getUsersGroups(profileUserService.getUser(idUser))
-            );
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @RequestMapping(value = "/user/groups", method = RequestMethod.POST)
-    @ResponseBody
-    ResponseEntity createUsersGroup(@RequestBody UserGroupEntity userGroup){
-        try{
-            administrationService.createUserGroup(userGroup);
-            return ResponseEntity.ok().build();
-        }catch (Exception e){
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    @RequestMapping(value = "/user/groups", method = RequestMethod.DELETE)
-    @ResponseBody
-    ResponseEntity dropUsersGroup(@RequestBody UserGroupEntity userGroup){
-        try{
-            administrationService.dropUserGroup(userGroup);
-            return ResponseEntity.ok().build();
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

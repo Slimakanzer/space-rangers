@@ -1,5 +1,7 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -8,7 +10,7 @@ import java.util.Objects;
 public class GroupAuthorityEntity {
     private Integer id;
     private String name;
-    private GroupsEntity groupsById;
+    private GroupsEntity groups;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -30,6 +32,16 @@ public class GroupAuthorityEntity {
         this.name = name;
     }
 
+    @OneToOne(mappedBy = "groupAuthority")
+    @JsonManagedReference
+    public GroupsEntity getGroups() {
+        return groups;
+    }
+
+    public void setGroups(GroupsEntity groups) {
+        this.groups = groups;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,14 +54,5 @@ public class GroupAuthorityEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
-    }
-
-    @OneToOne(mappedBy = "groupAuthorityById")
-    public GroupsEntity getGroupsById() {
-        return groupsById;
-    }
-
-    public void setGroupsById(GroupsEntity groupsById) {
-        this.groupsById = groupsById;
     }
 }

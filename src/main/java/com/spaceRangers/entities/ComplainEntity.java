@@ -1,5 +1,7 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -10,9 +12,10 @@ public class ComplainEntity {
     private Integer id;
     private Date date;
     private Boolean state;
-    private MessagesEntity messagesById;
+    private MessagesEntity message;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -58,12 +61,13 @@ public class ComplainEntity {
     }
 
     @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    public MessagesEntity getMessagesById() {
-        return messagesById;
+    @JoinColumn(name = "id_message", referencedColumnName = "id")
+    @JsonManagedReference
+    public MessagesEntity getMessage() {
+        return message;
     }
 
-    public void setMessagesById(MessagesEntity messagesById) {
-        this.messagesById = messagesById;
+    public void setMessage(MessagesEntity message) {
+        this.message = message;
     }
 }

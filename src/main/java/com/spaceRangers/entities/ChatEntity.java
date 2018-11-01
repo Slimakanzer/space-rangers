@@ -1,5 +1,7 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -15,11 +17,12 @@ public class ChatEntity {
     private Integer id;
     private String name;
     private Date date;
-    private Collection<ChatUserEntity> chatUsersById;
-    private Collection<VotingEntity> votingsById;
-    private Collection<MessagesEntity> messagesById;
+    private Collection<VotingEntity> votings;
+    private Collection<MessagesEntity> messages;
+    private Collection<UsersEntity> users;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -49,6 +52,33 @@ public class ChatEntity {
         this.date = date;
     }
 
+    @ManyToMany(mappedBy = "chats")
+    @JsonBackReference
+    public Collection<UsersEntity> getUsers(){
+        return users;
+    }
+
+    public void setUsers(Collection<UsersEntity> users) {
+        this.users = users;
+    }
+
+
+    @OneToMany(mappedBy = "chat")
+    @JsonIgnore
+    public Collection<VotingEntity> getVotingsById() {
+        return votings;
+    }
+
+    public void setVotingsById(Collection<VotingEntity> votings) {
+        this.votings = votings;
+    }
+
+    @OneToMany(targetEntity = MessagesEntity.class, mappedBy = "chat")
+    @JsonManagedReference
+    public Collection<MessagesEntity> getMessages(){return messages;}
+
+    public void setMessages(Collection<MessagesEntity> messages){this.messages = messages;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,20 +93,4 @@ public class ChatEntity {
     public int hashCode() {
         return Objects.hash(id, name, date);
     }
-
-    @OneToMany(mappedBy = "chatByIdChat", fetch = FetchType.EAGER)
-    public Collection<VotingEntity> getVotingsById() {
-        return votingsById;
-    }
-
-    public void setVotingsById(Collection<VotingEntity> votingsById) {
-        this.votingsById = votingsById;
-    }
-
-    @OneToMany(mappedBy = "chatByIdChat", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)
-    @JsonManagedReference
-    public Collection<MessagesEntity> getMessagesById(){return messagesById;}
-
-    public void setMessagesById(Collection<MessagesEntity> messagesById){this.messagesById = messagesById;}
 }

@@ -46,7 +46,7 @@ public class GameChatServiceImpl implements GameChatService {
         return votingRepository
                 .findAll()
                 .stream()
-                .filter(votingEntity -> votingEntity.getChatByIdChat().getId() == idChat)
+                .filter(votingEntity -> votingEntity.getChat().getId() == idChat)
                 .collect(Collectors.toList());
     }
 
@@ -67,7 +67,7 @@ public class GameChatServiceImpl implements GameChatService {
         return resultsRepository
                 .findAll()
                 .stream()
-                .filter(resultsEntity -> resultsEntity.getVotingByIdVoting().getId() == idVoting)
+                .filter(resultsEntity -> resultsEntity.getVoting().getId() == idVoting)
                 .collect(Collectors.toList());
     }
 
@@ -82,7 +82,7 @@ public class GameChatServiceImpl implements GameChatService {
         return voteRepository
                 .findAll()
                 .stream()
-                .filter(voteEntity -> voteEntity.getResultsByIdResult().getId() == idResult)
+                .filter(voteEntity -> voteEntity.getResults().getId() == idResult)
                 .collect(Collectors.toList());
 
     }

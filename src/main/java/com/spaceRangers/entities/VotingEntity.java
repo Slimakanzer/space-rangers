@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -9,8 +12,8 @@ import java.util.Objects;
 public class VotingEntity {
     private Integer id;
     private String message;
-    private Collection<ResultsEntity> resultsById;
-    private ChatEntity chatByIdChat;
+    private Collection<ResultsEntity> results;
+    private ChatEntity chat;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -46,22 +49,24 @@ public class VotingEntity {
         return Objects.hash(id, message);
     }
 
-    @OneToMany(mappedBy = "votingByIdVoting")
-    public Collection<ResultsEntity> getResultsById() {
-        return resultsById;
+    @OneToMany(mappedBy = "voting")
+    @JsonManagedReference
+    public Collection<ResultsEntity> getResults() {
+        return results;
     }
 
-    public void setResultsById(Collection<ResultsEntity> resultsById) {
-        this.resultsById = resultsById;
+    public void setResults(Collection<ResultsEntity> results) {
+        this.results = results;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_chat", referencedColumnName = "id")
-    public ChatEntity getChatByIdChat() {
-        return chatByIdChat;
+    @JsonBackReference
+    public ChatEntity getChat() {
+        return chat;
     }
 
-    public void setChatByIdChat(ChatEntity chatByIdChat) {
-        this.chatByIdChat = chatByIdChat;
+    public void setChat(ChatEntity chat) {
+        this.chat = chat;
     }
 }

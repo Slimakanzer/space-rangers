@@ -10,6 +10,6 @@ import java.util.List;
 public interface GroupsRepository extends JpaRepository<GroupsEntity, Integer> {
 
 
-    @Query("SELECT groups from GroupsEntity groups join UserGroupEntity userGroup on groups.id = userGroup.idGroup where userGroup.idUser = :idUser")
-    List<GroupsEntity> getListGroupsUser(@Param("idUser") int idUser);
+    //@Query("SELECT groups from GroupsEntity groups join UserGroupEntity userGroup on groups.id = userGroup.idGroup where userGroup.idUser = :idUser")
+    //List<GroupsEntity> getListGroupsUser(@Param("idUser") int idUser);
 }

@@ -1,5 +1,7 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -9,8 +11,8 @@ import java.util.Objects;
 public class GroupsEntity {
     private Integer id;
     private String name;
-    private GroupAuthorityEntity groupAuthorityById;
-    private Collection<UserGroupEntity> userGroupsById;
+    private GroupAuthorityEntity groupAuthority;
+    private Collection<UserAccountEntity> userAccounts;
 
     @Id
     @Column(name = "id", nullable = false)
@@ -32,6 +34,27 @@ public class GroupsEntity {
         this.name = name;
     }
 
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
+    public GroupAuthorityEntity getGroupAuthority() {
+        return groupAuthority;
+    }
+
+    public void setGroupAuthority(GroupAuthorityEntity groupAuthority) {
+        this.groupAuthority = groupAuthority;
+    }
+
+    @ManyToMany(mappedBy = "groups")
+    @JsonBackReference
+    public Collection<UserAccountEntity> getUserAccounts(){
+        return userAccounts;
+    }
+
+    public void setUserAccounts(Collection<UserAccountEntity> userAccounts) {
+        this.userAccounts = userAccounts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -45,15 +68,4 @@ public class GroupsEntity {
     public int hashCode() {
         return Objects.hash(id, name);
     }
-
-    @OneToOne
-    @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    public GroupAuthorityEntity getGroupAuthorityById() {
-        return groupAuthorityById;
-    }
-
-    public void setGroupAuthorityById(GroupAuthorityEntity groupAuthorityById) {
-        this.groupAuthorityById = groupAuthorityById;
-    }
-
 }

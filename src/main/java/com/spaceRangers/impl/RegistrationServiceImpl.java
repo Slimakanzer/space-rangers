@@ -5,7 +5,6 @@ import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.repository.GroupAuthorityRepository;
 import com.spaceRangers.repository.UserAccountRepository;
-import com.spaceRangers.repository.UserGroupRepository;
 import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.RegistrationService;
 import org.hibernate.Session;
@@ -25,14 +24,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final GroupAuthorityRepository groupAuthorityRepository;
 
-    private final UserGroupRepository userGroupRepository;
 
     @Autowired
-    public RegistrationServiceImpl(UserRepository userRepository, UserAccountRepository userAccountRepository, GroupAuthorityRepository groupAuthorityRepository, UserGroupRepository userGroupRepository) {
+    public RegistrationServiceImpl(UserRepository userRepository, UserAccountRepository userAccountRepository, GroupAuthorityRepository groupAuthorityRepository) {
         this.userRepository = userRepository;
         this.userAccountRepository = userAccountRepository;
         this.groupAuthorityRepository = groupAuthorityRepository;
-        this.userGroupRepository = userGroupRepository;
     }
 
     @Transactional
@@ -68,16 +65,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Transactional
     public List<GroupAuthorityEntity> getUserGroupAuthority(UserAccountEntity user) {
-        List authorities = new ArrayList<GroupAuthorityEntity>();
-        userGroupRepository.findUserGroupEntitiesByIdUser(user.getId())
-                .stream()
-                .forEach(
-                        e->authorities.add(
-                                groupAuthorityRepository.findById(
-                                        e.getIdGroup()
-                                ).get()
-                        )
-                        );
-        return authorities;
+//        List authorities = new ArrayList<GroupAuthorityEntity>();
+//        userGroupRepository.findUserGroupEntitiesByIdUser(user.getId())
+//                .stream()
+//                .forEach(
+//                        e->authorities.add(
+//                                groupAuthorityRepository.findById(
+//                                        e.getIdGroup()
+//                                ).get()
+//                        )
+//                        );
+//        return authorities;
+        // TODO переделать
+        return null;
     }
 }

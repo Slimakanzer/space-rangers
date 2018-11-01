@@ -1,6 +1,10 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -9,9 +13,11 @@ public class UserAccountEntity {
     private Integer id;
     private String login;
     private String password;
-    private UsersEntity usersById;
+    private UsersEntity user;
+    private Collection<GroupsEntity> groups;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -41,6 +47,31 @@ public class UserAccountEntity {
         this.password = password;
     }
 
+    @OneToOne(mappedBy = "userAccount")
+    @JsonManagedReference
+    public UsersEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_group",
+            joinColumns = {@JoinColumn(name = "id_user")},
+            inverseJoinColumns = {@JoinColumn(name = "id_group")}
+    )
+    @JsonManagedReference
+    public Collection<GroupsEntity> getGroups(){
+        return groups;
+    }
+
+    public void setGroups(Collection<GroupsEntity> groups) {
+        this.groups = groups;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -54,14 +85,5 @@ public class UserAccountEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, login, password);
-    }
-
-    @OneToOne(mappedBy = "userAccountById")
-    public UsersEntity getUsersById() {
-        return usersById;
-    }
-
-    public void setUsersById(UsersEntity usersById) {
-        this.usersById = usersById;
     }
 }

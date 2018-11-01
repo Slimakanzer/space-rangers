@@ -1,5 +1,9 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -9,10 +13,11 @@ import java.util.Objects;
 public class ResultsEntity {
     private Integer id;
     private String name;
-    private VotingEntity votingByIdVoting;
-    private Collection<VoteEntity> votesById;
+    private VotingEntity voting;
+    private Collection<VoteEntity> votes;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -48,20 +53,22 @@ public class ResultsEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_voting", referencedColumnName = "id")
-    public VotingEntity getVotingByIdVoting() {
-        return votingByIdVoting;
+    @JsonBackReference
+    public VotingEntity getVoting() {
+        return voting;
     }
 
-    public void setVotingByIdVoting(VotingEntity votingByIdVoting) {
-        this.votingByIdVoting = votingByIdVoting;
+    public void setVoting(VotingEntity voting) {
+        this.voting = voting;
     }
 
-    @OneToMany(mappedBy = "resultsByIdResult")
-    public Collection<VoteEntity> getVotesById() {
-        return votesById;
+    @OneToMany(mappedBy = "results")
+    @JsonManagedReference
+    public Collection<VoteEntity> getVotes() {
+        return votes;
     }
 
-    public void setVotesById(Collection<VoteEntity> votesById) {
-        this.votesById = votesById;
+    public void setVotes(Collection<VoteEntity> votes) {
+        this.votes = votes;
     }
 }

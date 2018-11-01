@@ -128,7 +128,7 @@ public class ChatServiceImpl implements ChatService {
         return messagesRepository
                 .findAll()
                 .stream()
-                .filter(messagesEntity -> messagesEntity.getChatByIdChat().getId() == idChat)
+                .filter(messagesEntity -> messagesEntity.getChat().getId() == idChat)
                 .collect(Collectors.toList());
     }
 
