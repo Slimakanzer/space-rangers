@@ -186,4 +186,37 @@ public class TestDatabaseJsonEntityReferences {
         logJsonObject(votingEntity);
     }
 
+    @Test
+    public void testSukaBlua(){
+        entityManager.getTransaction().begin();
+
+        try{
+
+            Session session = entityManager.unwrap(Session.class);
+
+
+            UserAccountEntity userAccountEntity = new UserAccountEntity();
+            userAccountEntity.setLogin("test");
+            userAccountEntity.setPassword("tets");
+
+            UsersEntity usersEntity = new UsersEntity();
+            usersEntity.setLevel(1);
+            usersEntity.setUserAccount(userAccountEntity);
+            userAccountEntity.setUser(usersEntity);
+
+            session.saveOrUpdate(userAccountEntity);
+            session.saveOrUpdate(usersEntity);
+
+            logJsonObject(userAccountEntity);
+
+            logJsonObject(usersEntity);
+
+
+
+        }finally {
+            entityManager.getTransaction().rollback();
+        }
+
+    }
+
 }

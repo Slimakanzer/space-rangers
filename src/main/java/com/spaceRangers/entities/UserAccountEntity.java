@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +16,10 @@ public class UserAccountEntity {
     private String password;
     private UsersEntity user;
     private Collection<GroupsEntity> groups;
+
+    public UserAccountEntity(){
+        groups = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

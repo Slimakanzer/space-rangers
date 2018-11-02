@@ -89,6 +89,20 @@ CREATE TABLE public.chat_user (
 ALTER TABLE public.chat_user OWNER TO postgres;
 
 --
+-- Name: complain; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.complain (
+    id integer NOT NULL,
+    id_message integer,
+    date date,
+    state boolean
+);
+
+
+ALTER TABLE public.complain OWNER TO postgres;
+
+--
 -- Name: fraction; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -115,18 +129,6 @@ CREATE TABLE public.group_authority (
 ALTER TABLE public.group_authority OWNER TO postgres;
 
 --
--- Name: group_member; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.group_member (
-    id_group integer DEFAULT 0 NOT NULL,
-    id_user integer NOT NULL
-);
-
-
-ALTER TABLE public.group_member OWNER TO postgres;
-
---
 -- Name: groups; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -149,8 +151,6 @@ CREATE TABLE public.messages (
     message text
 );
 
-create table Resourc(
-ID integer PRIMARY KEY,
 
 ALTER TABLE public.messages OWNER TO postgres;
 
@@ -160,9 +160,8 @@ ALTER TABLE public.messages OWNER TO postgres;
 
 CREATE TABLE public.planet (
     id integer NOT NULL,
-    name_planet character varying(15),
+    name character varying(30),
     id_system integer,
-    id_fraction integer,
     location_planet_x integer,
     location_planet_y integer,
     id_user integer,
@@ -190,7 +189,7 @@ ALTER TABLE public.politics OWNER TO postgres;
 
 CREATE TABLE public.resource (
     id integer NOT NULL,
-    name_resources text,
+    name text,
     id_planet integer,
     count integer,
     type integer
@@ -297,6 +296,30 @@ CREATE TABLE public.state_user (
 ALTER TABLE public.state_user OWNER TO postgres;
 
 --
+-- Name: state_user_battle; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.state_user_battle (
+    id integer NOT NULL,
+    name character varying(30)
+);
+
+
+ALTER TABLE public.state_user_battle OWNER TO postgres;
+
+--
+-- Name: state_user_fraction; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.state_user_fraction (
+    id integer NOT NULL,
+    name character varying(30)
+);
+
+
+ALTER TABLE public.state_user_fraction OWNER TO postgres;
+
+--
 -- Name: system; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -316,11 +339,10 @@ CREATE TABLE public.task (
     id integer NOT NULL,
     name character varying(20),
     description text,
-    access boolean NOT NULL,
     id_fraction integer NOT NULL,
     id_type integer,
     id_state integer,
-    privacy integer
+    id_privacy integer
 );
 
 
@@ -363,12 +385,48 @@ CREATE TABLE public.type_weather (
 ALTER TABLE public.type_weather OWNER TO postgres;
 
 --
+-- Name: user_account; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_account (
+    id integer NOT NULL,
+    login text NOT NULL,
+    password text NOT NULL
+);
+
+
+ALTER TABLE public.user_account OWNER TO postgres;
+
+--
+-- Name: user_account_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.user_account_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_account_id_seq OWNER TO postgres;
+
+--
+-- Name: user_account_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.user_account_id_seq OWNED BY public.user_account.id;
+
+
+--
 -- Name: user_battle; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.user_battle (
     id_user integer NOT NULL,
-    id_battle integer NOT NULL
+    id_battle integer NOT NULL,
+    date date,
+    id_state integer
 );
 
 
@@ -382,11 +440,23 @@ CREATE TABLE public.user_fraction (
     id_fraction integer NOT NULL,
     id_user integer NOT NULL,
     date date,
-    actual boolean
+    id_state integer
 );
 
 
 ALTER TABLE public.user_fraction OWNER TO postgres;
+
+--
+-- Name: user_group; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.user_group (
+    id_user integer NOT NULL,
+    id_group integer NOT NULL
+);
+
+
+ALTER TABLE public.user_group OWNER TO postgres;
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
@@ -394,24 +464,47 @@ ALTER TABLE public.user_fraction OWNER TO postgres;
 
 CREATE TABLE public.users (
     id integer NOT NULL,
-    game_name text,
     login text,
     password text,
     level integer,
-    id_state integer
+    id_state integer,
+    email character varying(30),
+    first_name character varying(30),
+    last_name character varying(30),
+    description text
 );
 
 
 ALTER TABLE public.users OWNER TO postgres;
 
 --
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.users_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.users_id_seq OWNER TO postgres;
+
+--
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
+
+
+--
 -- Name: vote; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.vote (
-    id integer NOT NULL,
-    id_user integer,
-    id_result integer
+    id_user integer NOT NULL,
+    id_result integer NOT NULL
 );
 
 
@@ -429,6 +522,20 @@ CREATE TABLE public.voting (
 
 
 ALTER TABLE public.voting OWNER TO postgres;
+
+--
+-- Name: user_account id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_account ALTER COLUMN id SET DEFAULT nextval('public.user_account_id_seq'::regclass);
+
+
+--
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
 
 --
 -- Data for Name: base; Type: TABLE DATA; Schema: public; Owner: postgres
@@ -451,9 +558,6 @@ COPY public.battle (id, name, id_system, date) FROM stdin;
 --
 
 COPY public.chat (id, name, date) FROM stdin;
-1	testing	2018-10-03
-2	chat 2	2018-10-04
-3	test_post	2018-10-03
 \.
 
 
@@ -462,6 +566,14 @@ COPY public.chat (id, name, date) FROM stdin;
 --
 
 COPY public.chat_user (id_user, id_chat) FROM stdin;
+\.
+
+
+--
+-- Data for Name: complain; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.complain (id, id_message, date, state) FROM stdin;
 \.
 
 
@@ -478,15 +590,6 @@ COPY public.fraction (id, name_fraction, id_politics) FROM stdin;
 --
 
 COPY public.group_authority (id, id_group, name_authority) FROM stdin;
-1	1	GROUP_PLAYER
-\.
-
-
---
--- Data for Name: group_member; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY public.group_member (id_group, id_user) FROM stdin;
 \.
 
 
@@ -495,7 +598,6 @@ COPY public.group_member (id_group, id_user) FROM stdin;
 --
 
 COPY public.groups (id, name) FROM stdin;
-1	players
 \.
 
 
@@ -511,7 +613,7 @@ COPY public.messages (id, id_chat, id_user, message) FROM stdin;
 -- Data for Name: planet; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.planet (id, name_planet, id_system, id_fraction, location_planet_x, location_planet_y, id_user, type_weather) FROM stdin;
+COPY public.planet (id, name, id_system, location_planet_x, location_planet_y, id_user, type_weather) FROM stdin;
 \.
 
 
@@ -527,7 +629,7 @@ COPY public.politics (id, name_politics) FROM stdin;
 -- Data for Name: resource; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.resource (id, name_resources, id_planet, count, type) FROM stdin;
+COPY public.resource (id, name, id_planet, count, type) FROM stdin;
 \.
 
 
@@ -588,6 +690,22 @@ COPY public.state_user (id, name) FROM stdin;
 
 
 --
+-- Data for Name: state_user_battle; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.state_user_battle (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: state_user_fraction; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.state_user_fraction (id, name) FROM stdin;
+\.
+
+
+--
 -- Data for Name: system; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -599,7 +717,7 @@ COPY public.system (id, name_system) FROM stdin;
 -- Data for Name: task; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.task (id, name, description, access, id_fraction, id_type, id_state, privacy) FROM stdin;
+COPY public.task (id, name, description, id_fraction, id_type, id_state, id_privacy) FROM stdin;
 \.
 
 
@@ -628,10 +746,18 @@ COPY public.type_weather (id, name) FROM stdin;
 
 
 --
+-- Data for Name: user_account; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_account (id, login, password) FROM stdin;
+\.
+
+
+--
 -- Data for Name: user_battle; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_battle (id_user, id_battle) FROM stdin;
+COPY public.user_battle (id_user, id_battle, date, id_state) FROM stdin;
 \.
 
 
@@ -639,7 +765,15 @@ COPY public.user_battle (id_user, id_battle) FROM stdin;
 -- Data for Name: user_fraction; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_fraction (id_fraction, id_user, date, actual) FROM stdin;
+COPY public.user_fraction (id_fraction, id_user, date, id_state) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_group; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.user_group (id_user, id_group) FROM stdin;
 \.
 
 
@@ -647,7 +781,7 @@ COPY public.user_fraction (id_fraction, id_user, date, actual) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.users (id, game_name, login, password, level, id_state) FROM stdin;
+COPY public.users (id, login, password, level, id_state, email, first_name, last_name, description) FROM stdin;
 \.
 
 
@@ -655,7 +789,7 @@ COPY public.users (id, game_name, login, password, level, id_state) FROM stdin;
 -- Data for Name: vote; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.vote (id, id_user, id_result) FROM stdin;
+COPY public.vote (id_user, id_result) FROM stdin;
 \.
 
 
@@ -665,6 +799,20 @@ COPY public.vote (id, id_user, id_result) FROM stdin;
 
 COPY public.voting (id, id_chat, message) FROM stdin;
 \.
+
+
+--
+-- Name: user_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.user_account_id_seq', 2, true);
+
+
+--
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.users_id_seq', 2, true);
 
 
 --
@@ -700,12 +848,18 @@ ALTER TABLE ONLY public.chat_user
 
 
 --
+-- Name: complain complain_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complain
+    ADD CONSTRAINT complain_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: fraction fraction_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.fraction
-create table Resourc(
-ID integer PRIMARY KEY,
     ADD CONSTRAINT fraction_pkey PRIMARY KEY (id);
 
 
@@ -715,14 +869,6 @@ ID integer PRIMARY KEY,
 
 ALTER TABLE ONLY public.group_authority
     ADD CONSTRAINT group_authority_pkey PRIMARY KEY (id);
-
-
---
--- Name: group_member group_member_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.group_member
-    ADD CONSTRAINT group_member_pkey PRIMARY KEY (id_group, id_user);
 
 
 --
@@ -814,6 +960,22 @@ ALTER TABLE ONLY public.state_ship
 
 
 --
+-- Name: state_user_battle state_user_battle_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.state_user_battle
+    ADD CONSTRAINT state_user_battle_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: state_user_fraction state_user_fraction_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.state_user_fraction
+    ADD CONSTRAINT state_user_fraction_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: state_user state_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -854,6 +1016,14 @@ ALTER TABLE ONLY public.type_resources
 
 
 --
+-- Name: user_account user_account_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_account
+    ADD CONSTRAINT user_account_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: user_battle user_battle_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -870,6 +1040,14 @@ ALTER TABLE ONLY public.user_fraction
 
 
 --
+-- Name: user_group user_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_group
+    ADD CONSTRAINT user_group_pkey PRIMARY KEY (id_user, id_group);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -882,7 +1060,7 @@ ALTER TABLE ONLY public.users
 --
 
 ALTER TABLE ONLY public.vote
-    ADD CONSTRAINT vote_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT vote_pkey PRIMARY KEY (id_user, id_result);
 
 
 --
@@ -942,6 +1120,14 @@ ALTER TABLE ONLY public.chat_user
 
 
 --
+-- Name: complain complain_id_message_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.complain
+    ADD CONSTRAINT complain_id_message_fkey FOREIGN KEY (id_message) REFERENCES public.messages(id);
+
+
+--
 -- Name: fraction fraction_id_politics_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -958,35 +1144,11 @@ ALTER TABLE ONLY public.group_authority
 
 
 --
--- Name: group_member group_member_id_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.group_member
-    ADD CONSTRAINT group_member_id_group_fkey FOREIGN KEY (id_group) REFERENCES public.groups(id) ON DELETE SET DEFAULT;
-
-
---
--- Name: group_member group_member_id_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.group_member
-    ADD CONSTRAINT group_member_id_user_fkey FOREIGN KEY (id_user) REFERENCES public.users(id) ON DELETE CASCADE;
-
-
---
 -- Name: messages messages_id_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.messages
     ADD CONSTRAINT messages_id_user_fkey FOREIGN KEY (id_user) REFERENCES public.groups(id) ON DELETE CASCADE;
-
-
---
--- Name: planet planet_id_fraction_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.planet
-    ADD CONSTRAINT planet_id_fraction_fkey FOREIGN KEY (id_fraction) REFERENCES public.fraction(id) ON DELETE SET NULL;
 
 
 --
@@ -1114,7 +1276,7 @@ ALTER TABLE ONLY public.task
 --
 
 ALTER TABLE ONLY public.task
-    ADD CONSTRAINT task_privacy_fkey FOREIGN KEY (privacy) REFERENCES public.state_privacy(id);
+    ADD CONSTRAINT task_privacy_fkey FOREIGN KEY (id_privacy) REFERENCES public.state_privacy(id);
 
 
 --
@@ -1123,6 +1285,14 @@ ALTER TABLE ONLY public.task
 
 ALTER TABLE ONLY public.user_battle
     ADD CONSTRAINT user_battle_id_battle_fkey FOREIGN KEY (id_battle) REFERENCES public.battle(id);
+
+
+--
+-- Name: user_battle user_battle_id_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_battle
+    ADD CONSTRAINT user_battle_id_state_fkey FOREIGN KEY (id_state) REFERENCES public.state_user_battle(id);
 
 
 --
@@ -1142,6 +1312,14 @@ ALTER TABLE ONLY public.user_fraction
 
 
 --
+-- Name: user_fraction user_fraction_id_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_fraction
+    ADD CONSTRAINT user_fraction_id_state_fkey FOREIGN KEY (id_state) REFERENCES public.state_user_fraction(id);
+
+
+--
 -- Name: user_fraction user_fraction_id_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -1150,11 +1328,35 @@ ALTER TABLE ONLY public.user_fraction
 
 
 --
+-- Name: user_group user_group_id_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_group
+    ADD CONSTRAINT user_group_id_group_fkey FOREIGN KEY (id_group) REFERENCES public.groups(id);
+
+
+--
+-- Name: user_group user_group_id_user_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_group
+    ADD CONSTRAINT user_group_id_user_fkey FOREIGN KEY (id_user) REFERENCES public.user_account(id);
+
+
+--
 -- Name: users users_id_state_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_id_state_fkey FOREIGN KEY (id_state) REFERENCES public.state_user(id);
+
+
+--
+-- Name: users users_id_user_account_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_id_user_account_fk FOREIGN KEY (id) REFERENCES public.user_account(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
