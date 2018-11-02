@@ -1,7 +1,10 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -9,7 +12,11 @@ import java.util.Objects;
 public class StateUserEntity {
     private Integer id;
     private String name;
-    private Collection<UsersEntity> usersById;
+    private Collection<UsersEntity> users;
+
+    public StateUserEntity(){
+        users = new HashSet<>();
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -45,12 +52,13 @@ public class StateUserEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "stateUserByIdState")
-    public Collection<UsersEntity> getUsersById() {
-        return usersById;
+    @OneToMany(mappedBy = "stateUser")
+    @JsonBackReference
+    public Collection<UsersEntity> getUsers() {
+        return users;
     }
 
-    public void setUsersById(Collection<UsersEntity> usersById) {
-        this.usersById = usersById;
+    public void setUsers(Collection<UsersEntity> usersById) {
+        this.users = usersById;
     }
 }

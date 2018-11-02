@@ -1,6 +1,9 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -9,6 +12,8 @@ import java.util.Objects;
 public class ShipBattleEntity {
     private Integer idShip;
     private Integer idBattle;
+    private ShipEntity ship;
+    private BattleEntity battle;
 
     @Id
     @Column(name = "id_ship", nullable = false)
@@ -42,5 +47,27 @@ public class ShipBattleEntity {
     @Override
     public int hashCode() {
         return Objects.hash(idShip, idBattle);
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_ship", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
+    @JsonBackReference
+    public ShipEntity getShip() {
+        return ship;
+    }
+
+    public void setShip(ShipEntity ship) {
+        this.ship = ship;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_battle", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
+    @JsonBackReference
+    public BattleEntity getBattle() {
+        return battle;
+    }
+
+    public void setBattle(BattleEntity battle) {
+        this.battle = battle;
     }
 }

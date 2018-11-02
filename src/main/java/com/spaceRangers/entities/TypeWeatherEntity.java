@@ -1,7 +1,10 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -9,7 +12,11 @@ import java.util.Objects;
 public class TypeWeatherEntity {
     private Integer id;
     private String name;
-    private Collection<PlanetEntity> planetsById;
+    private Collection<PlanetEntity> planets;
+
+    public TypeWeatherEntity(){
+        planets = new HashSet<>();
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -45,12 +52,13 @@ public class TypeWeatherEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "typeWeatherByTypeWeather")
-    public Collection<PlanetEntity> getPlanetsById() {
-        return planetsById;
+    @OneToMany(mappedBy = "typeWeather")
+    @JsonBackReference
+    public Collection<PlanetEntity> getPlanets() {
+        return planets;
     }
 
-    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
-        this.planetsById = planetsById;
+    public void setPlanets(Collection<PlanetEntity> planetsById) {
+        this.planets = planetsById;
     }
 }

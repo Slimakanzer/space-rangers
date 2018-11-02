@@ -41,7 +41,7 @@ public class AdministrationServiceImpl implements AdministrationService {
     @Override
     public StateUserEntity getStateUserByIdUser(int idUser) {
 
-        return userRepository.findById(idUser).get().getStateUserByIdState();
+        return userRepository.findById(idUser).get().getStateUser();
     }
 
     @Transactional

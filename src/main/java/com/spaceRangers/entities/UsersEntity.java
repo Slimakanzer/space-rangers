@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -18,13 +19,25 @@ public class UsersEntity {
     private String lastName;
     private String description;
     private Integer level;
-    private Collection<BaseEntity> basesById;
-    private Collection<PlanetEntity> planetsById;
-    private Collection<ShipEntity> shipsById;
+    private Collection<BaseEntity> bases;
+    private Collection<PlanetEntity> planets;
+    private Collection<ShipEntity> ships;
     private UserAccountEntity userAccount;
-    private StateUserEntity stateUserByIdState;
+    private StateUserEntity stateUser;
     private Collection<VoteEntity> votes;
     private Collection<ChatEntity> chats;
+    private Collection<UserFractionEntity> usersFraction;
+    private Collection<UserBattleEntity> usersBattle;
+
+    public UsersEntity(){
+        this.bases = new HashSet<>();
+        this.planets = new HashSet<>();
+        this.ships = new HashSet<>();
+        this.votes = new HashSet<>();
+        this.chats = new HashSet<>();
+        this.usersFraction = new HashSet<>();
+        this.usersBattle = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -131,34 +144,44 @@ public class UsersEntity {
         this.chats = chats;
     }
 
-    @OneToMany(mappedBy = "usersByIdUser")
-    @JsonIgnore
-    public Collection<BaseEntity> getBasesById() {
-        return basesById;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<VoteEntity> getVotes(){
+        return votes;
     }
 
-    public void setBasesById(Collection<BaseEntity> basesById) {
-        this.basesById = basesById;
+    public void setVotes(Collection<VoteEntity> votes) {
+        this.votes = votes;
     }
 
-    @OneToMany(mappedBy = "usersByIdUser")
-    @JsonIgnore
-    public Collection<PlanetEntity> getPlanetsById() {
-        return planetsById;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<BaseEntity> getBases() {
+        return bases;
     }
 
-    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
-        this.planetsById = planetsById;
+    public void setBases(Collection<BaseEntity> basesById) {
+        this.bases = basesById;
     }
 
-    @OneToMany(mappedBy = "usersByIdUser")
-    @JsonIgnore
-    public Collection<ShipEntity> getShipsById() {
-        return shipsById;
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<PlanetEntity> getPlanets() {
+        return planets;
     }
 
-    public void setShipsById(Collection<ShipEntity> shipsById) {
-        this.shipsById = shipsById;
+    public void setPlanets(Collection<PlanetEntity> planetsById) {
+        this.planets = planetsById;
+    }
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<ShipEntity> getShips() {
+        return ships;
+    }
+
+    public void setShips(Collection<ShipEntity> shipsById) {
+        this.ships = shipsById;
     }
 
     @OneToOne
@@ -174,12 +197,32 @@ public class UsersEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    @JsonIgnore
-    public StateUserEntity getStateUserByIdState() {
-        return stateUserByIdState;
+    @JsonManagedReference
+    public StateUserEntity getStateUser() {
+        return stateUser;
     }
 
-    public void setStateUserByIdState(StateUserEntity stateUserByIdState) {
-        this.stateUserByIdState = stateUserByIdState;
+    public void setStateUser(StateUserEntity stateUserByIdState) {
+        this.stateUser = stateUserByIdState;
+    }
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<UserBattleEntity> getUsersBattle() {
+        return usersBattle;
+    }
+
+    public void setUsersBattle(Collection<UserBattleEntity> usersBattle) {
+        this.usersBattle = usersBattle;
+    }
+
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    public Collection<UserFractionEntity> getUsersFraction() {
+        return usersFraction;
+    }
+
+    public void setUsersFraction(Collection<UserFractionEntity> usersFraction) {
+        this.usersFraction = usersFraction;
     }
 }

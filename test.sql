@@ -50,6 +50,27 @@ CREATE TABLE public.base (
 ALTER TABLE public.base OWNER TO postgres;
 
 --
+-- Name: base_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.base_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.base_id_seq OWNER TO postgres;
+
+--
+-- Name: base_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.base_id_seq OWNED BY public.base.id;
+
+
+--
 -- Name: battle; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -62,6 +83,27 @@ CREATE TABLE public.battle (
 
 
 ALTER TABLE public.battle OWNER TO postgres;
+
+--
+-- Name: battle_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.battle_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.battle_id_seq OWNER TO postgres;
+
+--
+-- Name: battle_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.battle_id_seq OWNED BY public.battle.id;
+
 
 --
 -- Name: chat; Type: TABLE; Schema: public; Owner: postgres
@@ -114,6 +156,27 @@ CREATE TABLE public.fraction (
 
 
 ALTER TABLE public.fraction OWNER TO postgres;
+
+--
+-- Name: fraction_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.fraction_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.fraction_id_seq OWNER TO postgres;
+
+--
+-- Name: fraction_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.fraction_id_seq OWNED BY public.fraction.id;
+
 
 --
 -- Name: group_authority; Type: TABLE; Schema: public; Owner: postgres
@@ -172,6 +235,27 @@ CREATE TABLE public.planet (
 ALTER TABLE public.planet OWNER TO postgres;
 
 --
+-- Name: planet_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.planet_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.planet_id_seq OWNER TO postgres;
+
+--
+-- Name: planet_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.planet_id_seq OWNED BY public.planet.id;
+
+
+--
 -- Name: politics; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -197,6 +281,27 @@ CREATE TABLE public.resource (
 
 
 ALTER TABLE public.resource OWNER TO postgres;
+
+--
+-- Name: resource_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.resource_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.resource_id_seq OWNER TO postgres;
+
+--
+-- Name: resource_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.resource_id_seq OWNED BY public.resource.id;
+
 
 --
 -- Name: results; Type: TABLE; Schema: public; Owner: postgres
@@ -246,6 +351,27 @@ CREATE TABLE public.ship_battle (
 
 
 ALTER TABLE public.ship_battle OWNER TO postgres;
+
+--
+-- Name: ship_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.ship_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.ship_id_seq OWNER TO postgres;
+
+--
+-- Name: ship_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.ship_id_seq OWNED BY public.ship.id;
+
 
 --
 -- Name: state_privacy; Type: TABLE; Schema: public; Owner: postgres
@@ -347,6 +473,27 @@ CREATE TABLE public.task (
 
 
 ALTER TABLE public.task OWNER TO postgres;
+
+--
+-- Name: task_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.task_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.task_id_seq OWNER TO postgres;
+
+--
+-- Name: task_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.task_id_seq OWNED BY public.task.id;
+
 
 --
 -- Name: type_resources; Type: TABLE; Schema: public; Owner: postgres
@@ -524,6 +671,55 @@ CREATE TABLE public.voting (
 ALTER TABLE public.voting OWNER TO postgres;
 
 --
+-- Name: base id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.base ALTER COLUMN id SET DEFAULT nextval('public.base_id_seq'::regclass);
+
+
+--
+-- Name: battle id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.battle ALTER COLUMN id SET DEFAULT nextval('public.battle_id_seq'::regclass);
+
+
+--
+-- Name: fraction id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.fraction ALTER COLUMN id SET DEFAULT nextval('public.fraction_id_seq'::regclass);
+
+
+--
+-- Name: planet id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.planet ALTER COLUMN id SET DEFAULT nextval('public.planet_id_seq'::regclass);
+
+
+--
+-- Name: resource id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.resource ALTER COLUMN id SET DEFAULT nextval('public.resource_id_seq'::regclass);
+
+
+--
+-- Name: ship id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ship ALTER COLUMN id SET DEFAULT nextval('public.ship_id_seq'::regclass);
+
+
+--
+-- Name: task id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.task ALTER COLUMN id SET DEFAULT nextval('public.task_id_seq'::regclass);
+
+
+--
 -- Name: user_account id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -662,6 +858,7 @@ COPY public.ship_battle (id_ship, id_battle) FROM stdin;
 --
 
 COPY public.state_privacy (id, name) FROM stdin;
+1	Only for users
 \.
 
 
@@ -670,6 +867,8 @@ COPY public.state_privacy (id, name) FROM stdin;
 --
 
 COPY public.state_ship (id, name) FROM stdin;
+1	Сломан
+2	В боевой готовности
 \.
 
 
@@ -678,6 +877,8 @@ COPY public.state_ship (id, name) FROM stdin;
 --
 
 COPY public.state_task (id, name_state) FROM stdin;
+1	Not yet
+2	Successful
 \.
 
 
@@ -694,6 +895,8 @@ COPY public.state_user (id, name) FROM stdin;
 --
 
 COPY public.state_user_battle (id, name) FROM stdin;
+1	В бою
+2	Вышел из боя
 \.
 
 
@@ -710,6 +913,7 @@ COPY public.state_user_fraction (id, name) FROM stdin;
 --
 
 COPY public.system (id, name_system) FROM stdin;
+1	Test system
 \.
 
 
@@ -726,6 +930,7 @@ COPY public.task (id, name, description, id_fraction, id_type, id_state, id_priv
 --
 
 COPY public.type_resources (id, name) FROM stdin;
+1	Iron
 \.
 
 
@@ -734,6 +939,8 @@ COPY public.type_resources (id, name) FROM stdin;
 --
 
 COPY public.type_task (id, name_state) FROM stdin;
+1	WAR
+2	Politics
 \.
 
 
@@ -742,6 +949,7 @@ COPY public.type_task (id, name_state) FROM stdin;
 --
 
 COPY public.type_weather (id, name) FROM stdin;
+1	Snow
 \.
 
 
@@ -750,6 +958,7 @@ COPY public.type_weather (id, name) FROM stdin;
 --
 
 COPY public.user_account (id, login, password) FROM stdin;
+1	test	tets
 \.
 
 
@@ -782,6 +991,7 @@ COPY public.user_group (id_user, id_group) FROM stdin;
 --
 
 COPY public.users (id, login, password, level, id_state, email, first_name, last_name, description) FROM stdin;
+1	\N	\N	1	\N	\N	\N	\N	\N
 \.
 
 
@@ -802,17 +1012,66 @@ COPY public.voting (id, id_chat, message) FROM stdin;
 
 
 --
+-- Name: base_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.base_id_seq', 5, true);
+
+
+--
+-- Name: battle_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.battle_id_seq', 3, true);
+
+
+--
+-- Name: fraction_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.fraction_id_seq', 5, true);
+
+
+--
+-- Name: planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.planet_id_seq', 35, true);
+
+
+--
+-- Name: resource_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.resource_id_seq', 68, true);
+
+
+--
+-- Name: ship_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.ship_id_seq', 8, true);
+
+
+--
+-- Name: task_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.task_id_seq', 2, true);
+
+
+--
 -- Name: user_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_account_id_seq', 2, true);
+SELECT pg_catalog.setval('public.user_account_id_seq', 3, true);
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 2, true);
+SELECT pg_catalog.setval('public.users_id_seq', 3, true);
 
 
 --
@@ -1308,7 +1567,7 @@ ALTER TABLE ONLY public.user_battle
 --
 
 ALTER TABLE ONLY public.user_fraction
-    ADD CONSTRAINT user_fraction_id_fraction_fkey FOREIGN KEY (id_fraction) REFERENCES public.ship(id) ON DELETE CASCADE;
+    ADD CONSTRAINT user_fraction_id_fraction_fkey FOREIGN KEY (id_fraction) REFERENCES public.fraction(id) ON DELETE CASCADE;
 
 
 --

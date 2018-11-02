@@ -1,7 +1,11 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -11,13 +15,16 @@ public class PlanetEntity {
     private String namePlanet;
     private Integer locationPlanetX;
     private Integer locationPlanetY;
-    private SystemEntity systemByIdSystem;
-    private FractionEntity fractionByIdFraction;
-    private UsersEntity usersByIdUser;
-    private TypeWeatherEntity typeWeatherByTypeWeather;
-    private Collection<ResourceEntity> resourcesById;
+    private SystemEntity system;
+    private UsersEntity user;
+    private TypeWeatherEntity typeWeather;
+    private Collection<ResourceEntity> resources;
 
+    public PlanetEntity(){
+        this.resources = new HashSet<>();
+    }
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -28,7 +35,7 @@ public class PlanetEntity {
     }
 
     @Basic
-    @Column(name = "name_planet", nullable = true, length = 15)
+    @Column(name = "name", nullable = true, length = 15)
     public String getNamePlanet() {
         return namePlanet;
     }
@@ -75,50 +82,44 @@ public class PlanetEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    public SystemEntity getSystemByIdSystem() {
-        return systemByIdSystem;
+    @JsonBackReference
+    public SystemEntity getSystem() {
+        return system;
     }
 
-    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
-        this.systemByIdSystem = systemByIdSystem;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "id_fraction", referencedColumnName = "id")
-    public FractionEntity getFractionByIdFraction() {
-        return fractionByIdFraction;
-    }
-
-    public void setFractionByIdFraction(FractionEntity fractionByIdFraction) {
-        this.fractionByIdFraction = fractionByIdFraction;
+    public void setSystem(SystemEntity systemByIdSystem) {
+        this.system = systemByIdSystem;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    public UsersEntity getUsersByIdUser() {
-        return usersByIdUser;
+    @JsonBackReference
+    public UsersEntity getUser() {
+        return user;
     }
 
-    public void setUsersByIdUser(UsersEntity usersByIdUser) {
-        this.usersByIdUser = usersByIdUser;
+    public void setUser(UsersEntity usersByIdUser) {
+        this.user = usersByIdUser;
     }
 
     @ManyToOne
     @JoinColumn(name = "type_weather", referencedColumnName = "id")
-    public TypeWeatherEntity getTypeWeatherByTypeWeather() {
-        return typeWeatherByTypeWeather;
+    @JsonManagedReference
+    public TypeWeatherEntity getTypeWeather() {
+        return typeWeather;
     }
 
-    public void setTypeWeatherByTypeWeather(TypeWeatherEntity typeWeatherByTypeWeather) {
-        this.typeWeatherByTypeWeather = typeWeatherByTypeWeather;
+    public void setTypeWeather(TypeWeatherEntity typeWeatherByTypeWeather) {
+        this.typeWeather = typeWeatherByTypeWeather;
     }
 
-    @OneToMany(mappedBy = "planetByIdPlanet")
-    public Collection<ResourceEntity> getResourcesById() {
-        return resourcesById;
+    @OneToMany(mappedBy = "planet")
+    @JsonManagedReference
+    public Collection<ResourceEntity> getResources() {
+        return resources;
     }
 
-    public void setResourcesById(Collection<ResourceEntity> resourcesById) {
-        this.resourcesById = resourcesById;
+    public void setResources(Collection<ResourceEntity> resourcesById) {
+        this.resources = resourcesById;
     }
 }

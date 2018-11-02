@@ -64,7 +64,7 @@ public class MessagesEntity {
     @JsonBackReference
     public ChatEntity getChat(){return chat;}
 
-    public void setChat(ChatEntity chatByIdChat){this.chat=chat;}
+    public void setChat(ChatEntity chat){this.chat=chat;}
 
     @OneToOne(mappedBy = "message")
     @JsonBackReference

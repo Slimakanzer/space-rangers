@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -11,9 +14,9 @@ public class UserBattleEntity {
     private Integer idUser;
     private Integer idBattle;
     private Date date;
-    private UsersEntity usersByIdUser;
-    private BattleEntity battleByIdBattle;
-    private StateUserBattleEntity stateUserBattleByIdState;
+    private UsersEntity user;
+    private BattleEntity battle;
+    private StateUserBattleEntity stateUserBattle;
 
     @Id
     @Column(name = "id_user", nullable = false)
@@ -62,11 +65,33 @@ public class UserBattleEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    public StateUserBattleEntity getStateUserBattleByIdState() {
-        return stateUserBattleByIdState;
+    @JsonManagedReference
+    public StateUserBattleEntity getStateUserBattle() {
+        return stateUserBattle;
     }
 
-    public void setStateUserBattleByIdState(StateUserBattleEntity stateUserBattleByIdState) {
-        this.stateUserBattleByIdState = stateUserBattleByIdState;
+    public void setStateUserBattle(StateUserBattleEntity stateUserBattleByIdState) {
+        this.stateUserBattle = stateUserBattleByIdState;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_battle", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
+    @JsonBackReference
+    public BattleEntity getBattle(){ return battle;}
+
+    public void setBattle(BattleEntity battle) {
+        this.battle = battle;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JsonBackReference
+    public UsersEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
     }
 }

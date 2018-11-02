@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -15,6 +16,10 @@ public class ResultsEntity {
     private String name;
     private VotingEntity voting;
     private Collection<VoteEntity> votes;
+
+    public ResultsEntity(){
+        this.votes = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

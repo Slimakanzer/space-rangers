@@ -36,7 +36,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<ShipEntity> getListShipsUsers(int idUser) {
-        return shipRepository.findShipEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
+        return shipRepository.findShipEntitiesByUser(userRepository.findById(idUser).get());
     }
 
     @Override
@@ -51,7 +51,7 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<PlanetEntity> getListPlanetUsers(int idUser) {
-        return planetRepository.findPlanetEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
+        return planetRepository.findPlanetEntitiesByUser(userRepository.findById(idUser).get());
     }
 
     @Override

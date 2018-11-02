@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface PlanetRepository extends CrudRepository<PlanetEntity, Integer> {
 
-    List<PlanetEntity> findPlanetEntitiesByUsersByIdUser(UsersEntity UsersByIdUser);
+    List<PlanetEntity> findPlanetEntitiesByUser(UsersEntity UsersByIdUser);
 
     PlanetEntity findPlanetEntityByNamePlanet(String namePlanet);
 }

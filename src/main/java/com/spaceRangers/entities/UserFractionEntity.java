@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
@@ -11,9 +14,9 @@ public class UserFractionEntity {
     private Integer idFraction;
     private Integer idUser;
     private Date date;
-    private ShipEntity shipByIdFraction;
-    private UsersEntity usersByIdUser;
-    private StateUserFractionEntity stateUserFractionByIdState;
+    private UsersEntity user;
+    private FractionEntity fraction;
+    private StateUserFractionEntity stateUserFraction;
 
     @Id
     @Column(name = "id_fraction", nullable = false)
@@ -62,11 +65,32 @@ public class UserFractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    public StateUserFractionEntity getStateUserFractionByIdState() {
-        return stateUserFractionByIdState;
+    @JsonManagedReference
+    public StateUserFractionEntity getStateUserFraction() {
+        return stateUserFraction;
     }
 
-    public void setStateUserFractionByIdState(StateUserFractionEntity stateUserFractionByIdState) {
-        this.stateUserFractionByIdState = stateUserFractionByIdState;
+    public void setStateUserFraction(StateUserFractionEntity stateUserFractionByIdState) {
+        this.stateUserFraction = stateUserFractionByIdState;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_fraction", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonBackReference
+    public FractionEntity getFraction(){return fraction;}
+
+    public void setFraction(FractionEntity fraction) {
+        this.fraction = fraction;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id", insertable = false, updatable = false)
+    @JsonBackReference
+    public UsersEntity getUser(){
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
     }
 }

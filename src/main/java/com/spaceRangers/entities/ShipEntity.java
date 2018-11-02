@@ -1,7 +1,11 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -14,14 +18,18 @@ public class ShipEntity {
     private Integer locationShipY;
     private Integer speed;
     private Integer protection;
-    private BaseEntity baseByIdBase;
-    private SystemEntity systemByIdSystem;
-    private UsersEntity usersByIdUser;
-    private StateShipEntity stateShipByState;
-    private Collection<ShipBattleEntity> shipBattlesById;
-    private Collection<UserFractionEntity> userFractionsById;
+    private BaseEntity base;
+    private SystemEntity system;
+    private UsersEntity user;
+    private StateShipEntity stateShip;
+    private Collection<ShipBattleEntity> shipBattles;
+
+    public ShipEntity(){
+        shipBattles = new HashSet<>();
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -110,43 +118,58 @@ public class ShipEntity {
         return Objects.hash(id, hp, nameShip, locationShipX, locationShipY, speed, protection);
     }
 
-    @ManyToOne
-    @JoinColumn(name = "id_base", referencedColumnName = "id")
-    public BaseEntity getBaseByIdBase() {
-        return baseByIdBase;
+
+    @OneToMany(mappedBy = "ship")
+    @JsonManagedReference
+    public Collection<ShipBattleEntity> getShipBattles() {
+        return shipBattles;
     }
 
-    public void setBaseByIdBase(BaseEntity baseByIdBase) {
-        this.baseByIdBase = baseByIdBase;
+    public void setShipBattles(Collection<ShipBattleEntity> shipBattles) {
+        this.shipBattles = shipBattles;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "id_base", referencedColumnName = "id")
+    @JsonManagedReference
+    public BaseEntity getBase() {
+        return base;
+    }
+
+    public void setBase(BaseEntity baseByIdBase) {
+        this.base = baseByIdBase;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    public SystemEntity getSystemByIdSystem() {
-        return systemByIdSystem;
+    @JsonManagedReference
+    public SystemEntity getSystem() {
+        return system;
     }
 
-    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
-        this.systemByIdSystem = systemByIdSystem;
+    public void setSystem(SystemEntity systemByIdSystem) {
+        this.system = systemByIdSystem;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    public UsersEntity getUsersByIdUser() {
-        return usersByIdUser;
+    @JsonBackReference
+    public UsersEntity getUser() {
+        return user;
     }
 
-    public void setUsersByIdUser(UsersEntity usersByIdUser) {
-        this.usersByIdUser = usersByIdUser;
+    public void setUser(UsersEntity usersByIdUser) {
+        this.user = usersByIdUser;
     }
 
     @ManyToOne
     @JoinColumn(name = "state", referencedColumnName = "id")
-    public StateShipEntity getStateShipByState() {
-        return stateShipByState;
+    @JsonManagedReference
+    public StateShipEntity getStateShip() {
+        return stateShip;
     }
 
-    public void setStateShipByState(StateShipEntity stateShipByState) {
-        this.stateShipByState = stateShipByState;
+    public void setStateShip(StateShipEntity stateShipByState) {
+        this.stateShip = stateShipByState;
     }
 }

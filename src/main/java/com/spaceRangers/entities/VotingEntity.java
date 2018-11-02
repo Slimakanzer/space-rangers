@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -14,6 +15,10 @@ public class VotingEntity {
     private String message;
     private Collection<ResultsEntity> results;
     private ChatEntity chat;
+
+    public VotingEntity(){
+        this.results = new HashSet<>();
+    }
 
     @Id
     @Column(name = "id", nullable = false)

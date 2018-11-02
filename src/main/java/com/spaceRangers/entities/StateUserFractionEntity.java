@@ -2,6 +2,7 @@ package com.spaceRangers.entities;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -9,7 +10,11 @@ import java.util.Objects;
 public class StateUserFractionEntity {
     private Integer id;
     private String name;
-    private Collection<UserFractionEntity> userFractionsById;
+    private Collection<UserFractionEntity> userFractions;
+
+    public StateUserFractionEntity(){
+        this.userFractions = new HashSet<>();
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -45,12 +50,12 @@ public class StateUserFractionEntity {
         return Objects.hash(id, name);
     }
 
-    @OneToMany(mappedBy = "stateUserFractionByIdState")
-    public Collection<UserFractionEntity> getUserFractionsById() {
-        return userFractionsById;
+    @OneToMany(mappedBy = "stateUserFraction")
+    public Collection<UserFractionEntity> getUserFractions() {
+        return userFractions;
     }
 
-    public void setUserFractionsById(Collection<UserFractionEntity> userFractionsById) {
-        this.userFractionsById = userFractionsById;
+    public void setUserFractions(Collection<UserFractionEntity> userFractionsById) {
+        this.userFractions = userFractionsById;
     }
 }

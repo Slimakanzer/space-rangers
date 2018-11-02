@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,13 +12,13 @@ public class TaskEntity {
     private Integer id;
     private String name;
     private String description;
-    private Boolean access;
-    private FractionEntity fractionByIdFraction;
-    private TypeTaskEntity typeTaskByIdType;
-    private StateTaskEntity stateTaskByIdState;
-    private StatePrivacyEntity statePrivacyByPrivacy;
+    private FractionEntity fraction;
+    private TypeTaskEntity typeTask;
+    private StateTaskEntity stateTask;
+    private StatePrivacyEntity statePrivacy;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -45,16 +48,6 @@ public class TaskEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "access", nullable = false)
-    public Boolean getAccess() {
-        return access;
-    }
-
-    public void setAccess(Boolean access) {
-        this.access = access;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,52 +55,55 @@ public class TaskEntity {
         TaskEntity that = (TaskEntity) o;
         return Objects.equals(id, that.id) &&
                 Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(access, that.access);
+                Objects.equals(description, that.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, access);
+        return Objects.hash(id, name, description);
     }
 
     @ManyToOne
     @JoinColumn(name = "id_fraction", referencedColumnName = "id", nullable = false)
-    public FractionEntity getFractionByIdFraction() {
-        return fractionByIdFraction;
+    @JsonBackReference
+    public FractionEntity getFraction() {
+        return fraction;
     }
 
-    public void setFractionByIdFraction(FractionEntity fractionByIdFraction) {
-        this.fractionByIdFraction = fractionByIdFraction;
+    public void setFraction(FractionEntity fractionByIdFraction) {
+        this.fraction = fractionByIdFraction;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_type", referencedColumnName = "id")
-    public TypeTaskEntity getTypeTaskByIdType() {
-        return typeTaskByIdType;
+    @JsonManagedReference
+    public TypeTaskEntity getTypeTask() {
+        return typeTask;
     }
 
-    public void setTypeTaskByIdType(TypeTaskEntity typeTaskByIdType) {
-        this.typeTaskByIdType = typeTaskByIdType;
+    public void setTypeTask(TypeTaskEntity typeTaskByIdType) {
+        this.typeTask = typeTaskByIdType;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    public StateTaskEntity getStateTaskByIdState() {
-        return stateTaskByIdState;
+    @JsonManagedReference
+    public StateTaskEntity getStateTask() {
+        return stateTask;
     }
 
-    public void setStateTaskByIdState(StateTaskEntity stateTaskByIdState) {
-        this.stateTaskByIdState = stateTaskByIdState;
+    public void setStateTask(StateTaskEntity stateTaskByIdState) {
+        this.stateTask = stateTaskByIdState;
     }
 
     @ManyToOne
-    @JoinColumn(name = "privacy", referencedColumnName = "id")
-    public StatePrivacyEntity getStatePrivacyByPrivacy() {
-        return statePrivacyByPrivacy;
+    @JoinColumn(name = "id_privacy", referencedColumnName = "id")
+    @JsonManagedReference
+    public StatePrivacyEntity getStatePrivacy() {
+        return statePrivacy;
     }
 
-    public void setStatePrivacyByPrivacy(StatePrivacyEntity statePrivacyByPrivacy) {
-        this.statePrivacyByPrivacy = statePrivacyByPrivacy;
+    public void setStatePrivacy(StatePrivacyEntity statePrivacyByPrivacy) {
+        this.statePrivacy = statePrivacyByPrivacy;
     }
 }

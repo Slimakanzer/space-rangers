@@ -3,29 +3,21 @@ package com.spaceRangers.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.omg.CORBA.UserException;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "vote", schema = "public", catalog = "course")
+@IdClass(VoteEntityPK.class)
 public class VoteEntity {
-    private Integer id;
     private Integer idUser;
     private Integer idResult;
     private ResultsEntity results;
+    private UsersEntity user;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     @Column(name = "id_user", nullable = false)
     public Integer getIdUser(){
         return this.idUser;
@@ -35,6 +27,7 @@ public class VoteEntity {
         this.idUser = idUser;
     }
 
+    @Id
     @Column(name = "id_result", nullable = false)
     public Integer getIdResult(){
         return idResult;
@@ -49,12 +42,12 @@ public class VoteEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         VoteEntity that = (VoteEntity) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(idUser, that.idUser) && Objects.equals(idResult, that.idResult);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(idUser*idResult);
     }
 
     @ManyToOne
@@ -66,5 +59,17 @@ public class VoteEntity {
 
     public void setResults(ResultsEntity results) {
         this.results = results;
+    }
+
+
+    @ManyToOne
+    @JoinColumn(name = "id_user", referencedColumnName = "id", updatable = false, insertable = false)
+    @JsonBackReference
+    public UsersEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UsersEntity user) {
+        this.user = user;
     }
 }

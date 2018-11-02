@@ -1,7 +1,12 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -11,9 +16,13 @@ public class BaseEntity {
     private String nameBase;
     private Integer locationBaseX;
     private Integer locationBaseY;
-    private UsersEntity usersByIdUser;
-    private SystemEntity systemByIdSystem;
-    private Collection<ShipEntity> shipsById;
+    private UsersEntity user;
+    private SystemEntity system;
+    private Collection<ShipEntity> ships;
+
+    public BaseEntity(){
+        ships = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -74,30 +83,33 @@ public class BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    public UsersEntity getUsersByIdUser() {
-        return usersByIdUser;
+    @JsonIgnore
+    public UsersEntity getUser() {
+        return user;
     }
 
-    public void setUsersByIdUser(UsersEntity usersByIdUser) {
-        this.usersByIdUser = usersByIdUser;
+    public void setUser(UsersEntity usersByIdUser) {
+        this.user = usersByIdUser;
     }
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    public SystemEntity getSystemByIdSystem() {
-        return systemByIdSystem;
+    @JsonManagedReference
+    public SystemEntity getSystem() {
+        return system;
     }
 
-    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
-        this.systemByIdSystem = systemByIdSystem;
+    public void setSystem(SystemEntity systemByIdSystem) {
+        this.system = systemByIdSystem;
     }
 
-    @OneToMany(mappedBy = "baseByIdBase")
-    public Collection<ShipEntity> getShipsById() {
-        return shipsById;
+    @OneToMany(mappedBy = "base")
+    @JsonBackReference
+    public Collection<ShipEntity> getShips() {
+        return ships;
     }
 
-    public void setShipsById(Collection<ShipEntity> shipsById) {
-        this.shipsById = shipsById;
+    public void setShips(Collection<ShipEntity> shipsById) {
+        this.ships = shipsById;
     }
 }

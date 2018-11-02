@@ -1,7 +1,12 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -9,10 +14,17 @@ import java.util.Objects;
 public class SystemEntity {
     private Integer id;
     private String nameSystem;
-    private Collection<BaseEntity> basesById;
-    private Collection<BattleEntity> battlesById;
-    private Collection<PlanetEntity> planetsById;
-    private Collection<ShipEntity> shipsById;
+    private Collection<BaseEntity> bases;
+    private Collection<BattleEntity> battles;
+    private Collection<PlanetEntity> planets;
+    private Collection<ShipEntity> ships;
+
+    public SystemEntity(){
+        this.bases = new HashSet<>();
+        this.battles = new HashSet<>();
+        this.planets = new HashSet<>();
+        this.ships = new HashSet<>();
+    }
 
     @Id
     @Column(name = "id", nullable = false)
@@ -48,39 +60,43 @@ public class SystemEntity {
         return Objects.hash(id, nameSystem);
     }
 
-    @OneToMany(mappedBy = "systemByIdSystem")
-    public Collection<BaseEntity> getBasesById() {
-        return basesById;
+    @OneToMany(mappedBy = "system")
+    @JsonBackReference
+    public Collection<BaseEntity> getBases() {
+        return bases;
     }
 
-    public void setBasesById(Collection<BaseEntity> basesById) {
-        this.basesById = basesById;
+    public void setBases(Collection<BaseEntity> basesById) {
+        this.bases = basesById;
     }
 
-    @OneToMany(mappedBy = "systemByIdSystem")
-    public Collection<BattleEntity> getBattlesById() {
-        return battlesById;
+    @OneToMany(mappedBy = "system")
+    @JsonBackReference
+    public Collection<BattleEntity> getBattles() {
+        return battles;
     }
 
-    public void setBattlesById(Collection<BattleEntity> battlesById) {
-        this.battlesById = battlesById;
+    public void setBattles(Collection<BattleEntity> battlesById) {
+        this.battles = battlesById;
     }
 
-    @OneToMany(mappedBy = "systemByIdSystem")
-    public Collection<PlanetEntity> getPlanetsById() {
-        return planetsById;
+    @OneToMany(mappedBy = "system")
+    @JsonManagedReference
+    public Collection<PlanetEntity> getPlanets() {
+        return planets;
     }
 
-    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
-        this.planetsById = planetsById;
+    public void setPlanets(Collection<PlanetEntity> planetsById) {
+        this.planets = planetsById;
     }
 
-    @OneToMany(mappedBy = "systemByIdSystem")
-    public Collection<ShipEntity> getShipsById() {
-        return shipsById;
+    @OneToMany(mappedBy = "system")
+    @JsonBackReference
+    public Collection<ShipEntity> getShips() {
+        return ships;
     }
 
-    public void setShipsById(Collection<ShipEntity> shipsById) {
-        this.shipsById = shipsById;
+    public void setShips(Collection<ShipEntity> shipsById) {
+        this.ships = shipsById;
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ShipRepository extends CrudRepository<ShipEntity, Integer> {
 
-   List<ShipEntity> findShipEntitiesByUsersByIdUser(UsersEntity usersByIdUser);
+   List<ShipEntity> findShipEntitiesByUser(UsersEntity usersByIdUser);
 
-   List<ShipEntity> findShipEntitiesByBaseByIdBase(BaseEntity baseByIdBase);
+   List<ShipEntity> findShipEntitiesByBase(BaseEntity baseByIdBase);
 }

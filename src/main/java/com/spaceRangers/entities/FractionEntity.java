@@ -1,7 +1,10 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -9,11 +12,17 @@ import java.util.Objects;
 public class FractionEntity {
     private Integer id;
     private String nameFraction;
-    private PoliticsEntity politicsByIdPolitics;
-    private Collection<PlanetEntity> planetsById;
-    private Collection<TaskEntity> tasksById;
+    private PoliticsEntity politics;
+    private Collection<TaskEntity> tasks;
+    private Collection<UserFractionEntity> usersFraction;
+
+    public FractionEntity(){
+        this.tasks = new HashSet<>();
+        this.usersFraction = new HashSet<>();
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -49,29 +58,32 @@ public class FractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_politics", referencedColumnName = "id", nullable = false)
-    public PoliticsEntity getPoliticsByIdPolitics() {
-        return politicsByIdPolitics;
+    @JsonManagedReference
+    public PoliticsEntity getPolitics() {
+        return politics;
     }
 
-    public void setPoliticsByIdPolitics(PoliticsEntity politicsByIdPolitics) {
-        this.politicsByIdPolitics = politicsByIdPolitics;
+    public void setPolitics(PoliticsEntity politicsByIdPolitics) {
+        this.politics = politicsByIdPolitics;
     }
 
-    @OneToMany(mappedBy = "fractionByIdFraction")
-    public Collection<PlanetEntity> getPlanetsById() {
-        return planetsById;
+    @OneToMany(mappedBy = "fraction")
+    @JsonManagedReference
+    public Collection<TaskEntity> getTasks() {
+        return tasks;
     }
 
-    public void setPlanetsById(Collection<PlanetEntity> planetsById) {
-        this.planetsById = planetsById;
+    public void setTasks(Collection<TaskEntity> tasksById) {
+        this.tasks = tasksById;
     }
 
-    @OneToMany(mappedBy = "fractionByIdFraction")
-    public Collection<TaskEntity> getTasksById() {
-        return tasksById;
+    @OneToMany(mappedBy = "fraction")
+    @JsonManagedReference
+    public Collection<UserFractionEntity> getUsersFraction() {
+        return usersFraction;
     }
 
-    public void setTasksById(Collection<TaskEntity> tasksById) {
-        this.tasksById = tasksById;
+    public void setUsersFraction(Collection<UserFractionEntity> usersFraction) {
+        this.usersFraction = usersFraction;
     }
 }

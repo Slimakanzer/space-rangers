@@ -1,8 +1,11 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -11,11 +14,17 @@ public class BattleEntity {
     private Integer id;
     private String name;
     private Date date;
-    private SystemEntity systemByIdSystem;
-    private Collection<ShipBattleEntity> shipBattlesById;
-    private Collection<UserBattleEntity> userBattlesById;
+    private SystemEntity system;
+    private Collection<ShipBattleEntity> shipBattles;
+    private Collection<UserBattleEntity> userBattles;
+
+    public BattleEntity(){
+        this.shipBattles = new HashSet<>();
+        this.userBattles = new HashSet<>();
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -62,11 +71,33 @@ public class BattleEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    public SystemEntity getSystemByIdSystem() {
-        return systemByIdSystem;
+    @JsonManagedReference
+    public SystemEntity getSystem() {
+        return system;
     }
 
-    public void setSystemByIdSystem(SystemEntity systemByIdSystem) {
-        this.systemByIdSystem = systemByIdSystem;
+    public void setSystem(SystemEntity systemByIdSystem) {
+        this.system = systemByIdSystem;
+    }
+
+    @OneToMany(mappedBy = "battle")
+    @JsonManagedReference
+    public Collection<ShipBattleEntity> getShipBattles() {
+        return shipBattles;
+    }
+
+    public void setShipBattles(Collection<ShipBattleEntity> shipBattles) {
+        this.shipBattles = shipBattles;
+    }
+
+
+    @OneToMany(mappedBy = "battle")
+    @JsonManagedReference
+    public Collection<UserBattleEntity> getUserBattles() {
+        return userBattles;
+    }
+
+    public void setUserBattles(Collection<UserBattleEntity> userBattles) {
+        this.userBattles = userBattles;
     }
 }

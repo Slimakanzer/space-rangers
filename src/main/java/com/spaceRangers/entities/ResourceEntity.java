@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,10 +12,11 @@ public class ResourceEntity {
     private Integer id;
     private String nameResources;
     private Integer count;
-    private PlanetEntity planetByIdPlanet;
-    private TypeResourcesEntity typeResourcesByType;
+    private PlanetEntity planet;
+    private TypeResourcesEntity typeResources;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -23,7 +27,7 @@ public class ResourceEntity {
     }
 
     @Basic
-    @Column(name = "name_resources", nullable = true, length = -1)
+    @Column(name = "name", nullable = true, length = -1)
     public String getNameResources() {
         return nameResources;
     }
@@ -59,21 +63,23 @@ public class ResourceEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_planet", referencedColumnName = "id")
-    public PlanetEntity getPlanetByIdPlanet() {
-        return planetByIdPlanet;
+    @JsonBackReference
+    public PlanetEntity getPlanet() {
+        return planet;
     }
 
-    public void setPlanetByIdPlanet(PlanetEntity planetByIdPlanet) {
-        this.planetByIdPlanet = planetByIdPlanet;
+    public void setPlanet(PlanetEntity planetByIdPlanet) {
+        this.planet = planetByIdPlanet;
     }
 
     @ManyToOne
     @JoinColumn(name = "type", referencedColumnName = "id")
-    public TypeResourcesEntity getTypeResourcesByType() {
-        return typeResourcesByType;
+    @JsonManagedReference
+    public TypeResourcesEntity getTypeResources() {
+        return typeResources;
     }
 
-    public void setTypeResourcesByType(TypeResourcesEntity typeResourcesByType) {
-        this.typeResourcesByType = typeResourcesByType;
+    public void setTypeResources(TypeResourcesEntity typeResourcesByType) {
+        this.typeResources = typeResourcesByType;
     }
 }

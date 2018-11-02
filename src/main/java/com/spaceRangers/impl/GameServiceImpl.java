@@ -82,7 +82,7 @@ public class GameServiceImpl implements GameService {
         return resourceRepository
                 .findAll()
                 .stream()
-                .filter(resourceEntity -> resourceEntity.getPlanetByIdPlanet().getId() == idPlanet)
+                .filter(resourceEntity -> resourceEntity.getPlanet().getId() == idPlanet)
                 .collect(Collectors.toList());
     }
 
@@ -122,7 +122,7 @@ public class GameServiceImpl implements GameService {
         return baseRepository
                 .findAll()
                 .stream()
-                .filter(baseEntity -> baseEntity.getUsersByIdUser().getId() == idUser)
+                .filter(baseEntity -> baseEntity.getUser().getId() == idUser)
                 .collect(Collectors.toList());
     }
 
@@ -195,7 +195,7 @@ public class GameServiceImpl implements GameService {
      */
     @Override
     public List<ShipEntity> getListShipByIdBase(int idBase) {
-        return shipRepository.findShipEntitiesByBaseByIdBase( baseRepository.findById(idBase).get());
+        return shipRepository.findShipEntitiesByBase( baseRepository.findById(idBase).get());
     }
 
     /**
@@ -207,7 +207,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public List<ShipEntity> getListShipByIdUser(int idUser) {
 
-        return shipRepository.findShipEntitiesByUsersByIdUser(userRepository.findById(idUser).get());
+        return shipRepository.findShipEntitiesByUser(userRepository.findById(idUser).get());
     }
 
     /**

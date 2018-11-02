@@ -9,6 +9,7 @@ import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
@@ -20,6 +21,13 @@ public class ChatEntity {
     private Collection<VotingEntity> votings;
     private Collection<MessagesEntity> messages;
     private Collection<UsersEntity> users;
+
+
+    public ChatEntity(){
+        this.votings = new HashSet<>();
+        this.messages = new HashSet<>();
+        this.users = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,8 +60,8 @@ public class ChatEntity {
         this.date = date;
     }
 
-    @ManyToMany(mappedBy = "chats")
-    @JsonBackReference
+    @ManyToMany(mappedBy = "chats", fetch = FetchType.LAZY)
+    @JsonIgnore
     public Collection<UsersEntity> getUsers(){
         return users;
     }
@@ -64,7 +72,7 @@ public class ChatEntity {
 
 
     @OneToMany(mappedBy = "chat")
-    @JsonIgnore
+    @JsonManagedReference
     public Collection<VotingEntity> getVotingsById() {
         return votings;
     }
