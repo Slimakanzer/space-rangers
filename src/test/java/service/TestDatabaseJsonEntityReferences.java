@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.GroupsRepository;
+import com.spaceRangers.repository.UserAccountRepository;
+import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.GameService;
 import com.spaceRangers.service.RegistrationService;
 import config.TestPersistenceConfig;
@@ -64,116 +66,19 @@ public class TestDatabaseJsonEntityReferences {
         }
     }
 
-    @Test
-    public void testGroupUser(){
-
-        GroupsEntity groupsEntity = entityManager.find(GroupsEntity.class, 1);
-
-
-        log.info(groupsEntity.getId() + " "+ groupsEntity.getName());
-
-        log.info(groupsEntity.getGroupAuthority().getName());
-
-        logJsonObject(groupsEntity);
-        logJsonObject(groupsEntity.getGroupAuthority());
-
-    }
-
     @Autowired
-    GroupsRepository groupsRepository;
+    UserAccountRepository userAccountRepository;
 
     @Test
-    public void testUserAccountGroup(){
-
-
-        GroupsEntity groupsEntity = groupsRepository.findById(1).get();
-
-        logJsonObject(groupsEntity);
-
-//       groupsEntity.getUserAccounts()
-//               .forEach(
-//                       e->logJsonObject(e)
-//               );
-
-
-    }
-
-
-    @Test
-    public void testUserAccountUser(){
-
-        UserAccountEntity userAccountEntity = entityManager.find(UserAccountEntity.class, 129);
-
-        logJsonObject(userAccountEntity);
-
-        logJsonObject(userAccountEntity.getUser());
-
-    }
-
-    @Test
-    public void testUserChat(){
-        UsersEntity user = entityManager.find(UsersEntity.class, 129);
-
-        logJsonObject(user);
-
-        user.getChats()
-                .forEach(e->logJsonObject(e));
-    }
-
-    @Test
-    public void testChatMessages(){
-        ChatEntity chatEntity = entityManager.find(ChatEntity.class, 1);
-
-        logJsonObject(chatEntity);
-
-        chatEntity.getMessages()
-                .forEach(
-                        e->logJsonObject(e)
-                );
-    }
-
-
-    @Test
-    public void testComplainMessage(){
-//        MessagesEntity messagesEntity = new MessagesEntity();
-//        messagesEntity.setIdUser(129);
-//        messagesEntity.setMessage("Не работает ");
-        ComplainEntity complainEntity = new ComplainEntity();
-        complainEntity.setState(false);
-        complainEntity.setDate(new Date(12312));
-        MessagesEntity messagesEntity = entityManager.find(MessagesEntity.class, 1);
-        complainEntity.setMessage(messagesEntity);
-        //messagesEntity.setComplain(complainEntity);
-
-        Session session = entityManager.unwrap(Session.class);
-
-        log.info(complainEntity.getMessage());
-
-
-        session.saveOrUpdate(complainEntity);
-//        session.saveOrUpdate(messagesEntity);
-//
-//
-        logJsonObject(messagesEntity);
-//
-        logJsonObject(complainEntity);
-
-
-    }
-
-
-
-    @Test
-    @Transactional
-    public void testSukaBlua(){
+    public void testUserGroups(){
         entityManager.getTransaction().begin();
 
         try{
 
-            UserAccountEntity userAccountEntity = entityManager.find(UserAccountEntity.class, 1);
+            UserAccountEntity userAccountEntity = userAccountRepository.findById(1).get();
 
-
-            //userAccountEntity.getChats().forEach(e-> System.out.println(e.getId()));
+            logJsonObject(userAccountEntity);
+            userAccountEntity.getGroups().forEach(e-> logJsonObject(e));
 
 
         }finally {
@@ -365,15 +270,21 @@ public class TestDatabaseJsonEntityReferences {
             SystemEntity systemEntity = entityManager.find(SystemEntity.class, 1);
 
 
+//            systemEntity.getPlanets()
+//                    .forEach(
+//                            e->logJsonObject(e)
+//                    );
+
             PlanetEntity planetEntity = new PlanetEntity();
             planetEntity.setLocationPlanetX(123);
             planetEntity.setLocationPlanetY(12314);
             planetEntity.setNamePlanet("Test planet");
             planetEntity.setSystem(systemEntity);
             planetEntity.setTypeWeather(typeWeatherEntity);
+            systemEntity.getPlanets().add(planetEntity);
             planetEntity.setUser(usersEntity);
 
-            session.save(planetEntity);
+            session.saveOrUpdate(planetEntity);
 
             session.refresh(systemEntity);
 
@@ -406,6 +317,13 @@ public class TestDatabaseJsonEntityReferences {
         }finally {
             entityManager.getTransaction().rollback();
         }
+    }
+
+
+    @Test
+    public void completeTest(){
+
+
     }
 
 }

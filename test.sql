@@ -184,8 +184,7 @@ ALTER SEQUENCE public.fraction_id_seq OWNED BY public.fraction.id;
 
 CREATE TABLE public.group_authority (
     id integer NOT NULL,
-    id_group integer,
-    name_authority text
+    name text
 );
 
 
@@ -785,7 +784,8 @@ COPY public.fraction (id, name_fraction, id_politics) FROM stdin;
 -- Data for Name: group_authority; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.group_authority (id, id_group, name_authority) FROM stdin;
+COPY public.group_authority (id, name) FROM stdin;
+1	USER_ROLE
 \.
 
 
@@ -794,6 +794,7 @@ COPY public.group_authority (id, id_group, name_authority) FROM stdin;
 --
 
 COPY public.groups (id, name) FROM stdin;
+1	User
 \.
 
 
@@ -983,6 +984,7 @@ COPY public.user_fraction (id_fraction, id_user, date, id_state) FROM stdin;
 --
 
 COPY public.user_group (id_user, id_group) FROM stdin;
+1	1
 \.
 
 
@@ -991,7 +993,7 @@ COPY public.user_group (id_user, id_group) FROM stdin;
 --
 
 COPY public.users (id, login, password, level, id_state, email, first_name, last_name, description) FROM stdin;
-1	\N	\N	1	\N	\N	\N	\N	\N
+1	Test	\N	1	\N	\N	\N	\N	\N
 \.
 
 
@@ -1036,14 +1038,14 @@ SELECT pg_catalog.setval('public.fraction_id_seq', 5, true);
 -- Name: planet_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.planet_id_seq', 35, true);
+SELECT pg_catalog.setval('public.planet_id_seq', 46, true);
 
 
 --
 -- Name: resource_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.resource_id_seq', 68, true);
+SELECT pg_catalog.setval('public.resource_id_seq', 90, true);
 
 
 --
@@ -1395,11 +1397,11 @@ ALTER TABLE ONLY public.fraction
 
 
 --
--- Name: group_authority group_authority_id_group_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: groups groups_group_group_authority_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY public.group_authority
-    ADD CONSTRAINT group_authority_id_group_fkey FOREIGN KEY (id_group) REFERENCES public.groups(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_group_group_authority_fk FOREIGN KEY (id) REFERENCES public.group_authority(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --

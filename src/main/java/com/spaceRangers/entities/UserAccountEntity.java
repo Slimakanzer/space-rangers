@@ -62,7 +62,7 @@ public class UserAccountEntity {
         this.user = user;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_group",
             joinColumns = {@JoinColumn(name = "id_user")},

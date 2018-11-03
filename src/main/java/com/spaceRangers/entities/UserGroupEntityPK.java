@@ -9,7 +9,15 @@ public class UserGroupEntityPK implements Serializable {
     private Integer idUser;
     private Integer idGroup;
 
-    @Column(name = "id_user", nullable = false)
+    public void setIdUser(int idUser) {
+        this.idUser = idUser;
+    }
+
+    public void setIdGroup(int idGroup) {
+        this.idGroup = idGroup;
+    }
+
+    @Column(name = "id_user")
     @Id
     public Integer getIdUser() {
         return idUser;
@@ -19,7 +27,7 @@ public class UserGroupEntityPK implements Serializable {
         this.idUser = idUser;
     }
 
-    @Column(name = "id_group", nullable = false)
+    @Column(name = "id_group")
     @Id
     public Integer getIdGroup() {
         return idGroup;
