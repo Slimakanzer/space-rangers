@@ -40,11 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                .userDetailsService(userDetailsService);
-        auth
                 .authenticationProvider(authenticationProvider());
-
-
     }
 
     @Override
@@ -59,6 +55,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .usernameParameter("login")
                     .passwordParameter("password")
                 .and().csrf()
+                    .disable()
+                    .authorizeRequests()
+                    .anyRequest()
+                    .authenticated()
+                    .and()
+                    .httpBasic()
                 .and().exceptionHandling()
                     .accessDeniedPage("/denied")
                 .and()

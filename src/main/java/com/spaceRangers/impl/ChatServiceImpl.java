@@ -35,18 +35,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Transactional
-    public ChatEntity createChat(Map<String, Object> mapObject) {
-
-        ChatEntity chat = (ChatEntity) mapObject.get("chat");
-        UsersEntity user = (UsersEntity) mapObject.get("user");
+    public ChatEntity createChat(ChatEntity chat) {
 
         chatRepository.save(chat);
-
-        ChatUserEntity chatUserEntity = new ChatUserEntity();
-        chatUserEntity.setIdChat(chat.getId());
-        chatUserEntity.setIdUser(user.getId());
-
-        chatUserRepository.save(chatUserEntity);
 
         return chat;
     }
@@ -68,21 +59,16 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public List<ChatEntity> getChatsUser(int idUser) {
-        // TODO перенести в репозиторий
-        List<ChatEntity> listChats = new ArrayList<>();
-        chatUserRepository
-                .findAll()
-                .stream()
-                .filter(chatUserEntity -> chatUserEntity.getIdUser() == idUser)
-                .forEach(e ->{
-                    listChats.add(
-                            chatRepository.findById(
-                                    e.getIdChat()
-                            ).get()
-                    );
-                });
-        return listChats;
+        ArrayList arrayList = new ArrayList<>();
+        arrayList.addAll(
+                userRepository
+                    .findById(idUser).get()
+                    .getChats()
+
+        );
+        return arrayList;
     }
 
     @Transactional

@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -46,12 +47,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         List authorities = new ArrayList<GrantedAuthority>();
 
-
-        registrationService.getUserGroupAuthority(userAccount)
+        userAccount.getGroups()
                 .forEach(
-                        e->{
-                            log.info(e.getName());
-                            authorities.add(new SimpleGrantedAuthority(e.getName()));
+                        e-> {
+                            log.info(e.getName()+" - "+e.getGroupAuthority().getName());
+                            authorities.add(
+
+                                    new SimpleGrantedAuthority(e.getGroupAuthority().getName())
+                            );
                         }
                 );
 

@@ -30,7 +30,7 @@
         <spring-framework-version>5.0.4.RELEASE</spring-framework-version>
         <postgres-version>42.2.2</postgres-version>
         <javaee-version>8.0</javaee-version>
-        <jackson-version>2.9.7</jackson-version>
+        <jackson-version>2.9.2</jackson-version>
         <spring.test>3.2.4.RELEASE</spring.test>
         <junit.version>4.11</junit.version>
         <log4j.version>1.2.17</log4j.version>

@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.sql.Date;
 import java.util.Collection;
 import java.util.HashSet;
@@ -71,18 +74,20 @@ public class ChatEntity {
     }
 
 
-    @OneToMany(mappedBy = "chat")
+    @OneToMany(targetEntity = VotingEntity.class, mappedBy = "chat")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
-    public Collection<VotingEntity> getVotingsById() {
+    public Collection<VotingEntity> getVotings() {
         return votings;
     }
 
-    public void setVotingsById(Collection<VotingEntity> votings) {
+    public void setVotings(Collection<VotingEntity> votings) {
         this.votings = votings;
     }
 
     @OneToMany(targetEntity = MessagesEntity.class, mappedBy = "chat")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference(value = "chat")
     public Collection<MessagesEntity> getMessages(){return messages;}
 
     public void setMessages(Collection<MessagesEntity> messages){this.messages = messages;}

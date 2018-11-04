@@ -63,12 +63,12 @@ public class TestGameChatService {
         map.put("user", usersEntity);
 
 
-        ChatEntity chat = chatService.createChat(map);
+//        ChatEntity chat = chatService.createChat(map);
 
         log.info("Created chat");
 
         VotingEntity votingEntity = new VotingEntity();
-        votingEntity.setChat(chat);
+//        votingEntity.setChat(chat);
         votingEntity.setMessage("Голосование: металл или дерево");
 
         votingEntity = gameChatService.createVoting(votingEntity);

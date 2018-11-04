@@ -15,7 +15,7 @@ public interface ChatService {
      * @param
      * @return
      */
-    ChatEntity createChat(Map<String, Object> mapObject);
+    ChatEntity createChat(ChatEntity chat);
 
     /**
      * Получение чата по id

@@ -3,6 +3,8 @@ package com.spaceRangers.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -69,6 +71,7 @@ public class ResultsEntity {
 
     @OneToMany(mappedBy = "results")
     @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<VoteEntity> getVotes() {
         return votes;
     }

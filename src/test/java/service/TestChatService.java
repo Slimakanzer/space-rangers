@@ -67,7 +67,7 @@ public class TestChatService {
 
 
         log.info("****************Test create chat entity**************************");
-        chatService.createChat(map);
+
 
 
         chatService.getChatsUser(usersEntity.getId())
@@ -94,12 +94,12 @@ public class TestChatService {
         map.put("chat", chatEntity);
         map.put("user", userOne);
 
-        ChatEntity chat = chatService.createChat(map);
+
         log.info("Created chat");
 
         ChatUserEntity chatUserEntity = new ChatUserEntity();
         chatUserEntity.setIdUser(userTwo.getId());
-        chatUserEntity.setIdChat(chat.getId());
+
 
         chatService.createChatUser(chatUserEntity);
         log.info("Created chatUser with second user");
@@ -107,16 +107,16 @@ public class TestChatService {
 
         MessagesEntity messagesEntityOne = new MessagesEntity();
         messagesEntityOne.setIdUser(userOne.getId());
-        messagesEntityOne.setChat(chat);
+//        messagesEntityOne.setChat(chat);
         messagesEntityOne.setMessage("Hello!");
 
         MessagesEntity messagesEntityTwo = new MessagesEntity();
-        messagesEntityTwo.setChat(chat);
+//        messagesEntityTwo.setChat(chat);
         messagesEntityTwo.setIdUser(userTwo.getId());
         messagesEntityTwo.setMessage("Hello dude");
 
         MessagesEntity messagesEntityThree = new MessagesEntity();
-        messagesEntityThree.setChat(chat);
+//        messagesEntityThree.setChat(chat);
         messagesEntityThree.setIdUser(userOne.getId());
         messagesEntityThree.setMessage("How are you");
 
@@ -126,10 +126,10 @@ public class TestChatService {
         log.info("Created messages");
 
 
-        chatService.getMessagesOfChat(chat.getId())
-                .stream()
-                .forEach(e->log.info(e.getChat().getId() +" "+e.getIdUser() +" "+e.getMessage()));
-        log.info("Got messages from chat");
+//        chatService.getMessagesOfChat(chat.getId())
+//                .stream()
+//                .forEach(e->log.info(e.getChat().getId() +" "+e.getIdUser() +" "+e.getMessage()));
+//        log.info("Got messages from chat");
 
 
 

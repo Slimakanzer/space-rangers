@@ -62,7 +62,7 @@ public class ComplainEntity {
 
     @OneToOne
     @JoinColumn(name = "id_message", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonManagedReference(value = "complain")
     public MessagesEntity getMessage() {
         return message;
     }

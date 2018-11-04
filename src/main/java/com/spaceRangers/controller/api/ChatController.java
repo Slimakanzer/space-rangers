@@ -1,5 +1,7 @@
 package com.spaceRangers.controller.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceRangers.config.security.UserDetailsServiceImpl;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.service.ChatService;
@@ -7,9 +9,11 @@ import com.spaceRangers.service.GameChatService;
 import com.spaceRangers.service.RegistrationService;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,6 +21,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -25,6 +32,15 @@ import java.util.NoSuchElementException;
 @RequestMapping(value = "/api/chats")
 public class ChatController {
     Logger log = LogManager.getLogger(ChatController.class);
+
+    public void logJsonObject(Object object){
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            log.info(object.getClass().getName()+" "+ objectMapper.writeValueAsString(object));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Qualifier("chatService")
     @Autowired
@@ -38,16 +54,23 @@ public class ChatController {
     @Autowired
     private RegistrationService registrationService;
 
+    @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.POST)
-    ResponseEntity createChat(@RequestBody Map<String, Object> map){
-        chatService.createChat(map);
+    ResponseEntity createChat(
+            @RequestBody ChatEntity chat,
+            @AuthenticationPrincipal User user
+    ){
+        UserAccountEntity  usersEntity = registrationService.getUserAccount(user.getUsername());
+        UsersEntity users = usersEntity.getUser();
+        chat.getUsers().add(users);
+        users.getChats().add(chat);
+
+        chatService.createChat(chat);
+
         return ResponseEntity.ok().build();
     }
 
 
-
-
-    @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET)
     ResponseEntity getListChatsByUserId(
             @RequestParam("id_user") int idUser,
@@ -56,7 +79,10 @@ public class ChatController {
         UserAccountEntity userAccountEntity = registrationService.getUserAccount(user.getUsername());
 
         if(userAccountEntity.getId()==idUser){
-            return ResponseEntity.ok(chatService.getChatsUser(idUser));
+
+            List<ChatEntity> list = chatService.getChatsUser(idUser);
+
+            return ResponseEntity.ok(list);
         }else return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -98,10 +124,26 @@ public class ChatController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/messages", method = RequestMethod.POST)
-    ResponseEntity createMessage(@RequestBody MessagesEntity messages){
-        chatService.createMessages(messages);
-        return ResponseEntity.ok().build();
+    @RequestMapping(value = "/messages", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    ResponseEntity createMessage(@RequestBody String messages){
+
+//        logJsonObject(messages);
+
+        System.out.println(messages);
+
+        try {
+
+            MessagesEntity messagesEntity = new ObjectMapper().readValue(messages, MessagesEntity.class);
+            chatService.createMessages(messagesEntity);
+
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
+
+
+//        chatService.createMessages(messages);
     }
 
     @RequestMapping(value = "/voting", method = RequestMethod.POST)
