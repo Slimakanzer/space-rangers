@@ -38,11 +38,6 @@ public class TestProfileUserService {
     @Autowired
     ProfileUserService profileUserService;
 
-    @Before
-    public void beforeInstance(){
-        usersEntity = registrationService.createUser("Test", "Test");
-    }
-
     @After
     public void afterInstance(){
         administrationService.dropUser(usersEntity);

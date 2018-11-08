@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "user_account", schema = "public", catalog = "course")
+@JsonIgnoreProperties("user")
 public class UserAccountEntity {
     private Integer id;
     private String login;
@@ -53,7 +55,7 @@ public class UserAccountEntity {
     }
 
     @OneToOne(mappedBy = "userAccount")
-    @JsonManagedReference
+    @JsonManagedReference(value = "userAccountUser")
     public UsersEntity getUser() {
         return user;
     }
@@ -68,7 +70,7 @@ public class UserAccountEntity {
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_group")}
     )
-    @JsonManagedReference
+    @JsonIgnore
     public Collection<GroupsEntity> getGroups(){
         return groups;
     }

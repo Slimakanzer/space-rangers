@@ -3,6 +3,7 @@ package com.spaceRangers.entities;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class VoteEntityPK implements Serializable {
 
@@ -28,5 +29,19 @@ public class VoteEntityPK implements Serializable {
 
     public void setIdResult(Integer idResult) {
         this.idResult = idResult;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof VoteEntityPK)) return false;
+        VoteEntityPK that = (VoteEntityPK) o;
+        return Objects.equals(getIdUser(), that.getIdUser()) &&
+                Objects.equals(getIdResult(), that.getIdResult());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdUser(), getIdResult());
     }
 }

@@ -61,7 +61,7 @@ public class MessagesEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_chat", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonBackReference(value = "chat")
+    @JsonBackReference(value = "chatMessages")
     public ChatEntity getChat(){return chat;}
 
     public void setChat(ChatEntity chat){this.chat=chat;}

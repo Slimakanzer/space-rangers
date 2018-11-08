@@ -52,7 +52,7 @@ public class VoteEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_result", referencedColumnName = "id", updatable = false, insertable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "voteResult")
     public ResultsEntity getResults() {
         return results;
     }
@@ -64,7 +64,7 @@ public class VoteEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id", updatable = false, insertable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "voteUser")
     public UsersEntity getUser() {
         return user;
     }

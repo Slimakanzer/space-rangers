@@ -15,7 +15,6 @@ public class DatabaseConfig {
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer configurer() {
-        System.out.println("Started postBeanFactory");
 
         return new PropertySourcesPlaceholderConfigurer();
     }

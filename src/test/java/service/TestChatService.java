@@ -45,11 +45,6 @@ public class TestChatService {
 
     private UsersEntity usersEntity;
 
-    @Before
-    public void createUser(){
-       usersEntity =  registrationService.createUser("Test", "Test");
-    }
-
     @After
     public void dropUser(){
         administrationService.dropUser(usersEntity);
@@ -76,63 +71,5 @@ public class TestChatService {
         log.info("Successful");
     }
 
-
-    @Test
-    public void testChatFunctional(){
-        log.info("*******************Test chat functional**************************");
-
-        UsersEntity userOne = registrationService.createUser("TestChatOne", "TestChatOne");
-
-        UsersEntity userTwo = registrationService.createUser("TestChatTwo", "TestChatTwo");
-        log.info("Created two users");
-
-        ChatEntity chatEntity = new ChatEntity();
-        chatEntity.setName("Test chat entity");
-        chatEntity.setDate(new Date(180000000));
-
-        Map map = new HashMap<String, Object>();
-        map.put("chat", chatEntity);
-        map.put("user", userOne);
-
-
-        log.info("Created chat");
-
-        ChatUserEntity chatUserEntity = new ChatUserEntity();
-        chatUserEntity.setIdUser(userTwo.getId());
-
-
-        chatService.createChatUser(chatUserEntity);
-        log.info("Created chatUser with second user");
-
-
-        MessagesEntity messagesEntityOne = new MessagesEntity();
-        messagesEntityOne.setIdUser(userOne.getId());
-//        messagesEntityOne.setChat(chat);
-        messagesEntityOne.setMessage("Hello!");
-
-        MessagesEntity messagesEntityTwo = new MessagesEntity();
-//        messagesEntityTwo.setChat(chat);
-        messagesEntityTwo.setIdUser(userTwo.getId());
-        messagesEntityTwo.setMessage("Hello dude");
-
-        MessagesEntity messagesEntityThree = new MessagesEntity();
-//        messagesEntityThree.setChat(chat);
-        messagesEntityThree.setIdUser(userOne.getId());
-        messagesEntityThree.setMessage("How are you");
-
-        chatService.createMessages(messagesEntityOne);
-        chatService.createMessages(messagesEntityTwo);
-        chatService.createMessages(messagesEntityThree);
-        log.info("Created messages");
-
-
-//        chatService.getMessagesOfChat(chat.getId())
-//                .stream()
-//                .forEach(e->log.info(e.getChat().getId() +" "+e.getIdUser() +" "+e.getMessage()));
-//        log.info("Got messages from chat");
-
-
-
-    }
 
 }

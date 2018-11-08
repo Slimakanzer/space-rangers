@@ -60,7 +60,7 @@ public class ResultsEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_voting", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference(value = "votingResult")
     public VotingEntity getVoting() {
         return voting;
     }
@@ -70,7 +70,7 @@ public class ResultsEntity {
     }
 
     @OneToMany(mappedBy = "results")
-    @JsonManagedReference
+    @JsonManagedReference(value = "voteResult")
     @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<VoteEntity> getVotes() {
         return votes;

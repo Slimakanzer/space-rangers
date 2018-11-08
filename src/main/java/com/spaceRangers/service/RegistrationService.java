@@ -3,6 +3,7 @@ package com.spaceRangers.service;
 import com.spaceRangers.entities.GroupAuthorityEntity;
 import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 
@@ -18,13 +19,11 @@ public interface RegistrationService {
 
     /**
      * Регистрирование пользователя
-     * @param login
-     * @param password
      * @return
      */
-    UsersEntity createUser(String login, String password);
+    UsersEntity createUser(UserAccountEntity user);
 
     UserAccountEntity getUserAccount(String login);
 
-    List<GroupAuthorityEntity> getUserGroupAuthority(UserAccountEntity user);
+    UsersEntity getUser(User user);
 }

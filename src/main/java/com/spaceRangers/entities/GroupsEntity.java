@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -46,7 +47,7 @@ public class GroupsEntity {
     }
 
     @ManyToMany(mappedBy = "groups")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<UserAccountEntity> getUserAccounts(){
         return userAccounts;
     }

@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("chatService")
@@ -39,6 +37,12 @@ public class ChatServiceImpl implements ChatService {
 
         chatRepository.save(chat);
 
+        return chat;
+    }
+
+    @Transactional
+    public ChatEntity updateChat(ChatEntity chat){
+        chatRepository.save(chat);
         return chat;
     }
 
@@ -80,29 +84,27 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<UsersEntity> getUsersInChat(int idChat) {
-        // TODO перенести в репозиторий
-        List<String> listUsers = new ArrayList<>();
-        chatUserRepository
-                .findAll()
-                .stream()
-                .filter(chatUserEntity -> chatUserEntity.getIdChat() == idChat)
-                .forEach(chatUserEntity ->
-                        listUsers.add(
-                                userRepository.findById(
-                                        chatUserEntity.getIdUser()
-                                ).get().getLogin()
-                        )
-                );
-        return null;
+        try {
+            ArrayList users = new ArrayList();
+            users.addAll(
+                    getChat(idChat)
+                            .getUsers()
+            );
+            return users;
+        }catch (Exception e){
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
+    @Deprecated
     public ChatUserEntity createChatUser(ChatUserEntity chatUser) {
         chatUserRepository.save(chatUser);
         return chatUser;
     }
 
     @Override
+    @Deprecated
     public boolean dropChatUser(ChatUserEntity chatUser) {
         chatUserRepository.delete(chatUser);
         return true;
@@ -110,12 +112,11 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<MessagesEntity> getMessagesOfChat(int idChat) {
-        // TODO перенести в репозиторий
-        return messagesRepository
-                .findAll()
-                .stream()
-                .filter(messagesEntity -> messagesEntity.getChat().getId() == idChat)
-                .collect(Collectors.toList());
+        ArrayList arrayList = new ArrayList();
+        arrayList.addAll(
+                getChat(idChat).getMessages()
+        );
+        return arrayList;
     }
 
     @Override
@@ -124,8 +125,24 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    @Transactional
     public MessagesEntity createMessages(MessagesEntity message) {
         messagesRepository.save(message);
         return message;
+    }
+
+    @Override
+    public boolean userInChat(UsersEntity user, ChatEntity chat) {
+        Iterator iterator = chat.getUsers().iterator();
+
+        while (iterator.hasNext()){
+            UsersEntity userInChat = (UsersEntity) iterator.next();
+
+            if (userInChat.getId().equals(user.getId())){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

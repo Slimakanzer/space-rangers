@@ -44,11 +44,6 @@ public class TestGameChatService {
 
     private UsersEntity usersEntity;
 
-    @Before
-    public void getUserEntity(){
-        usersEntity = registrationService.createUser("Test", "Test");
-    }
-
     @Test
     public void testCreateResultsInChat(){
 

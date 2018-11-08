@@ -23,6 +23,7 @@ public class VotingEntity {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -57,7 +58,7 @@ public class VotingEntity {
     }
 
     @OneToMany(mappedBy = "voting")
-    @JsonManagedReference
+    @JsonManagedReference(value = "votingResult")
     @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<ResultsEntity> getResults() {
         return results;
@@ -69,7 +70,7 @@ public class VotingEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_chat", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference(value = "chatVoting")
     public ChatEntity getChat() {
         return chat;
     }

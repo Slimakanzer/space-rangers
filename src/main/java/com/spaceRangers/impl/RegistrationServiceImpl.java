@@ -1,14 +1,19 @@
 package com.spaceRangers.impl;
 
 import com.spaceRangers.entities.GroupAuthorityEntity;
+import com.spaceRangers.entities.GroupsEntity;
 import com.spaceRangers.entities.UserAccountEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.repository.GroupAuthorityRepository;
+import com.spaceRangers.repository.GroupsRepository;
 import com.spaceRangers.repository.UserAccountRepository;
 import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.RegistrationService;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,14 +27,18 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final UserAccountRepository userAccountRepository;
 
-    private final GroupAuthorityRepository groupAuthorityRepository;
+    private final GroupsRepository groupsRepository;
 
 
     @Autowired
-    public RegistrationServiceImpl(UserRepository userRepository, UserAccountRepository userAccountRepository, GroupAuthorityRepository groupAuthorityRepository) {
+    public PasswordEncoder passwordEncoder;
+
+
+    @Autowired
+    public RegistrationServiceImpl(UserRepository userRepository, UserAccountRepository userAccountRepository, GroupsRepository groupsRepository) {
         this.userRepository = userRepository;
         this.userAccountRepository = userAccountRepository;
-        this.groupAuthorityRepository = groupAuthorityRepository;
+        this.groupsRepository=groupsRepository;
     }
 
     @Transactional
@@ -50,33 +59,32 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Transactional
-    public UsersEntity createUser(String login, String password) {
-        UserAccountEntity userAccount = new UserAccountEntity();
-        userAccount.setLogin(login);
-        userAccount.setPassword(password);
-        userAccount.setId(null);
+    public UsersEntity createUser(UserAccountEntity user) {
 
-        userAccountRepository.save(userAccount);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        return userRepository.findById(
-                userAccount.getId()
-        ).get();
+        user.getGroups().add(groupsRepository.findGroupsEntityByName("User"));
+        user.setId(null);
+        userAccountRepository.save(user);
+
+//
+        UsersEntity usersEntity = new UsersEntity();
+        usersEntity.setId(user.getId());
+        usersEntity.setUserAccount(user);
+        usersEntity.setLevel(1);
+
+        userRepository.save(usersEntity);
+//
+
+//        return userRepository.findById(
+//                user.getId()
+//        ).get();
+        return null;
     }
 
+    @Override
     @Transactional
-    public List<GroupAuthorityEntity> getUserGroupAuthority(UserAccountEntity user) {
-//        List authorities = new ArrayList<GroupAuthorityEntity>();
-//        userGroupRepository.findUserGroupEntitiesByIdUser(user.getId())
-//                .stream()
-//                .forEach(
-//                        e->authorities.add(
-//                                groupAuthorityRepository.findById(
-//                                        e.getIdGroup()
-//                                ).get()
-//                        )
-//                        );
-//        return authorities;
-        // TODO переделать
-        return null;
+    public UsersEntity getUser(User user) {
+        return getUserAccount(user.getUsername()).getUser();
     }
 }

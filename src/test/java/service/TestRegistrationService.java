@@ -38,27 +38,4 @@ public class TestRegistrationService {
     private RegistrationService registrationService;
 
 
-
-    @Test
-    @Transactional
-    public void testCreateUserAccount() throws Exception {
-        log.info("***********************Started test registration user*************************");
-
-        UsersEntity usersEntity = registrationService.createUser("Test", "Test");
-
-        administrationService.dropUser(usersEntity);
-        log.info("**********************Success***************************");
-    }
-
-    @Test
-    @Transactional
-    public void testUsersAuthority(){
-        log.info("**********************************test authority**********************************");
-
-        UserAccountEntity userAccountEntity = registrationService.getUserAccount("TestSecurity");
-        log.info(userAccountEntity.getId());
-
-        registrationService.getUserGroupAuthority(userAccountEntity)
-                .forEach(e->log.info(e.getName()));
-    }
 }

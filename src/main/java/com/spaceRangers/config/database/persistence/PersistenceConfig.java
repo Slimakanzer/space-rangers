@@ -56,7 +56,6 @@ public class PersistenceConfig{
 
     @Bean("dataSource")
     public DataSource getDataSource(){
-        System.out.println("Started getDataSource");
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(driver);
@@ -69,7 +68,6 @@ public class PersistenceConfig{
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
-        System.out.println("Started entity manager factory bean");
 
         LocalContainerEntityManagerFactoryBean managerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 
@@ -101,7 +99,6 @@ public class PersistenceConfig{
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory){
-        System.out.println("Started transaction manager");
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         return transactionManager;

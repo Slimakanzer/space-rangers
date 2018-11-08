@@ -18,6 +18,16 @@ public interface ChatService {
     ChatEntity createChat(ChatEntity chat);
 
     /**
+     * Update
+     * @param chat
+     * @return
+     */
+    ChatEntity updateChat(ChatEntity chat);
+
+
+    boolean userInChat(UsersEntity user, ChatEntity chat);
+
+    /**
      * Получение чата по id
      * @param idChat
      * @return
@@ -84,4 +94,6 @@ public interface ChatService {
      * @return
      */
     MessagesEntity createMessages(MessagesEntity message);
+
+
 }

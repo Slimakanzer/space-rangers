@@ -10,6 +10,7 @@ import com.spaceRangers.service.GameChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,8 +31,16 @@ public class GameChatServiceImpl implements GameChatService {
     }
 
     @Override
+    @Transactional
     public VotingEntity createVoting(VotingEntity voting) {
 
+        votingRepository.save(voting);
+        return voting;
+    }
+
+    @Override
+    @Transactional
+    public VotingEntity updateVoting(VotingEntity voting){
         votingRepository.save(voting);
         return voting;
     }
@@ -51,9 +60,17 @@ public class GameChatServiceImpl implements GameChatService {
     }
 
     @Override
+    @Transactional
     public ResultsEntity createResults(ResultsEntity results) {
         resultsRepository.save(results);
         return results;
+    }
+
+    @Override
+    @Transactional
+    public ResultsEntity updateResults(ResultsEntity resultsEntity){
+        resultsRepository.save(resultsEntity);
+        return resultsEntity;
     }
 
     @Override
@@ -72,10 +89,12 @@ public class GameChatServiceImpl implements GameChatService {
     }
 
     @Override
+    @Transactional
     public VoteEntity createVote(VoteEntity vote) {
         voteRepository.save(vote);
         return vote;
     }
+
 
     @Override
     public List<VoteEntity> getListVoteByIdResult(int idResult) {

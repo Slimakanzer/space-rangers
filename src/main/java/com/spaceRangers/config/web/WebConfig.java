@@ -20,7 +20,6 @@ public class WebConfig {
 
     @Bean
     ViewResolver internalViewResolver(){
-        System.out.println("Started view resolver");
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
         resolver.setOrder(0);
         resolver.setSuffix(".jsp");

@@ -65,4 +65,18 @@ public interface GameChatService {
      */
     List<VoteEntity> getListVoteByIdResult(int idResult);
 
+    /**
+     *
+     * @param voting
+     * @return
+     */
+    VotingEntity updateVoting(VotingEntity voting);
+
+    /**
+     *
+     * @param resultsEntity
+     * @return
+     */
+    ResultsEntity updateResults(ResultsEntity resultsEntity);
+
 }

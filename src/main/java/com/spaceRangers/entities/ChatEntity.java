@@ -63,7 +63,7 @@ public class ChatEntity {
         this.date = date;
     }
 
-    @ManyToMany(mappedBy = "chats", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
     @JsonIgnore
     public Collection<UsersEntity> getUsers(){
         return users;
@@ -76,7 +76,7 @@ public class ChatEntity {
 
     @OneToMany(targetEntity = VotingEntity.class, mappedBy = "chat")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
+    @JsonManagedReference(value = "chatVoting")
     public Collection<VotingEntity> getVotings() {
         return votings;
     }
@@ -87,7 +87,7 @@ public class ChatEntity {
 
     @OneToMany(targetEntity = MessagesEntity.class, mappedBy = "chat")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference(value = "chat")
+    @JsonManagedReference(value = "chatMessages")
     public Collection<MessagesEntity> getMessages(){return messages;}
 
     public void setMessages(Collection<MessagesEntity> messages){this.messages = messages;}

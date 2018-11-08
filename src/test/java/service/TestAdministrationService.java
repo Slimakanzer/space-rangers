@@ -40,11 +40,7 @@ public class TestAdministrationService {
     private AdministrationService administrationService;
 
 
-    @Before
-    public void getUsersEntity(){
 
-        usersEntity = registrationService.createUser("Test", "Test");
-    }
 
     @After
     public void dropUserEntity(){
@@ -87,8 +83,6 @@ public class TestAdministrationService {
 
     @Test
     public void testDropUser(){
-
-        UsersEntity usersEntity = registrationService.createUser("TestDrop", "TestDrop");
 
 
         UsersEntity user = registrationService.loginUser("TestDrop", "TestDrop");

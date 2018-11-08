@@ -3,6 +3,8 @@ package com.spaceRangers.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -40,7 +42,6 @@ public class UsersEntity {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -129,7 +130,7 @@ public class UsersEntity {
         return Objects.hash(id, login, email, firstName, lastName, description, level);
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "chat_user",
             joinColumns = {@JoinColumn(name = "id_user")},
@@ -145,7 +146,8 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference(value = "voteResult")
     public Collection<VoteEntity> getVotes(){
         return votes;
     }
@@ -186,7 +188,7 @@ public class UsersEntity {
 
     @OneToOne
     @JoinColumn(name = "id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "userAccountUser")
     public UserAccountEntity getUserAccount() {
         return userAccount;
     }
