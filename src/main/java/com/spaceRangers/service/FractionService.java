@@ -1,6 +1,9 @@
 package com.spaceRangers.service;
 
 import com.spaceRangers.entities.*;
+import javassist.NotFoundException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,8 @@ public interface FractionService {
      * @return
      */
     UserFractionEntity createUserFraction(UserFractionEntity userFraction);
+
+    FractionEntity createFraction(FractionEntity fraction, User user);
 
     /**
      *
@@ -44,8 +49,22 @@ public interface FractionService {
 
     /**
      * Получение задач, поставленных фракцией (Для обычных пользователей только их область видимости)
-     * @param idFraction
      * @return
      */
-    List<TaskEntity> getFractionTasks(int idFraction);
+    List<TaskEntity> getFractionTasks(FractionEntity fration);
+
+
+    boolean canCreateTasks(FractionEntity fraction, UsersEntity user) throws NotFoundException;
+
+    StateUserFractionEntity roleUserInFraction(FractionEntity fraction, User user);
+
+
+    TaskEntity getFractionTask(int id);
+
+    UserFractionEntity joinFraction(FractionEntity fraction, UsersEntity user);
+
+    UserFractionEntity outFromFraction(FractionEntity fraction, UsersEntity user);
+
+
+
 }

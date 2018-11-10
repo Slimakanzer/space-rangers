@@ -1,5 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,6 +54,7 @@ public class StateUserFractionEntity {
     }
 
     @OneToMany(mappedBy = "stateUserFraction")
+    @JsonIgnore
     public Collection<UserFractionEntity> getUserFractions() {
         return userFractions;
     }

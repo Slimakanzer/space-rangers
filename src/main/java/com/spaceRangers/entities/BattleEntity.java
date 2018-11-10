@@ -1,6 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -71,7 +73,7 @@ public class BattleEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public SystemEntity getSystem() {
         return system;
     }

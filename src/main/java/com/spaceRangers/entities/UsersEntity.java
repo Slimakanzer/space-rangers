@@ -130,13 +130,14 @@ public class UsersEntity {
         return Objects.hash(id, login, email, firstName, lastName, description, level);
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
             name = "chat_user",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_chat")}
     )
     @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<ChatEntity> getChats(){
         return chats;
     }
@@ -157,6 +158,7 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     public Collection<BaseEntity> getBases() {
         return bases;
@@ -167,6 +169,7 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     public Collection<PlanetEntity> getPlanets() {
         return planets;
@@ -177,7 +180,8 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference("userShip")
     public Collection<ShipEntity> getShips() {
         return ships;
     }
@@ -209,6 +213,7 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JsonManagedReference
     public Collection<UserBattleEntity> getUsersBattle() {
         return usersBattle;
@@ -219,7 +224,8 @@ public class UsersEntity {
     }
 
     @OneToMany(mappedBy = "user")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference(value = "userUserFraction")
     public Collection<UserFractionEntity> getUsersFraction() {
         return usersFraction;
     }

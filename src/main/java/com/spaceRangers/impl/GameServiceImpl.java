@@ -1,14 +1,12 @@
 package com.spaceRangers.impl;
 
-import com.spaceRangers.entities.BaseEntity;
-import com.spaceRangers.entities.PlanetEntity;
-import com.spaceRangers.entities.ResourceEntity;
-import com.spaceRangers.entities.ShipEntity;
+import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.*;
 import com.spaceRangers.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -133,7 +131,9 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public BaseEntity createBase(BaseEntity base) {
+        base.setId(null);
         baseRepository.save(base);
         return base;
     }
@@ -146,6 +146,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public BaseEntity updateBase(BaseEntity base) {
         baseRepository.save(base);
         return base;
@@ -170,6 +171,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public ShipEntity updateShip(ShipEntity ship) {
         shipRepository.save(ship);
         return ship;
@@ -178,12 +180,18 @@ public class GameServiceImpl implements GameService {
     /**
      * Получение корабля по id
      *
-     * @param idShip
      * @return
      */
     @Override
-    public ShipEntity getShipById(int idShip) {
-        return shipRepository.findById(idShip).get();
+    public ShipEntity getShip(UsersEntity user, int id) {
+        List<ShipEntity> list = user.getShips()
+                .stream()
+                .filter(e->e.getId().equals(id))
+                .collect(Collectors.toList());
+
+        if(list.size()==0) return null;
+        return list.get(0);
+
     }
 
 
@@ -232,6 +240,17 @@ public class GameServiceImpl implements GameService {
     public ResourceEntity createResource(ResourceEntity resource) {
         resourceRepository.saveAndFlush(resource);
         return resource;
+    }
+
+    @Override
+    public BaseEntity getUserBase(UsersEntity user, int idBase){
+        BaseEntity baseEntity  =user
+                .getBases()
+                .stream()
+                .filter(e->e.getId().equals(idBase))
+                .findFirst().get();
+
+        return baseEntity;
     }
 
     /**

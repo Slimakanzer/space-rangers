@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -11,7 +12,7 @@ import java.util.Objects;
 @Table(name = "type_task", schema = "public", catalog = "course")
 public class TypeTaskEntity {
     private Integer id;
-    private String nameState;
+    private String name;
     private Collection<TaskEntity> tasks;
 
     public TypeTaskEntity(){
@@ -30,12 +31,12 @@ public class TypeTaskEntity {
 
     @Basic
     @Column(name = "name_state", nullable = true, length = 30)
-    public String getNameState() {
-        return nameState;
+    public String getName() {
+        return name;
     }
 
-    public void setNameState(String nameState) {
-        this.nameState = nameState;
+    public void setName(String nameState) {
+        this.name = nameState;
     }
 
     @Override
@@ -44,16 +45,16 @@ public class TypeTaskEntity {
         if (o == null || getClass() != o.getClass()) return false;
         TypeTaskEntity that = (TypeTaskEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(nameState, that.nameState);
+                Objects.equals(name, that.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, nameState);
+        return Objects.hash(id, name);
     }
 
     @OneToMany(mappedBy = "typeTask")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<TaskEntity> getTasks() {
         return tasks;
     }

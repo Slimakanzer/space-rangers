@@ -91,7 +91,7 @@ public interface GameService {
      * @param idShip
      * @return
      */
-    ShipEntity getShipById(int idShip);
+    ShipEntity getShip(UsersEntity user, int idShip);
 
     /**
      * Создание корабля
@@ -129,5 +129,7 @@ public interface GameService {
      * @return
      */
     List<ShipEntity> getListShipByIdUser(int idUser);
+
+    BaseEntity getUserBase(UsersEntity user, int idBase);
 
 }

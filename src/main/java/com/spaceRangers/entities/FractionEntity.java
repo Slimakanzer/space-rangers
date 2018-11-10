@@ -1,6 +1,11 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -57,18 +62,19 @@ public class FractionEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_politics", referencedColumnName = "id", nullable = false)
-    @JsonManagedReference
-    public PoliticsEntity getPolitics() {
+    @JoinColumn(name = "id_politics", referencedColumnName = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
+    public PoliticsEntity getPolitics(){
         return politics;
     }
 
-    public void setPolitics(PoliticsEntity politicsByIdPolitics) {
-        this.politics = politicsByIdPolitics;
+    public void setPolitics(PoliticsEntity politics) {
+        this.politics = politics;
     }
 
     @OneToMany(mappedBy = "fraction")
-    @JsonManagedReference
+    @JsonManagedReference(value = "fractionTask")
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<TaskEntity> getTasks() {
         return tasks;
     }
@@ -78,7 +84,8 @@ public class FractionEntity {
     }
 
     @OneToMany(mappedBy = "fraction")
-    @JsonManagedReference
+    @JsonManagedReference(value = "fractionUserFraction")
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<UserFractionEntity> getUsersFraction() {
         return usersFraction;
     }

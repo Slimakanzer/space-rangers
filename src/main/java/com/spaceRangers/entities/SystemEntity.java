@@ -3,6 +3,8 @@ package com.spaceRangers.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -61,7 +63,7 @@ public class SystemEntity {
     }
 
     @OneToMany(mappedBy = "system")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<BaseEntity> getBases() {
         return bases;
     }
@@ -71,7 +73,7 @@ public class SystemEntity {
     }
 
     @OneToMany(mappedBy = "system")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<BattleEntity> getBattles() {
         return battles;
     }
@@ -81,7 +83,8 @@ public class SystemEntity {
     }
 
     @OneToMany(mappedBy = "system")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference("planetSystem")
     public Collection<PlanetEntity> getPlanets() {
         return planets;
     }
@@ -91,7 +94,7 @@ public class SystemEntity {
     }
 
     @OneToMany(mappedBy = "system")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<ShipEntity> getShips() {
         return ships;
     }

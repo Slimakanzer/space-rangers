@@ -1,7 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -65,7 +64,7 @@ public class UserFractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public StateUserFractionEntity getStateUserFraction() {
         return stateUserFraction;
     }
@@ -76,7 +75,7 @@ public class UserFractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_fraction", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "fractionUserFraction")
     public FractionEntity getFraction(){return fraction;}
 
     public void setFraction(FractionEntity fraction) {
@@ -85,7 +84,7 @@ public class UserFractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "userUserFraction")
     public UsersEntity getUser(){
         return user;
     }

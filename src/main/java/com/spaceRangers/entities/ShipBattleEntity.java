@@ -51,7 +51,7 @@ public class ShipBattleEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_ship", referencedColumnName = "id", nullable = false, updatable = false, insertable = false)
-    @JsonBackReference
+    @JsonBackReference("shipBattleShip")
     public ShipEntity getShip() {
         return ship;
     }

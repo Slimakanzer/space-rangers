@@ -3,11 +3,9 @@ package com.spaceRangers.impl;
 import com.spaceRangers.entities.StateUserFractionEntity;
 import com.spaceRangers.entities.TaskEntity;
 import com.spaceRangers.entities.UserFractionEntity;
-import com.spaceRangers.repository.FractionRepository;
-import com.spaceRangers.repository.TaskRepository;
-import com.spaceRangers.repository.UserFractionRepository;
-import com.spaceRangers.repository.UserRepository;
+import com.spaceRangers.repository.*;
 import com.spaceRangers.service.LeaderPlayerFractionService;
+import com.spaceRangers.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +17,9 @@ public class LeaderPlayerFractionServiceImpl extends AdvisersPlayerFractionServi
     private final UserFractionRepository userFractionRepository;
 
     @Autowired
-    public LeaderPlayerFractionServiceImpl(UserFractionRepository userFractionRepository, FractionRepository fractionRepository, UserRepository userRepository, TaskRepository taskRepository) {
-        super(userFractionRepository, fractionRepository, userRepository, taskRepository);
+    public LeaderPlayerFractionServiceImpl(UserFractionRepository userFractionRepository, FractionRepository fractionRepository, UserRepository userRepository, TaskRepository taskRepository, StateUserFractionRepository stateUserFractionRepository, RegistrationService registrationService) {
+        super(userFractionRepository, fractionRepository, userRepository, taskRepository, stateUserFractionRepository, registrationService);
         this.userFractionRepository = userFractionRepository;
-    }
-
-    @Override
-    public List<TaskEntity> getFractionTasks(int idFraction) {
-        // TODO сделать реализацию
-        return super.getFractionTasks(idFraction);
     }
 
     /**

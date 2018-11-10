@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -53,7 +54,7 @@ public class StatePrivacyEntity {
     }
 
     @OneToMany(mappedBy = "statePrivacy")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<TaskEntity> getTasks() {
         return tasks;
     }

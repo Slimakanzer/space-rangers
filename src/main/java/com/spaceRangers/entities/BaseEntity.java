@@ -1,8 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -94,7 +92,7 @@ public class BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public SystemEntity getSystem() {
         return system;
     }
@@ -104,7 +102,7 @@ public class BaseEntity {
     }
 
     @OneToMany(mappedBy = "base")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<ShipEntity> getShips() {
         return ships;
     }

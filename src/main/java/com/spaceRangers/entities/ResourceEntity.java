@@ -1,7 +1,9 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -74,7 +76,7 @@ public class ResourceEntity {
 
     @ManyToOne
     @JoinColumn(name = "type", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public TypeResourcesEntity getTypeResources() {
         return typeResources;
     }

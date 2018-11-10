@@ -1,7 +1,11 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -120,7 +124,8 @@ public class ShipEntity {
 
 
     @OneToMany(mappedBy = "ship")
-    @JsonManagedReference
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonManagedReference("shipBattleShip")
     public Collection<ShipBattleEntity> getShipBattles() {
         return shipBattles;
     }
@@ -131,7 +136,7 @@ public class ShipEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_base", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public BaseEntity getBase() {
         return base;
     }
@@ -142,7 +147,7 @@ public class ShipEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public SystemEntity getSystem() {
         return system;
     }
@@ -153,7 +158,7 @@ public class ShipEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference("userShip")
     public UsersEntity getUser() {
         return user;
     }
@@ -164,7 +169,7 @@ public class ShipEntity {
 
     @ManyToOne
     @JoinColumn(name = "state", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public StateShipEntity getStateShip() {
         return stateShip;
     }

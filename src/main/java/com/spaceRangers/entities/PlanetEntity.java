@@ -1,7 +1,9 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -82,7 +84,7 @@ public class PlanetEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference("planetSystem")
     public SystemEntity getSystem() {
         return system;
     }
@@ -104,7 +106,7 @@ public class PlanetEntity {
 
     @ManyToOne
     @JoinColumn(name = "type_weather", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public TypeWeatherEntity getTypeWeather() {
         return typeWeather;
     }

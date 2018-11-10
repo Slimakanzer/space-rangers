@@ -1,7 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -65,7 +64,7 @@ public class TaskEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_fraction", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @JsonBackReference(value = "fractionTask")
     public FractionEntity getFraction() {
         return fraction;
     }
@@ -76,7 +75,7 @@ public class TaskEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_type", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public TypeTaskEntity getTypeTask() {
         return typeTask;
     }
@@ -87,7 +86,7 @@ public class TaskEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public StateTaskEntity getStateTask() {
         return stateTask;
     }
@@ -98,7 +97,7 @@ public class TaskEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_privacy", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public StatePrivacyEntity getStatePrivacy() {
         return statePrivacy;
     }

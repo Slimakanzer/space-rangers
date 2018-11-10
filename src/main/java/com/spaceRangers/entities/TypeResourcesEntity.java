@@ -1,6 +1,7 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -52,7 +53,7 @@ public class TypeResourcesEntity {
     }
 
     @OneToMany(mappedBy = "typeResources")
-    @JsonBackReference
+    @JsonIgnore
     public Collection<ResourceEntity> getResources() {
         return resources;
     }
