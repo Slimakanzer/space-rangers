@@ -22,39 +22,18 @@ public class LeaderPlayerFractionServiceImpl extends AdvisersPlayerFractionServi
         this.userFractionRepository = userFractionRepository;
     }
 
-    /**
-     * Обновление задачи фракции
-     * Например, обновить область видимости
-     * или принять задачу
-     *
-     * @param task
-     * @return
-     */
     @Override
     public TaskEntity updateTask(TaskEntity task) {
         super.taskRepository.save(task);
         return task;
     }
 
-    /**
-     * Удаление задачи фракции
-     *
-     * @param task
-     * @return
-     */
     @Override
     public boolean removeTask(TaskEntity task) {
         taskRepository.delete(task);
         return true;
     }
 
-    /**
-     * Обновление состояния пользователя во фракции
-     * Например, увольнение
-     * или принятие пользователя
-     *
-     * @return
-     */
     @Override
     public UserFractionEntity updateStateUserFraction(UserFractionEntity userFractionEntity) {
         userFractionRepository.save(userFractionEntity);

@@ -21,12 +21,6 @@ public class PlayerFractionServiceImpl extends FractionServiceImpl implements Pl
         super(userFractionRepository, fractionRepository, userRepository, stateUserFractionRepository, taskRepository, registrationService);
     }
 
-    /**
-     * Изменение состояния пользователя во фракции
-     * (когда хочет покинуть её)
-     *
-     * @return
-     */
     @Override
     public UserFractionEntity updateStateUserFraction(UserFractionEntity userFractionEntity) {
         userFractionRepository.save(userFractionEntity);

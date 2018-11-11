@@ -7,6 +7,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.XmlViewResolver;
 
@@ -14,9 +16,10 @@ import org.springframework.web.servlet.view.XmlViewResolver;
 @EnableWebMvc
 @ComponentScan({
         "com.spaceRangers.config.security",
-        "com.spaceRangers.controller"
+        "com.spaceRangers.controller",
+        "com.spaceRangers.config.documentation"
 })
-public class WebConfig {
+public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     ViewResolver internalViewResolver(){
@@ -25,6 +28,16 @@ public class WebConfig {
         resolver.setSuffix(".jsp");
         resolver.setPrefix("/WEB-INF/");
         return resolver;
+    }
+
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     ViewResolver xmlViewResolver(){

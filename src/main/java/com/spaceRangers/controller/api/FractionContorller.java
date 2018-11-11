@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.impl.FilterService;
 import com.spaceRangers.service.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,6 +42,8 @@ public class FractionContorller {
     @Autowired
     LeaderPlayerFractionService leaderPlayerFractionService;
 
+    @ApiOperation("Get list of fractions")
+    @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getAllFractions(){
         try{
@@ -48,15 +53,14 @@ public class FractionContorller {
         }
     }
 
+    @ApiOperation("Create fraction by user")
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createFracion(
-            @AuthenticationPrincipal User user,
-            @RequestBody String fractions
+            @ApiIgnore  @AuthenticationPrincipal User user,
+            @ApiParam("Fraction entity") @RequestBody FractionEntity fraction
             ){
         try{
-
-            FractionEntity fraction = new ObjectMapper().readValue(fractions, FractionEntity.class);
             FractionEntity fractionEntity = fractionService.createFraction(fraction, user);
 
             return ResponseEntity.ok(fractionEntity);
@@ -68,8 +72,12 @@ public class FractionContorller {
     }
 
 
+    @ApiOperation("Get fraction by id")
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getFraction(@PathVariable int id){
+    public ResponseEntity getFraction(
+            @ApiParam("fraction id") @PathVariable int id
+    ){
         try{
             return ResponseEntity.ok(fractionService.getFraction(id));
         }catch (Exception e){
@@ -77,11 +85,12 @@ public class FractionContorller {
         }
     }
 
+    @ApiOperation("Get fraction's tasks")
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFractionTasks(
-            @PathVariable int id,
-            @AuthenticationPrincipal User user
+            @ApiParam("fraction id") @PathVariable int id,
+            @ApiIgnore @AuthenticationPrincipal User user
     ){
         try{
 
@@ -101,19 +110,18 @@ public class FractionContorller {
 
 
 
+    @ApiOperation("Create task for fraction")
     @Secured({
             "ROLE_LEADER",
             "ROLE_ADVISER"
     })
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createTask(
-            @AuthenticationPrincipal User user,
-            @PathVariable int id,
-            @RequestBody String tasks
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @ApiParam("fraction id") @PathVariable int id,
+            @ApiParam("task entity") @RequestBody TaskEntity task
     ){
         try{
-
-            TaskEntity task = new ObjectMapper().readValue(tasks, TaskEntity.class);
             task.setId(null);
 
             try{
@@ -135,12 +143,13 @@ public class FractionContorller {
     }
 
 
+    @ApiOperation("Get fraction task by id task")
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/tasks/{idTask}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getTaskById(
-            @AuthenticationPrincipal User user,
-            @PathVariable int id,
-            @PathVariable int idTask
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @ApiParam("fraction id") @PathVariable int id,
+            @ApiParam("task id") @PathVariable int idTask
     ){
         try{
             FractionEntity fraction = fractionService.getFraction(id);
@@ -155,18 +164,16 @@ public class FractionContorller {
         }
     }
 
+    @ApiOperation("Update task states")
     @Secured("ROLE_LEADER")
     @RequestMapping(value = "/{id}/tasks/{idTask}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTask(
-            @AuthenticationPrincipal User user,
-            @PathVariable int id,
-            @PathVariable int idTask,
-            @RequestBody String tasks
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @ApiParam("fraction id") @PathVariable int id,
+            @ApiParam("task id") @PathVariable int idTask,
+            @ApiParam("Task entity") @RequestBody TaskEntity task
     ){
         try{
-
-            TaskEntity task = new ObjectMapper().readValue(tasks, TaskEntity.class);
-
             try{
                 FractionEntity fraction = fractionService.getFraction(id);
                 if(filterService.taskInFraction(fraction, task)) {
@@ -185,11 +192,12 @@ public class FractionContorller {
         }
     }
 
+    @ApiOperation("To join the fraction")
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/join", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity subscribeUser(
-        @AuthenticationPrincipal User user,
-        @PathVariable int id
+        @ApiIgnore @AuthenticationPrincipal User user,
+        @ApiParam("fraction id") @PathVariable int id
     ){
         try {
             FractionEntity fraction = fractionService.getFraction(id);
@@ -211,11 +219,12 @@ public class FractionContorller {
         }
     }
 
+    @ApiOperation("To leave the fraction")
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/out", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity outFromFraction(
-            @AuthenticationPrincipal User user,
-            @PathVariable int id
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @ApiParam("fraction id") @PathVariable int id
     ){
 
         try{

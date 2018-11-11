@@ -23,7 +23,17 @@ public interface RegistrationService {
      */
     UsersEntity createUser(UserAccountEntity user);
 
+    /**
+     * Получение аккаунта пользователя по login
+     * @param login
+     * @return
+     */
     UserAccountEntity getUserAccount(String login);
 
+    /**
+     * Получение персонажа пользователя по User
+     * @param user
+     * @return
+     */
     UsersEntity getUser(User user);
 }

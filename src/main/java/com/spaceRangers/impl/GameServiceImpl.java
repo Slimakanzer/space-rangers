@@ -4,9 +4,12 @@ import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.*;
 import com.spaceRangers.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +25,9 @@ public class GameServiceImpl implements GameService {
     private final ShipRepository shipRepository;
 
     private final UserRepository userRepository;
+
+    @Autowired
+    SystemRepository systemRepository;
 
     @Autowired
     public GameServiceImpl(PlanetRepository planetRepository, ResourceRepository resourceRepository, BaseRepository baseRepository, ShipRepository shipRepository, UserRepository userRepository) {
@@ -63,6 +69,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public PlanetEntity updatePlanet(PlanetEntity planet) {
         planetRepository.save(planet);
         return planet;
@@ -225,6 +232,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public PlanetEntity createPlanet(PlanetEntity planet) {
         planetRepository.save(planet);
         return planet;
@@ -237,6 +245,7 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
+    @Transactional
     public ResourceEntity createResource(ResourceEntity resource) {
         resourceRepository.saveAndFlush(resource);
         return resource;
@@ -263,5 +272,53 @@ public class GameServiceImpl implements GameService {
     public boolean dropShip(ShipEntity ship) {
         shipRepository.delete(ship);
         return true;
+    }
+
+    public List<ShipEntity> getAllShips(){
+        List<ShipEntity> list = new ArrayList<>();
+        shipRepository.findAll().iterator()
+                .forEachRemaining(list::add);
+        return list;
+    }
+
+    public ShipEntity getShip(int id){
+        return shipRepository.findById(id).get();
+    }
+
+    public List<BaseEntity> getAllBases(){
+        List<BaseEntity> list = new ArrayList<>();
+        baseRepository.findAll().iterator()
+                .forEachRemaining(list::add);
+        return list;
+    }
+
+    public BaseEntity getBase(int id){
+        return baseRepository.findById(id).get();
+    }
+
+    public Collection<SystemEntity> getAllSystems(){
+        Collection<SystemEntity> list = new ArrayList<>();
+
+        systemRepository.findAll().iterator()
+                .forEachRemaining(list::add);
+        return list;
+    }
+
+    public SystemEntity getSystem(String name){
+        return systemRepository.findSystemEntityByNameSystem(name);
+    }
+
+    public SystemEntity getSystem(int id){
+        return systemRepository.findById(id).get();
+    }
+
+    public ResourceEntity getResource(int id){
+        return resourceRepository.findById(id).get();
+    }
+
+    @Transactional
+    public ResourceEntity updateResource(ResourceEntity resourceEntity){
+        resourceRepository.save(resourceEntity);
+        return resourceEntity;
     }
 }

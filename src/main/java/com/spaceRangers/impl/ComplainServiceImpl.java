@@ -17,24 +17,12 @@ public class ComplainServiceImpl implements ComplainService {
         this.complainRepository = complainRepository;
     }
 
-    /**
-     * Создание жалобы
-     *
-     * @param complainEntity
-     * @return
-     */
     @Override
     public ComplainEntity createComplain(ComplainEntity complainEntity) {
         complainRepository.save(complainEntity);
         return complainEntity;
     }
 
-    /**
-     * Изменение жалобы (если исправлена или т.д.)
-     *
-     * @param complainEntity
-     * @return
-     */
     @Override
     public ComplainEntity updateComplain(ComplainEntity complainEntity) {
         complainRepository.save(complainEntity);

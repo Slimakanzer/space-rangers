@@ -233,15 +233,8 @@ public class TestDatabaseJsonEntityReferences {
 
             session.saveOrUpdate(userBattleEntity);
 
-            ShipBattleEntity shipBattleEntity = new ShipBattleEntity();
-            shipBattleEntity.setIdBattle(battleEntity.getId());
-            shipBattleEntity.setBattle(battleEntity);
-            battleEntity.getShipBattles().add(shipBattleEntity);
-            shipBattleEntity.setIdShip(shipEntity.getId());
-            shipEntity.getShipBattles().add(shipBattleEntity);
-            shipBattleEntity.setShip(shipEntity);
 
-            session.saveOrUpdate(shipBattleEntity);
+
 
             ShipEntity ship = entityManager.find(ShipEntity.class, shipEntity.getId());
             BattleEntity battle = entityManager.find(BattleEntity.class, battleEntity.getId());

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,95 +30,60 @@ public class BattleServiceImpl implements BattleService {
         this.shipRepository = shipRepository;
     }
 
-    /**
-     * Получение userBattle по id
-     *
-     * @param idUserBattle
-     * @return
-     */
+
     @Override
     public StateUserBattleEntity getUserBattleById(int idUserBattle) {
         return null;
     }
 
-    /**
-     * Получение по названию
-     *
-     * @param name@return
-     */
+
     @Override
     public StateUserFractionEntity getUserBattleByName(String name) {
         return null;
     }
 
-    /**
-     * Создание битвы (когда начинается бой)
-     *
-     * @param battle
-     * @return
-     */
     @Override
     public BattleEntity createBattle(BattleEntity battle) {
         battleRepository.save(battle);
         return battle;
     }
 
-    /**
-     * Добавление участника в битву (может быть несколько пользователей в битве)
-     *
-     * @param userBattle
-     * @return
-     */
     @Override
     public UserBattleEntity createBattleUser(UserBattleEntity userBattle) {
         userBattleRepository.save(userBattle);
         return userBattle;
     }
 
-    /**
-     * Обновление состояния игрока в битве
-     * Например, проиграл, вышел из битвы
-     *
-     * @param userBattle
-     * @return
-     */
     @Override
     public UserBattleEntity updateBattleUser(UserBattleEntity userBattle) {
         userBattleRepository.save(userBattle);
         return userBattle;
     }
 
-    /**
-     * Получение списка пользователей в битве
-     *
-     * @param idBattle
-     * @return
-     */
     @Override
     public List<UsersEntity> getListUsersInBattle(int idBattle) {
         return battleRepository.getListUsersInBattle(idBattle);
     }
 
-    /**
-     * Добавление корабля в битву
-     *
-     * @param shipBattle
-     * @return
-     */
     @Override
     public ShipBattleEntity createShipBattle(ShipBattleEntity shipBattle) {
         shipBattleRepository.save(shipBattle);
         return shipBattle;
     }
 
-    /**
-     * Получение списка кораблей пользователя в битве
-     *
-     * @param
-     * @return
-     */
-//    @Override
-//    public List<ShipEntity> getListShipInBattle(int idBattle) {
-//        return shipBattleRepository.findShipsInBattle(idBattle);
-//    }
+    public Collection<BattleEntity> getBattlesUser(UsersEntity usersEntity){
+        Collection<BattleEntity> list = new ArrayList<>();
+        usersEntity.getUsersBattle()
+                .stream()
+                .forEach(e-> {
+                    BattleEntity battleEntity = e.getBattle();
+                    list.add(battleEntity);
+                });
+
+        return list;
+    }
+
+    public BattleEntity getBattle(int id){
+        return battleRepository.findById(id).get();
+    }
 }

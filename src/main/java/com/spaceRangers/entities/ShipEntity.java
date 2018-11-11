@@ -1,9 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -26,10 +23,10 @@ public class ShipEntity {
     private SystemEntity system;
     private UsersEntity user;
     private StateShipEntity stateShip;
-    private Collection<ShipBattleEntity> shipBattles;
+    private Collection<BattleEntity> battles;
 
     public ShipEntity(){
-        shipBattles = new HashSet<>();
+        battles = new HashSet<>();
     }
 
     @Id
@@ -123,15 +120,15 @@ public class ShipEntity {
     }
 
 
-    @OneToMany(mappedBy = "ship")
+    @ManyToMany(mappedBy = "ships")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference("shipBattleShip")
-    public Collection<ShipBattleEntity> getShipBattles() {
-        return shipBattles;
+    @JsonIgnore
+    public Collection<BattleEntity> getBattles() {
+        return battles;
     }
 
-    public void setShipBattles(Collection<ShipBattleEntity> shipBattles) {
-        this.shipBattles = shipBattles;
+    public void setBattles(Collection<BattleEntity> shipBattles) {
+        this.battles = shipBattles;
     }
 
     @ManyToOne

@@ -56,13 +56,35 @@ public interface FractionService {
 
     boolean canCreateTasks(FractionEntity fraction, UsersEntity user) throws NotFoundException;
 
+    /**
+     * Получение роли пользователя во фракции
+     * @param fraction
+     * @param user
+     * @return
+     */
     StateUserFractionEntity roleUserInFraction(FractionEntity fraction, User user);
 
-
+    /**
+     * Получение задания по id
+     * @param id
+     * @return
+     */
     TaskEntity getFractionTask(int id);
 
+    /**
+     * Подача заявки во фракцию
+     * @param fraction
+     * @param user
+     * @return
+     */
     UserFractionEntity joinFraction(FractionEntity fraction, UsersEntity user);
 
+    /**
+     * Выход из фракции
+     * @param fraction
+     * @param user
+     * @return
+     */
     UserFractionEntity outFromFraction(FractionEntity fraction, UsersEntity user);
 
 

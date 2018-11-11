@@ -9,8 +9,8 @@ import com.spaceRangers.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,12 +36,7 @@ public class AdvisersPlayerFractionServiceImpl extends PlayerFractionServiceImpl
         return (ArrayList<TaskEntity>)fraction.getTasks();
     }
 
-    /**
-     * Создание задач фракции
-     *
-     * @param task
-     * @return
-     */
+
     @Transactional
     public TaskEntity createTask(TaskEntity task) {
         task.setStateTask(stateTaskRepository.findStateTaskEntityByName("created"));

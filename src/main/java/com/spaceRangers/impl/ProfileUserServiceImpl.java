@@ -5,8 +5,8 @@ import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.ProfileUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,12 +20,6 @@ public class ProfileUserServiceImpl implements ProfileUserService {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Обновление пользовтеля
-     *
-     * @param user
-     * @return
-     */
     @Override
     @Transactional
     public UsersEntity updateUser(UsersEntity user) {
@@ -33,24 +27,12 @@ public class ProfileUserServiceImpl implements ProfileUserService {
         return user;
     }
 
-    /**
-     * Получение профиля игрока
-     *
-     * @param idUser
-     * @return
-     */
     @Override
     public UsersEntity getUser(int idUser) {
 
         return userRepository.findById(idUser).get();
     }
 
-    /**
-     * Получение id пользователя по его логину
-     *
-     * @param userLogin
-     * @return
-     */
     @Override
     public UsersEntity getUser(String userLogin) {
         return userRepository.findUsersEntityByLogin(userLogin);

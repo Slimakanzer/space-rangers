@@ -17,11 +17,11 @@ public class BattleEntity {
     private String name;
     private Date date;
     private SystemEntity system;
-    private Collection<ShipBattleEntity> shipBattles;
+    private Collection<ShipEntity> ships;
     private Collection<UserBattleEntity> userBattles;
 
     public BattleEntity(){
-        this.shipBattles = new HashSet<>();
+        this.ships = new HashSet<>();
         this.userBattles = new HashSet<>();
     }
 
@@ -82,14 +82,19 @@ public class BattleEntity {
         this.system = systemByIdSystem;
     }
 
-    @OneToMany(mappedBy = "battle")
-    @JsonManagedReference
-    public Collection<ShipBattleEntity> getShipBattles() {
-        return shipBattles;
+    @ManyToMany
+    @JoinTable(
+            name = "ship_battle",
+            joinColumns = {@JoinColumn(name = "id_battle")},
+            inverseJoinColumns = {@JoinColumn(name = "id_ship")}
+    )
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
+    public Collection<ShipEntity> getShips() {
+        return ships;
     }
 
-    public void setShipBattles(Collection<ShipBattleEntity> shipBattles) {
-        this.shipBattles = shipBattles;
+    public void setShips(Collection<ShipEntity> shipBattles) {
+        this.ships = shipBattles;
     }
 
 

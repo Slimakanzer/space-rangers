@@ -5,6 +5,7 @@ import com.spaceRangers.repository.StateUserBattleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface BattleService {
@@ -57,6 +58,21 @@ public interface BattleService {
      * @return
      */
     ShipBattleEntity createShipBattle(ShipBattleEntity shipBattle);
+
+    /**
+     * Получение списка битв пользователя
+     * @param usersEntity
+     * @return
+     */
+    Collection<BattleEntity> getBattlesUser(UsersEntity usersEntity);
+
+    /**
+     * Получение битвы по id
+     * @param id
+     * @return
+     */
+    BattleEntity getBattle(int id);
+
 
     /**
      * Получение списка кораблей пользователя в битве

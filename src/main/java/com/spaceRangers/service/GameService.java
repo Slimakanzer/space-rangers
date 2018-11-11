@@ -1,7 +1,9 @@
 package com.spaceRangers.service;
 
 import com.spaceRangers.entities.*;
+import org.springframework.http.ResponseEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface GameService {
@@ -130,6 +132,72 @@ public interface GameService {
      */
     List<ShipEntity> getListShipByIdUser(int idUser);
 
+    /**
+     * Получение баз пользователя
+     * @param user
+     * @param idBase
+     * @return
+     */
     BaseEntity getUserBase(UsersEntity user, int idBase);
+
+    /**
+     * Получение всех кораблей
+     * @return
+     */
+    List<ShipEntity> getAllShips();
+
+    /**
+     * Получение корабля по id
+     * @param id
+     * @return
+     */
+    ShipEntity getShip(int id);
+
+    /**
+     * Получение всех баз
+     * @return
+     */
+    List<BaseEntity> getAllBases();
+
+    /**
+     * Получение базы по id
+     * @param id
+     * @return
+     */
+    BaseEntity getBase(int id);
+
+    /**
+     * Получение всех систем
+     * @return
+     */
+    Collection<SystemEntity> getAllSystems();
+
+    /**
+     * Получение системы по name
+     * @param name
+     * @return
+     */
+    SystemEntity getSystem(String name);
+
+    /**
+     * ПОлучение системы по id
+     * @param id
+     * @return
+     */
+    SystemEntity getSystem(int id);
+
+    /**
+     * Получение ресурса по id
+     * @param id
+     * @return
+     */
+    ResourceEntity getResource(int id);
+
+    /**
+     * Обновление ресурса
+     * @param resourceEntity
+     * @return
+     */
+    ResourceEntity updateResource(ResourceEntity resourceEntity);
 
 }

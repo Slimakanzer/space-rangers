@@ -8,8 +8,8 @@ import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,12 +46,6 @@ public class ChatServiceImpl implements ChatService {
         return chat;
     }
 
-    /**
-     * Получение чата по id
-     *
-     * @param name
-     * @return
-     */
     @Override
     public ChatEntity getChat(String name) {
         return chatRepository.findChatEntityByName(name);

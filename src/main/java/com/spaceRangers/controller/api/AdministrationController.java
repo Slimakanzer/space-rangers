@@ -3,6 +3,10 @@ package com.spaceRangers.controller.api;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.AdministrationService;
 import com.spaceRangers.service.ProfileUserService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -21,9 +25,14 @@ public class AdministrationController {
     @Qualifier("profileUserService")
     private ProfileUserService profileUserService;
 
+    @ApiOperation("Delete user from application")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully deleted user"),
+            @ApiResponse(code = 404, message = "User not found")
+    })
     @RequestMapping(value = "/user", method = RequestMethod.DELETE)
     @ResponseBody
-    ResponseEntity dropUser(@RequestBody UsersEntity user) {
+    ResponseEntity dropUser(@ApiParam("Users entity") @RequestBody UsersEntity user) {
         try {
 
             return ResponseEntity.ok(
@@ -34,9 +43,15 @@ public class AdministrationController {
         }
     }
 
+    @ApiOperation("Update users state in application")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Successfully updated users state"),
+            @ApiResponse(code = 404, message = "User not found")
+    }
+    )
     @RequestMapping(value = "/user", method = RequestMethod.PUT)
     @ResponseBody
-    ResponseEntity updateUser(@RequestBody UsersEntity user){
+    ResponseEntity updateUser(@ApiParam("Users entity") @RequestBody UsersEntity user){
         try{
 
             return ResponseEntity.ok(
@@ -47,9 +62,16 @@ public class AdministrationController {
         }
     }
 
+    @ApiOperation("Get users state by id user")
+    @ApiResponses(
+            {
+                    @ApiResponse(code = 200, message = "Successfully got users state"),
+                    @ApiResponse(code = 404, message = "User not found")
+            }
+    )
     @RequestMapping(value = "/user/state", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity getStateUserByUserId(@RequestParam("id_user")int id_user){
+    ResponseEntity getStateUserByUserId(@ApiParam("Users id") @RequestParam("id_user")int id_user){
         try{
 
             return ResponseEntity.ok(

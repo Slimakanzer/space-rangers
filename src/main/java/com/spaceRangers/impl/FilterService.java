@@ -127,4 +127,45 @@ public class FilterService {
         return true;
 
     }
+
+    public boolean isPlanetInSystem(SystemEntity systemEntity, PlanetEntity planetEntity){
+        long count = systemEntity.getPlanets()
+                .stream()
+                .filter(e->e.getId().equals(planetEntity.getId()))
+                .count();
+
+        if(count == 0) return false; else return true;
+    }
+
+    public boolean isResourceInPlanet(PlanetEntity planetEntity, ResourceEntity resourceEntity){
+        long count = planetEntity.getResources()
+                .stream()
+                .filter(e->e.getId().equals(resourceEntity.getId()))
+                .count();
+
+        if(count == 0) return false; else return true;
+    }
+
+    public boolean isUsersPlanet(User user, PlanetEntity planetEntity){
+        if (planetEntity==null) return false;
+        UsersEntity usersEntity = registrationService.getUser(user);
+        long count = usersEntity.getPlanets()
+                .stream()
+                .filter(e->e.getId().equals(planetEntity.getId()))
+                .count();
+
+        if(count==0) return false; else return true;
+    }
+
+    public boolean isUsersBattle(User user, BattleEntity battleEntity){
+        if (battleEntity == null) return false;
+        UsersEntity usersEntity = registrationService.getUser(user);
+        long count = usersEntity.getUsersBattle()
+                .stream()
+                .filter(e->{
+                    if(e.getBattle().getId().equals(battleEntity.getId())) return true;
+                    else return false;
+                }).count();
+        if(count == 0) return false; else return true;
+    }
 }
