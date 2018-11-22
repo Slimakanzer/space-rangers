@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @ComponentScan(basePackages = {
-        "com.spaceRangers.config.database",
         "com.spaceRangers.config.web"
 })
 public class RootConfig extends WebMvcConfigurerAdapter {

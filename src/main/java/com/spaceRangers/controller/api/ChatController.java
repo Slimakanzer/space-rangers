@@ -2,7 +2,6 @@ package com.spaceRangers.controller.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spaceRangers.config.security.UserDetailsServiceImpl;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.service.ChatService;
 import com.spaceRangers.service.GameChatService;
@@ -14,7 +13,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,12 +21,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.transaction.Transactional;
-import java.io.IOException;
 import java.sql.Date;
 import java.util.*;
 
@@ -71,7 +66,7 @@ public class ChatController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET)
     ResponseEntity getListChatsUser(
-            @ApiParam("Users id") @RequestParam("id_user") int idUser,
+            @ApiParam("Users id") @RequestParam(name = "id_user", defaultValue = "1") int idUser,
             @ApiIgnore @AuthenticationPrincipal User user
             ){
         UserAccountEntity userAccountEntity = registrationService.getUserAccount(user.getUsername());
@@ -128,7 +123,7 @@ public class ChatController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     ResponseEntity getChat(
-            @ApiParam("id chat") @PathVariable int id,
+            @ApiParam(name = "id chat", defaultValue = "1") @PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
         try {
@@ -156,7 +151,7 @@ public class ChatController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/messages", method = RequestMethod.GET)
     ResponseEntity getMessagers(
-            @PathVariable int id,
+            @ApiParam(name = "id chat", defaultValue = "1")@PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
         try {
@@ -184,7 +179,7 @@ public class ChatController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity createMessage(
-            @ApiParam("chat id")@PathVariable int id,
+            @ApiParam(name = "chat id", defaultValue = "1")@PathVariable int id,
         @ApiParam("Message entity") @RequestBody MessagesEntity messagesEntity,
         @ApiIgnore @AuthenticationPrincipal User user
     ){
@@ -218,7 +213,7 @@ public class ChatController {
             method = RequestMethod.GET
     )
     ResponseEntity getChatVotings(
-            @ApiParam("chat id") @PathVariable int id,
+            @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
         try{
@@ -250,7 +245,7 @@ public class ChatController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity createChatVotings(
-            @ApiParam("chat id") @PathVariable int id,
+            @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user,
             @ApiParam("Voting entity") @RequestBody VotingEntity votingEntity
     ){
@@ -287,7 +282,7 @@ public class ChatController {
             method = RequestMethod.GET
     )
     ResponseEntity getVoting(
-            @ApiParam("chat id") @PathVariable int id,
+            @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
             @ApiParam("voting id")@PathVariable int idVoting,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
@@ -325,7 +320,7 @@ public class ChatController {
             method = RequestMethod.GET
     )
     ResponseEntity getVotingResults(
-            @ApiParam("chat id") @PathVariable int id,
+            @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
             @ApiParam("voting id") @PathVariable int idVoting,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
@@ -366,8 +361,8 @@ public class ChatController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity createVotingResults(
-            @ApiParam("chat id") @PathVariable int id,
-            @ApiParam("voting id") @PathVariable int idVoting,
+            @ApiParam(name = "chat id") @PathVariable int id,
+            @ApiParam(name = "voting id", defaultValue = "1") @PathVariable int idVoting,
             @ApiParam("Result entity") @RequestBody ResultsEntity resultsEntity,
             @ApiIgnore @AuthenticationPrincipal User user
     ) {
@@ -412,9 +407,9 @@ public class ChatController {
             method = RequestMethod.GET
     )
     ResponseEntity getVotingResult(
-            @ApiParam("chat id") @PathVariable int id,
-            @ApiParam("voting id") @PathVariable int idVoting,
-            @ApiParam("result id")@PathVariable int idResult,
+            @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
+            @ApiParam(name = "voting id", defaultValue = "1") @PathVariable int idVoting,
+            @ApiParam(name = "result id", defaultValue = "1")@PathVariable int idResult,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
         try{

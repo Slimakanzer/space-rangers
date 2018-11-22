@@ -6,26 +6,7 @@ import java.util.List;
 
 public interface AdministrationService {
 
-//    /**
-//     * Получение списка групп пользователя
-//     * @param user
-//     * @return
-//     */
-//    List<UserGroupEntity> getUsersGroups(UsersEntity user);
-//
-//    /**
-//     * Добавление пользователя в группу
-//     * @param userGroup
-//     * @return
-//     */
-//    UserGroupEntity createUserGroup(UserGroupEntity userGroup);
-//
-//    /**
-//     * Удаление пользователя из группы
-//     * @param userGroup
-//     * @return
-//     */
-//    boolean dropUserGroup(UserGroupEntity userGroup);
+
 
     /**
      * Получение состояния пользователя

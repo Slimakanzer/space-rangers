@@ -8,7 +8,6 @@ public class WebApplicationInitialiser extends AbstractDispatcherServletInitiali
 
     @Override
     protected WebApplicationContext createServletApplicationContext() {
-        System.out.println("Init web context");
 
         AnnotationConfigWebApplicationContext servletConfig = new AnnotationConfigWebApplicationContext();
         servletConfig.register(WebConfig.class);
@@ -18,7 +17,6 @@ public class WebApplicationInitialiser extends AbstractDispatcherServletInitiali
 
     @Override
     protected WebApplicationContext createRootApplicationContext() {
-        System.out.println("Init application context");
         AnnotationConfigWebApplicationContext rootConfig = new AnnotationConfigWebApplicationContext();
         rootConfig.register(RootConfig.class);
 

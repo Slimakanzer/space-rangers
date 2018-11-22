@@ -17,7 +17,8 @@ import org.springframework.web.servlet.view.XmlViewResolver;
 @ComponentScan({
         "com.spaceRangers.config.security",
         "com.spaceRangers.controller",
-        "com.spaceRangers.config.documentation"
+        "com.spaceRangers.config.documentation",
+        "com.spaceRangers.config.database",
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -38,12 +39,5 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         registry.addResourceHandler("webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
-    }
-
-    ViewResolver xmlViewResolver(){
-        XmlViewResolver resolver = new XmlViewResolver();
-        resolver.setOrder(1);
-        resolver.setLocation(new ClassPathResource("views.xml"));
-        return resolver;
     }
 }

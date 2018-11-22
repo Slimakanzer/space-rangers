@@ -71,7 +71,7 @@ public class AdministrationController {
     )
     @RequestMapping(value = "/user/state", method = RequestMethod.GET)
     @ResponseBody
-    ResponseEntity getStateUserByUserId(@ApiParam("Users id") @RequestParam("id_user")int id_user){
+    ResponseEntity getStateUserByUserId(@ApiParam(name = "Users id", defaultValue = "1") @RequestParam("id_user")int id_user){
         try{
 
             return ResponseEntity.ok(

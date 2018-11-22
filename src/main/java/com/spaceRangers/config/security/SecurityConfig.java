@@ -18,14 +18,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
 @Configuration
 @EnableWebMvcSecurity
-@ComponentScan
-@Import(PersistenceConfig.class)
+@ComponentScan(value = "com.spaceRangers.config.security.service")
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -65,10 +65,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling()
                     .accessDeniedPage("/denied")
                 .and()
+                    .authenticationProvider(authenticationProvider())
+
                     .rememberMe()
-                    .rememberMeCookieName("my-token")
-                    .tokenRepository(persistentTokenRepository())
-                    .tokenValiditySeconds(60*60);
+                        .rememberMeCookieName("remember-me-token")
+                        .userDetailsService(userDetailsService)
+                        .tokenRepository(persistentTokenRepository())
+                        .key("test")
+                        .tokenValiditySeconds(60*60*4)
+                        .alwaysRemember(true);
     }
 
     @Bean
