@@ -1,5 +1,5 @@
 course.iml
 .idea/
 out/
-package.json
+*.json
 target/
