@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "persistent_logins", schema = "public", catalog = "course")
+@Table(name = "persistent_logins", schema = "s242552", catalog = "course")
 public class PersistentLoginsEntity {
     private String username;
     private String series;

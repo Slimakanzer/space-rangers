@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "planet", schema = "public", catalog = "course")
+@Table(name = "planet", schema = "s242552", catalog = "course")
 public class PlanetEntity {
     private Integer id;
     private String namePlanet;

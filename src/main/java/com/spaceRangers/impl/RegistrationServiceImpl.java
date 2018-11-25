@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service("registrationService")
 public class RegistrationServiceImpl implements RegistrationService {
@@ -61,8 +62,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Transactional
     public UsersEntity createUser(UserAccountEntity user) {
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         user.getGroups().add(groupsRepository.findGroupsEntityByName("User"));
         user.setId(null);
         userAccountRepository.save(user);
@@ -74,17 +73,29 @@ public class RegistrationServiceImpl implements RegistrationService {
         usersEntity.setLevel(1);
 
         userRepository.save(usersEntity);
-//
 
-//        return userRepository.findById(
-//                user.getId()
-//        ).get();
-        return null;
+        return usersEntity;
     }
 
     @Override
-    @Transactional
     public UsersEntity getUser(User user) {
         return getUserAccount(user.getUsername()).getUser();
+    }
+
+
+    public UserAccountEntity authentification(String mail){
+
+        Optional<UserAccountEntity> user = userAccountRepository.findUserAccountEntityByMail(mail);
+
+        if(user.isPresent()){
+            return user.get();
+        }else {
+            UserAccountEntity userAccount = new UserAccountEntity();
+            userAccount.setMail(mail);
+            userAccount.setLogin(mail);
+            userAccount.setPassword("");
+            this.createUser(userAccount);
+            return userAccount;
+        }
     }
 }

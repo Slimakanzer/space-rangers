@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "voting", schema = "public", catalog = "course")
+@Table(name = "voting", schema = "s242552", catalog = "course")
 public class VotingEntity {
     private Integer id;
     private String message;

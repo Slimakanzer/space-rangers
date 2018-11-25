@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_group", schema = "public", catalog = "course")
+@Table(name = "user_group", schema = "s242552", catalog = "course")
 @IdClass(UserGroupEntityPK.class)
 public class UserGroupEntity {
     private int idUser;

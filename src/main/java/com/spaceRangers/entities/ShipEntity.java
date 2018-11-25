@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ship", schema = "public", catalog = "course")
+@Table(name = "ship", schema = "s242552", catalog = "course")
 public class ShipEntity {
     private Integer id;
     private Integer hp;

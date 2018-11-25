@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "system", schema = "public", catalog = "course")
+@Table(name = "system", schema = "s242552", catalog = "course")
 public class SystemEntity {
     private Integer id;
     private String nameSystem;

@@ -36,4 +36,6 @@ public interface RegistrationService {
      * @return
      */
     UsersEntity getUser(User user);
+
+    UserAccountEntity authentification(String mail);
 }

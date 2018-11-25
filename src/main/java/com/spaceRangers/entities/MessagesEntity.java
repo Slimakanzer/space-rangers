@@ -9,7 +9,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Objects;
 
 @Entity
-@Table(name = "messages", schema = "public", catalog = "course")
+@Table(name = "messages", schema = "s242552", catalog = "course")
 public class MessagesEntity {
     private Integer id;
     private Integer idUser;

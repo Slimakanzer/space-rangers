@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "resource", schema = "public", catalog = "course")
+@Table(name = "resource", schema = "s242552", catalog = "course")
 public class ResourceEntity {
     private Integer id;
     private String nameResources;

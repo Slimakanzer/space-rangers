@@ -7,7 +7,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_fraction", schema = "public", catalog = "course")
+@Table(name = "user_fraction", schema = "s242552", catalog = "course")
 @IdClass(UserFractionEntityPK.class)
 public class UserFractionEntity {
     private Integer idFraction;

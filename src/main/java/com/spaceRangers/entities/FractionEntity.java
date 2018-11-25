@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "fraction", schema = "public", catalog = "course")
+@Table(name = "fraction", schema = "s242552", catalog = "course")
 public class FractionEntity {
     private Integer id;
     private String nameFraction;

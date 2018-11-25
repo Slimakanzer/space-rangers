@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "state_user", schema = "public", catalog = "course")
+@Table(name = "state_user", schema = "s242552", catalog = "course")
 public class StateUserEntity {
     private Integer id;
     private String name;

@@ -10,7 +10,6 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @PropertySource("classpath:database.properties")
-@ComponentScan("com.spaceRangers.config.database.persistence")
 public class DatabaseConfig {
 
     @Bean

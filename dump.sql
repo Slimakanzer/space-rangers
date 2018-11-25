@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 10.5 (Ubuntu 10.5-0ubuntu0.18.04)
--- Dumped by pg_dump version 10.5 (Ubuntu 10.5-0ubuntu0.18.04)
+-- Dumped from database version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
+-- Dumped by pg_dump version 10.6 (Ubuntu 10.6-0ubuntu0.18.04.1)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -257,6 +257,20 @@ ALTER TABLE public.messages_id_seq OWNER TO postgres;
 
 ALTER SEQUENCE public.messages_id_seq OWNED BY public.messages.id;
 
+
+--
+-- Name: persistent_logins; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.persistent_logins (
+    username character varying(100) NOT NULL,
+    series character varying(64) NOT NULL,
+    token character varying(64) NOT NULL,
+    last_used timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.persistent_logins OWNER TO postgres;
 
 --
 -- Name: planet; Type: TABLE; Schema: public; Owner: postgres
@@ -599,8 +613,9 @@ ALTER TABLE public.type_weather OWNER TO postgres;
 
 CREATE TABLE public.user_account (
     id integer NOT NULL,
-    login text NOT NULL,
-    password text NOT NULL
+    login text,
+    password text,
+    mail text
 );
 
 
@@ -862,6 +877,7 @@ COPY public.chat (id, name, date) FROM stdin;
 1	The Best	2018-11-03
 2	test2	2018-11-03
 3	test2	2018-11-03
+4	Gays	\N
 \.
 
 
@@ -873,6 +889,7 @@ COPY public.chat_user (id_user, id_chat) FROM stdin;
 1	1
 1	2
 1	3
+1	4
 \.
 
 
@@ -928,6 +945,20 @@ COPY public.messages (id, id_chat, id_user, message) FROM stdin;
 6	1	1	hey, h=who are you?
 7	1	1	I'm Gleb
 8	2	1	Hello
+9	1	1	string
+\.
+
+
+--
+-- Data for Name: persistent_logins; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.persistent_logins (username, series, token, last_used) FROM stdin;
+glebb	aeDno1eRw7WMCa1vVy7c3Q==	lHkyMtSz19gwNbEzienWPQ==	2018-11-22 18:56:19.1
+glebb	ByHCtNIdSQiZEl+B/cFvxw==	olmXlaD1atZw0nDZVtczCA==	2018-11-22 18:57:29.754
+test	doB2ogF2q0IjZO2PZxcTOw==	7H4mseaiFWB4SALO2KEi7Q==	2018-11-24 17:16:06.687
+test	XTu+WSgv9P0ulFUR9iC1iA==	6DnfbTA9g6lhaLQ0hP0OyA==	2018-11-24 17:55:12.439
+test	F2TB0xF9In9qAIJWPGZ+jA==	0osSV6FBUO6QAmTBR44+cA==	2018-11-24 20:33:20.245
 \.
 
 
@@ -1097,9 +1128,10 @@ COPY public.type_weather (id, name) FROM stdin;
 -- Data for Name: user_account; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.user_account (id, login, password) FROM stdin;
-1	test	$2a$10$aJ7a.8gk/sPlyQsl0I5co./MVJo/6dJAivJKKgsCcgtGiqVlnBoAO
-10	glebb	$2a$10$jU0rTXRWZPRDFKea92.sp.tvdKc.qMckDhmcGHQkxz5fDkOF1JXe.
+COPY public.user_account (id, login, password, mail) FROM stdin;
+1	test	$2a$10$aJ7a.8gk/sPlyQsl0I5co./MVJo/6dJAivJKKgsCcgtGiqVlnBoAO	\N
+10	glebb	$2a$10$jU0rTXRWZPRDFKea92.sp.tvdKc.qMckDhmcGHQkxz5fDkOF1JXe.	\N
+12	gleb.larochkin@gmail.com		gleb.larochkin@gmail.com
 \.
 
 
@@ -1116,8 +1148,8 @@ COPY public.user_battle (id_user, id_battle, date, id_state) FROM stdin;
 --
 
 COPY public.user_fraction (id_fraction, id_user, date, id_state) FROM stdin;
-8	10	2018-11-08	1
 8	1	2018-11-08	3
+8	10	2018-11-08	\N
 \.
 
 
@@ -1130,6 +1162,7 @@ COPY public.user_group (id_user, id_group) FROM stdin;
 10	2
 1	1
 1	3
+12	1
 \.
 
 
@@ -1140,6 +1173,7 @@ COPY public.user_group (id_user, id_group) FROM stdin;
 COPY public.users (id, login, password, level, id_state, email, first_name, last_name, description) FROM stdin;
 1	Test	\N	1	\N	\N	\N	\N	\N
 10	\N	\N	\N	\N	\N	\N	\N	\N
+12	\N	\N	1	\N	\N	\N	\N	\N
 \.
 
 
@@ -1181,7 +1215,7 @@ SELECT pg_catalog.setval('public.battle_id_seq', 3, true);
 -- Name: chat_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.chat_id_seq', 3, true);
+SELECT pg_catalog.setval('public.chat_id_seq', 4, true);
 
 
 --
@@ -1195,7 +1229,7 @@ SELECT pg_catalog.setval('public.fraction_id_seq', 14, true);
 -- Name: messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.messages_id_seq', 8, true);
+SELECT pg_catalog.setval('public.messages_id_seq', 9, true);
 
 
 --
@@ -1237,7 +1271,7 @@ SELECT pg_catalog.setval('public.task_id_seq', 7, true);
 -- Name: user_account_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.user_account_id_seq', 11, true);
+SELECT pg_catalog.setval('public.user_account_id_seq', 12, true);
 
 
 --
@@ -1324,6 +1358,14 @@ ALTER TABLE ONLY public.groups
 
 ALTER TABLE ONLY public.messages
     ADD CONSTRAINT messages_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: persistent_logins persistent_logins_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.persistent_logins
+    ADD CONSTRAINT persistent_logins_pkey PRIMARY KEY (series);
 
 
 --
@@ -1452,6 +1494,14 @@ ALTER TABLE ONLY public.type_task
 
 ALTER TABLE ONLY public.type_resources
     ADD CONSTRAINT type_resources_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_account user_account_mail_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.user_account
+    ADD CONSTRAINT user_account_mail_key UNIQUE (mail);
 
 
 --

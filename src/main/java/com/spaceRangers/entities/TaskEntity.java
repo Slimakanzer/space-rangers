@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "task", schema = "public", catalog = "course")
+@Table(name = "task", schema = "s242552", catalog = "course")
 public class TaskEntity {
     private Integer id;
     private String name;

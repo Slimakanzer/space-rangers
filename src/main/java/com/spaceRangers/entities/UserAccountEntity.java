@@ -3,6 +3,8 @@ package com.spaceRangers.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -10,12 +12,13 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_account", schema = "public", catalog = "course")
+@Table(name = "user_account", schema = "s242552", catalog = "course")
 @JsonIgnoreProperties("user")
 public class UserAccountEntity {
     private Integer id;
     private String login;
     private String password;
+    private String mail;
     private UsersEntity user;
     private Collection<GroupsEntity> groups;
 
@@ -35,7 +38,7 @@ public class UserAccountEntity {
     }
 
     @Basic
-    @Column(name = "login", nullable = true, length = 30)
+    @Column(name = "login", length = 30)
     public String getLogin() {
         return login;
     }
@@ -45,13 +48,23 @@ public class UserAccountEntity {
     }
 
     @Basic
-    @Column(name = "password", nullable = true, length = -1)
+    @Column(name = "password", length = -1)
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Basic
+    @Column(name = "mail", length = -1, unique = true)
+    public String getMail() {
+        return mail;
+    }
+
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 
     @OneToOne(mappedBy = "userAccount")
@@ -64,13 +77,14 @@ public class UserAccountEntity {
         this.user = user;
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(
             name = "user_group",
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_group")}
     )
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<GroupsEntity> getGroups(){
         return groups;
     }
