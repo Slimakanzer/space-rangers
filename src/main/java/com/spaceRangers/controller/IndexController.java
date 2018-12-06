@@ -37,11 +37,6 @@ public class IndexController{
         }
     }
 
-    @RequestMapping("/login")
-    public String getLogin(){
-        return "login";
-    }
-
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
     public String registrations(BindingResult bindingResult, Model model){
 

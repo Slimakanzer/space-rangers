@@ -1,6 +1,9 @@
 package com.spaceRangers.config.security;
 
+import com.google.common.collect.ImmutableList;
 import com.spaceRangers.config.security.filters.GoogleOauthFilter;
+import com.spaceRangers.config.security.service.RestEntriyPoint;
+import com.spaceRangers.config.security.handlers.SuccessLoginHandler;
 import com.spaceRangers.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,11 +19,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.RequestContextFilter;
 
 import javax.sql.DataSource;
@@ -44,6 +54,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("googleRestTemplate")
     public OAuth2RestTemplate googleRestTemplate;
+
+    @Autowired
+    RestEntriyPoint restEntriyPoint;
+
+    @Autowired
+    SuccessLoginHandler successLoginHandler;
 
 
     @Autowired
@@ -77,27 +93,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login/google"));
 
-        http.authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("/registration").permitAll()
-                .antMatchers("/test").access("hasRole('USER')")
-                .and().formLogin()
-                    .loginPage("/login")
-                    .defaultSuccessUrl("/test")
-                    .failureForwardUrl("/login")
-                    .usernameParameter("login")
-                    .passwordParameter("password")
-                .and().csrf()
-                    .disable()
-                    .authorizeRequests()
-                    .anyRequest()
-                    .authenticated()
-                    .and()
-                    .httpBasic()
-                .and().exceptionHandling()
-                    .accessDeniedPage("/denied")
+        http
+                .addFilterBefore(new CorsFilter(corsConfigurationSource()), UsernamePasswordAuthenticationFilter.class)
+                .httpBasic()
+                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/**"));
+
+
+        http
+                .authorizeRequests()
+                    .antMatchers("/login/**").permitAll()
                 .and()
-                    .authenticationProvider(authenticationProvider())
+                .csrf().disable()
+                .httpBasic()
+                .and()
+                .formLogin()
+                    .successHandler(successLoginHandler)
+                    .failureHandler(failureHandler())
+                .and()
+                .exceptionHandling()
+                    .authenticationEntryPoint(restEntriyPoint)
+                .and()
+                .authenticationProvider(authenticationProvider())
 
                 .rememberMe()
                         .rememberMeCookieName("remember-me-token")
@@ -129,5 +145,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         jdbcTokenRepository.setDataSource(dataSource);
         return jdbcTokenRepository;
     }
+
+    @Bean
+    public AuthenticationFailureHandler failureHandler(){
+        return new SimpleUrlAuthenticationFailureHandler();
+    }
+
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(ImmutableList.of("*"));
+        configuration.setAllowedMethods(ImmutableList.of("HEAD",
+                "GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowCredentials(true);
+        configuration.setAllowedHeaders(ImmutableList.of("*"));
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
+
 }
 

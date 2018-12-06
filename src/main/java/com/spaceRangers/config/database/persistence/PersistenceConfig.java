@@ -20,7 +20,6 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @ComponentScan(basePackages = {
-        "com.spaceRangers.repository",
         "com.spaceRangers.impl"
 })
 @EnableJpaRepositories("com.spaceRangers.repository")
@@ -83,8 +82,7 @@ public class PersistenceConfig{
 
     @Bean
     public JpaVendorAdapter getJpaVendorAdapter(){
-        JpaVendorAdapter jpaVendorAdapter = new HibernateJpaVendorAdapter();
-        return jpaVendorAdapter;
+        return new HibernateJpaVendorAdapter();
     }
 
 

@@ -3,3 +3,11 @@ course.iml
 out/
 *.json
 target/
+uml/
+
+
+vue/node_modules/
+vue/config/
+vue/build/
+vue/static/.*
+vue/.*

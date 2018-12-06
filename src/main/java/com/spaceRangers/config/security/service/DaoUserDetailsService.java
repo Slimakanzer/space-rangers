@@ -39,7 +39,6 @@ public class DaoUserDetailsService implements UserDetailsService {
         return new User(userAccount.getLogin(), userAccount.getPassword(), getGrantedAuthorities(userAccount));
     }
 
-
     private List<GrantedAuthority> getGrantedAuthorities(UserAccountEntity userAccount){
 
         log.info("User was found " + userAccount.getLogin());
