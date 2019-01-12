@@ -84,7 +84,7 @@ public class SystemEntity {
 
     @OneToMany(mappedBy = "system")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference("planetSystem")
+    @JsonIgnore
     public Collection<PlanetEntity> getPlanets() {
         return planets;
     }

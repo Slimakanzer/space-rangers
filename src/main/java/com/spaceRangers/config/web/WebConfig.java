@@ -21,6 +21,7 @@ import org.springframework.web.servlet.view.XmlViewResolver;
         "com.spaceRangers.controller",
         "com.spaceRangers.config.documentation",
         "com.spaceRangers.config.database",
+        "com.spaceRangers.config.websocket",
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
@@ -32,7 +33,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         resolver.setPrefix("/WEB-INF/");
         return resolver;
     }
-
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

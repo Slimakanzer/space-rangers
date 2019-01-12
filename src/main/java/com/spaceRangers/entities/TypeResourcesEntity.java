@@ -14,10 +14,11 @@ public class TypeResourcesEntity {
     private Integer id;
     private String name;
     private Collection<ResourceEntity> resources;
-
+    private Integer cost;
     public TypeResourcesEntity(){
         resources = new HashSet<>();
     }
+
     @Id
     @Column(name = "id", nullable = false)
     public Integer getId() {
@@ -60,5 +61,15 @@ public class TypeResourcesEntity {
 
     public void setResources(Collection<ResourceEntity> resourcesById) {
         this.resources = resourcesById;
+    }
+
+    @Basic
+    @Column(name = "cost")
+    public Integer getCost() {
+        return cost;
+    }
+
+    public void setCost(Integer cost) {
+        this.cost = cost;
     }
 }

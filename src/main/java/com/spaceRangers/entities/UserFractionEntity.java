@@ -84,7 +84,7 @@ public class UserFractionEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonBackReference(value = "userUserFraction")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser(){
         return user;
     }

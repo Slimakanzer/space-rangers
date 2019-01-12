@@ -13,6 +13,8 @@ public class WebApplicationInitialiser extends AbstractDispatcherServletInitiali
 
     Logger log = LogManager.getLogger(WebApplicationInitialiser.class);
 
+
+
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);

@@ -44,6 +44,17 @@ public class IndexController{
 
     }
 
+
+//    @RequestMapping(value = "/login/google")
+//    public void googleLogin(HttpServletRequest request, HttpServletResponse response){
+//        try {
+//            response.sendRedirect("http://localhost:8081/#/user");
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     @RequestMapping("/test")
     public String getTest(){
         return "test";

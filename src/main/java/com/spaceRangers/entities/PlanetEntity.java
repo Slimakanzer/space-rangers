@@ -23,10 +23,13 @@ public class PlanetEntity {
     private UsersEntity user;
     private TypeWeatherEntity typeWeather;
     private Collection<ResourceEntity> resources;
+    private Integer locationPlanetZ;
+    private Integer rplanet;
 
     public PlanetEntity(){
         this.resources = new HashSet<>();
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -86,7 +89,7 @@ public class PlanetEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_system", referencedColumnName = "id")
-    @JsonBackReference("planetSystem")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public SystemEntity getSystem() {
         return system;
     }
@@ -97,7 +100,7 @@ public class PlanetEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser() {
         return user;
     }
@@ -126,5 +129,25 @@ public class PlanetEntity {
 
     public void setResources(Collection<ResourceEntity> resourcesById) {
         this.resources = resourcesById;
+    }
+
+    @Basic
+    @Column(name = "location_planet_z")
+    public Integer getLocationPlanetZ() {
+        return locationPlanetZ;
+    }
+
+    public void setLocationPlanetZ(Integer locationPlanetZ) {
+        this.locationPlanetZ = locationPlanetZ;
+    }
+
+    @Basic
+    @Column(name = "rplanet")
+    public Integer getRplanet() {
+        return rplanet;
+    }
+
+    public void setRplanet(Integer rplanet) {
+        this.rplanet = rplanet;
     }
 }

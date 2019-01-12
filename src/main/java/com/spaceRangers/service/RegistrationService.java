@@ -9,13 +9,6 @@ import java.util.List;
 
 public interface RegistrationService {
 
-    /**
-     * Логгирование юзера
-     * @param login
-     * @param password
-     * @return
-     */
-    UsersEntity loginUser(String login, String password);
 
     /**
      * Регистрирование пользователя
@@ -38,4 +31,6 @@ public interface RegistrationService {
     UsersEntity getUser(User user);
 
     UserAccountEntity authentification(String mail);
+
+    UserAccountEntity registration(String login, String password) throws IllegalAccessException;
 }

@@ -1,6 +1,8 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -17,6 +19,7 @@ public class BaseEntity {
     private UsersEntity user;
     private SystemEntity system;
     private Collection<ShipEntity> ships;
+    private Integer locationBaseZ;
 
     public BaseEntity(){
         ships = new HashSet<>();
@@ -81,7 +84,7 @@ public class BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser() {
         return user;
     }
@@ -103,11 +106,22 @@ public class BaseEntity {
 
     @OneToMany(mappedBy = "base")
     @JsonIgnore
+    @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<ShipEntity> getShips() {
         return ships;
     }
 
     public void setShips(Collection<ShipEntity> shipsById) {
         this.ships = shipsById;
+    }
+
+    @Basic
+    @Column(name = "location_base_z")
+    public Integer getLocationBaseZ() {
+        return locationBaseZ;
+    }
+
+    public void setLocationBaseZ(Integer locationBaseZ) {
+        this.locationBaseZ = locationBaseZ;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,6 +22,11 @@ public class SuccessLoginHandler extends SimpleUrlAuthenticationSuccessHandler {
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication auth)
             throws ServletException, IOException {
+
+        Cookie cookie = new Cookie("auth", "auth");
+        cookie.setHttpOnly(false);
+        response.addCookie(cookie);
+
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         if (savedRequest == null) {
             clearAuthenticationAttributes(request);

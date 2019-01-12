@@ -80,18 +80,4 @@ public class TestAdministrationService {
 //
 //        log.info("*********************End test******************************");
 //    }
-
-    @Test
-    public void testDropUser(){
-
-
-        UsersEntity user = registrationService.loginUser("TestDrop", "TestDrop");
-
-        log.info(user.getId() + " "+user.getLevel());
-        log.info("Проверка удаления пользователя");
-
-        administrationService.dropUser(usersEntity);
-        log.info("Successful: успешно удалён пользователь");
-
-    }
 }

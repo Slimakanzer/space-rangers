@@ -1,6 +1,11 @@
 package com.spaceRangers.service;
 
+import com.spaceRangers.entities.ChatEntity;
 import com.spaceRangers.entities.ComplainEntity;
+import com.spaceRangers.entities.UsersEntity;
+import org.springframework.security.core.userdetails.User;
+
+import java.util.Collection;
 
 public interface ComplainService {
 
@@ -18,4 +23,8 @@ public interface ComplainService {
      * @return
      */
     ComplainEntity updateComplain(ComplainEntity complainEntity);
+
+    ChatEntity startProcessionComplain(ComplainEntity complainEntity, User user);
+
+    Collection<ComplainEntity> getComplains();
 }

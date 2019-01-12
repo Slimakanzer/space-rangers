@@ -116,12 +116,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationProvider(authenticationProvider())
 
                 .rememberMe()
-                        .rememberMeCookieName("remember-me-token")
-                        .userDetailsService(userDetailsService)
-                        .tokenRepository(persistentTokenRepository())
-                        .key("test")
-                        .tokenValiditySeconds(60*60*4)
-                        .alwaysRemember(true);
+                .rememberMeCookieName("remember-me-token")
+                .userDetailsService(userDetailsService)
+                .tokenRepository(persistentTokenRepository())
+                .key("test")
+                .tokenValiditySeconds(60*60*4)
+                .alwaysRemember(true);
     }
 
     @Bean

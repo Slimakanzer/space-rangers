@@ -24,6 +24,7 @@ public class ShipEntity {
     private UsersEntity user;
     private StateShipEntity stateShip;
     private Collection<BattleEntity> battles;
+    private TypeShipEntity typeShip;
 
     public ShipEntity(){
         battles = new HashSet<>();
@@ -155,7 +156,7 @@ public class ShipEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    @JsonBackReference("userShip")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser() {
         return user;
     }
@@ -173,5 +174,16 @@ public class ShipEntity {
 
     public void setStateShip(StateShipEntity stateShipByState) {
         this.stateShip = stateShipByState;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "type_ship", referencedColumnName = "name")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
+    public TypeShipEntity getTypeShip() {
+        return typeShip;
+    }
+
+    public void setTypeShip(TypeShipEntity typeShipByTypeShip) {
+        this.typeShip = typeShipByTypeShip;
     }
 }

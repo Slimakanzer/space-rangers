@@ -43,18 +43,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Transactional
-    public UsersEntity loginUser(String login, String password) {
-        UserAccountEntity user = userAccountRepository.findUserAccountEntityByLogin(login);
-            if (user.getPassword().equals(password)) {
-                return userRepository.findById(
-                        user.getId()
-                ).get();
-            } else return null;
-    }
-
-    @Transactional
     public UserAccountEntity getUserAccount(String login){
-        UserAccountEntity userAccountEntity = userAccountRepository.findUserAccountEntityByLogin(login);
+        UserAccountEntity userAccountEntity = userAccountRepository.findUserAccountEntityByLogin(login).get();
         return userAccountEntity;
 
     }
@@ -97,5 +87,24 @@ public class RegistrationServiceImpl implements RegistrationService {
             this.createUser(userAccount);
             return userAccount;
         }
+    }
+
+
+    public UserAccountEntity registration(String login, String password) throws IllegalAccessException {
+        UserAccountEntity userAccountEntity = new UserAccountEntity();
+        userAccountEntity.setLogin(login);
+        userAccountEntity.setPassword(passwordEncoder.encode(password));
+
+        Optional<UserAccountEntity> user = userAccountRepository.findUserAccountEntityByLogin(login);
+
+        if(user.isPresent()){
+            throw new IllegalAccessException("Already exist");
+        }
+
+        createUser(userAccountEntity);
+        return userAccountEntity;
+
+
+
     }
 }

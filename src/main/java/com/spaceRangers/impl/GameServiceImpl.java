@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service("gameService")
@@ -25,6 +26,9 @@ public class GameServiceImpl implements GameService {
     private final ShipRepository shipRepository;
 
     private final UserRepository userRepository;
+
+    @Autowired
+    private TypeShipRepository typeShipRepository;
 
     @Autowired
     SystemRepository systemRepository;
@@ -166,9 +170,35 @@ public class GameServiceImpl implements GameService {
      * @return
      */
     @Override
-    public ShipEntity createShip(ShipEntity ship) {
+    @Transactional
+    public ShipEntity createShip(ShipEntity ship) throws Exception {
+
+        if(ship.getTypeShip() == null || ship.getBase() == null){
+            throw new NoSuchFieldException("Null field");
+        }
+
+        if (ship.getUser().getCoins() < ship.getTypeShip().getCost()) throw new Exception("402 - you don't have money");
+
+        ship.getUser().setCoins(ship.getUser().getCoins() - ship.getTypeShip().getCost());
+        userRepository.save(ship.getUser());
+
+        ship.setSystem(ship.getBase().getSystem());
+        ship.setHp(ship.getTypeShip().getHp());
+        ship.setSpeed(ship.getTypeShip().getSpeed());
+        ship.setProtection(ship.getTypeShip().getProtection());
+
         shipRepository.save(ship);
         return ship;
+    }
+
+    @Override
+    public ShipEntity powerupShip(ShipEntity ship) throws Exception {
+        if(ship.getUser().getCoins() < 20) throw new Exception("402 - you don't have money");
+
+        ship.getUser().setCoins(ship.getUser().getCoins() - 20);
+        userRepository.save(ship.getUser());
+
+        return shipRepository.save(ship);
     }
 
     /**
@@ -252,7 +282,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public BaseEntity getUserBase(UsersEntity user, int idBase){
+    public BaseEntity getUserBase(UsersEntity user, int idBase) throws NoSuchElementException {
         BaseEntity baseEntity  =user
                 .getBases()
                 .stream()
@@ -320,5 +350,10 @@ public class GameServiceImpl implements GameService {
     public ResourceEntity updateResource(ResourceEntity resourceEntity){
         resourceRepository.save(resourceEntity);
         return resourceEntity;
+    }
+
+    @Override
+    public Collection<TypeShipEntity> getShipTypes() {
+        return typeShipRepository.findAll();
     }
 }

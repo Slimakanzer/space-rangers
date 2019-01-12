@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -35,6 +36,10 @@ public class MessagesEntity {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Basic
     @Column(name = "id_user", nullable = false)
     public  Integer getIdUser(){
@@ -46,17 +51,13 @@ public class MessagesEntity {
     }
 
     @Basic
-    @Column(name = "id_chat", nullable = false)
+    @Column(name = "id_chat", nullable = true)
     public Integer getIdChat(){
         return idChat;
     }
 
     public void setIdChat(Integer idChat){
         this.idChat = idChat;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @ManyToOne
@@ -67,7 +68,7 @@ public class MessagesEntity {
     public void setChat(ChatEntity chat){this.chat=chat;}
 
     @OneToOne(mappedBy = "message")
-    @JsonBackReference(value = "complain")
+    @JsonIgnore
     public ComplainEntity getComplain() {
         return complain;
     }

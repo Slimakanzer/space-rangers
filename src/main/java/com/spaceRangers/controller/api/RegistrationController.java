@@ -6,6 +6,7 @@ import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.service.RegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,15 @@ public class RegistrationController {
     @Autowired
     RegistrationService registrationService;
 
-    @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public ResponseEntity loginUser(@RequestBody UserAccountEntity userAccountEntity){
-        UsersEntity user = registrationService.loginUser(userAccountEntity.getLogin(), userAccountEntity.getPassword());
-        return ResponseEntity.ok(user);
+
+    @RequestMapping(value = "/registration", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public ResponseEntity registration(@RequestParam String username, @RequestParam String password){
+        try {
+            registrationService.registration(username, password);
+            return ResponseEntity.ok().build();
+        } catch (IllegalAccessException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
     }
+
 }

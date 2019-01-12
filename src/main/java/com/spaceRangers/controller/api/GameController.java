@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -34,12 +35,8 @@ public class GameController {
     @RequestMapping(value = "/ships", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getShips(){
-        try{
             return ResponseEntity.ok(gameService.getAllShips());
 
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get ship by id")
@@ -48,27 +45,19 @@ public class GameController {
     public ResponseEntity getShip(
             @ApiParam("ship id") @PathVariable int id
     ){
-        try{
             try {
                 ShipEntity shipEntity = gameService.getShip(id);
                 return ResponseEntity.ok(shipEntity);
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get bases")
     @RequestMapping(value = "/bases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getBases(){
-        try {
             return ResponseEntity.ok(gameService.getAllBases());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get base by id")
@@ -77,27 +66,19 @@ public class GameController {
     public ResponseEntity getBase(
             @ApiParam("base id") @PathVariable int id
     ){
-        try{
             try {
                 BaseEntity baseEntity = gameService.getBase(id);
                 return ResponseEntity.ok(baseEntity);
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get systems")
     @RequestMapping(value = "/systems", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getSystems(){
-        try{
             return ResponseEntity.ok(gameService.getAllSystems());
 
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get system by id")
@@ -105,16 +86,12 @@ public class GameController {
     public ResponseEntity getSystems(
             @ApiParam("system id") @PathVariable int id
     ){
-        try{
             try {
                 SystemEntity systemEntity = gameService.getSystem(id);
                 return ResponseEntity.ok(systemEntity);
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get system planets")
@@ -123,7 +100,6 @@ public class GameController {
     public ResponseEntity getPlanets(
             @ApiParam("system id") @PathVariable int idSystem
     ){
-        try{
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 return ResponseEntity.ok(systemEntity.getPlanets());
@@ -131,36 +107,24 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get planet by id")
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/planets/{idPlanet}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getPlanet(
-            @ApiParam("system id")@PathVariable int idSystem,
             @ApiParam("planet id")@PathVariable int idPlanet
     ){
-        try{
             try{
-                SystemEntity systemEntity = gameService.getSystem(idSystem);
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
 
-                if(filterService.isPlanetInSystem(systemEntity, planetEntity)){
-                    return ResponseEntity.ok(planetEntity);
-                }
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                if(planetEntity == null)
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                else return ResponseEntity.ok(planetEntity);
 
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Create planet")
@@ -170,7 +134,6 @@ public class GameController {
             @ApiParam("system id") @PathVariable int idSystem,
             @ApiParam("Planet entity") @RequestBody PlanetEntity planetEntity
     ){
-        try{
             try {
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 planetEntity.setSystem(systemEntity);
@@ -181,9 +144,6 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Update planet")
@@ -194,7 +154,6 @@ public class GameController {
             @ApiParam("planet id") @PathVariable int idPlanet,
             @ApiParam("Planet entity") @RequestBody PlanetEntity planetEntity
     ){
-        try{
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 planetEntity.setId(idPlanet);
@@ -210,10 +169,6 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get planet resources")
@@ -223,7 +178,6 @@ public class GameController {
             @ApiParam("system id") @PathVariable int idSystem,
             @ApiParam("planet id") @PathVariable int idPlanet
     ){
-        try{
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
@@ -233,9 +187,6 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Create planet resource")
@@ -246,7 +197,6 @@ public class GameController {
             @ApiParam("planet id") @PathVariable int idPlanet,
             @ApiParam("Resource entity") @RequestBody ResourceEntity resourceEntity
     ){
-        try{
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
@@ -262,9 +212,6 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get resource by id")
@@ -275,8 +222,6 @@ public class GameController {
             @ApiParam("planet id") @PathVariable int idPlanet,
             @ApiParam("resource id") @PathVariable int idResource
     ){
-        try{
-
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
@@ -290,10 +235,6 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Update count of resource")
@@ -306,8 +247,6 @@ public class GameController {
             @ApiParam("Resource entity") @RequestBody ResourceEntity resourceEntity,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
-
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
@@ -327,12 +266,12 @@ public class GameController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
-
-
+    @ApiOperation("Get ships types")
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/ships/types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<TypeShipEntity>> getShipsTypes(){
+        return ResponseEntity.ok(gameService.getShipTypes());
+    }
 }

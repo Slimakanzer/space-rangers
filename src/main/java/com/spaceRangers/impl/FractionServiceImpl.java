@@ -4,18 +4,13 @@ import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.*;
 import com.spaceRangers.service.FractionService;
 import com.spaceRangers.service.RegistrationService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("fractionService")
@@ -75,18 +70,23 @@ public class FractionServiceImpl implements FractionService {
     }
 
     @Override
-    public List<UsersEntity> getListUsersInFraction(int idFraction) {
-        List<UsersEntity> users = new ArrayList<>();
+    public Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, User user) {
 
-        userFractionRepository
-                .findAll()
-                .stream()
-                .forEach(e->{
-                    if(e.getIdFraction() == idFraction) users.add(
-                            userRepository.findById(e.getIdUser()).get()
-                    );
-                });
-        return users;
+        Collection<UserFractionEntity> userFractionEntities = fractionEntity.getUsersFraction();
+
+        StateUserFractionEntity role = roleUserInFraction(fractionEntity, user);
+        if( role == null || role.getName().equals("candidate") || role.getName().equals("player") || role.getName().equals("left")){
+            userFractionEntities = userFractionEntities.stream().filter(e->{
+                String nameState = e.getStateUserFraction().getName();
+
+                if(nameState.equals("leader")) return true;
+                if(nameState.equals("player")) return true;
+                return false;
+            })
+                    .collect(Collectors.toList());
+        }
+
+        return userFractionEntities;
     }
 
     @Override
@@ -148,10 +148,11 @@ public class FractionServiceImpl implements FractionService {
 
         if(userFraction.size() == 0) return null;
 
-        StateUserFractionEntity  state = userFraction.get(0).getStateUserFraction();
-        if(state.getName().equals("owner") || state.getName().equals("adviser") || state.getName().equals("player")) return state;
 
-        return null;
+
+        StateUserFractionEntity  state = userFraction.get(0).getStateUserFraction();
+        return state;
+
     }
 
     @Override
@@ -190,9 +191,25 @@ public class FractionServiceImpl implements FractionService {
                 .findAny().get();
 
         if(userFractionEntity==null) return null;
-        userFractionEntity.setStateUserFraction(stateUserFractionRepository.findStateUserFractionEntityByName("leaved"));
+        userFractionEntity.setStateUserFraction(stateUserFractionRepository.findStateUserFractionEntityByName("left"));
         userFractionRepository.save(userFractionEntity);
 
         return userFractionEntity;
+    }
+
+    @Transactional
+    public void updateUser(FractionEntity fractionEntity, UserFractionEntity userFractionEntity, User user) throws NoSuchElementException{
+
+        UserFractionEntityPK userFractionEntityPK = new UserFractionEntityPK();
+        userFractionEntityPK.setIdFraction(userFractionEntity.getIdFraction());
+        userFractionEntityPK.setIdUser(userFractionEntity.getIdUser());
+
+        Optional<UserFractionEntity> userFractionEntityOptional = userFractionRepository.findById(userFractionEntityPK);
+
+        if(userFractionEntityOptional.isPresent()){
+            UserFractionEntity userFractionEntity1 = userFractionEntityOptional.get();
+            userFractionEntity1.setStateUserFraction(userFractionEntity.getStateUserFraction());
+            userFractionRepository.save(userFractionEntity1);
+        }else throw new NoSuchElementException("Not found");
     }
 }

@@ -2,11 +2,11 @@ package com.spaceRangers.service;
 
 import com.spaceRangers.entities.*;
 import javassist.NotFoundException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 
 public interface FractionService {
 
@@ -42,10 +42,9 @@ public interface FractionService {
 
     /**
      * Получение списка пользователей, которые находятся в данной фракции
-     * @param idFraction
      * @return
      */
-    List<UsersEntity> getListUsersInFraction(int idFraction);
+    Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, User user);
 
     /**
      * Получение задач, поставленных фракцией (Для обычных пользователей только их область видимости)
@@ -86,6 +85,8 @@ public interface FractionService {
      * @return
      */
     UserFractionEntity outFromFraction(FractionEntity fraction, UsersEntity user);
+
+    void updateUser(FractionEntity fractionEntity, UserFractionEntity userFractionEntity, User user) throws NoSuchElementException;
 
 
 

@@ -1,6 +1,8 @@
 package com.spaceRangers.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -11,8 +13,8 @@ import java.util.Objects;
 public class ComplainEntity {
     private Integer id;
     private Date date;
-    private Boolean state;
     private MessagesEntity message;
+    private StateComplainEntity stateComplain;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,39 +37,39 @@ public class ComplainEntity {
         this.date = date;
     }
 
-    @Basic
-    @Column(name = "state", nullable = true)
-    public Boolean getState() {
-        return state;
-    }
-
-    public void setState(Boolean state) {
-        this.state = state;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ComplainEntity that = (ComplainEntity) o;
         return Objects.equals(id, that.id) &&
-                Objects.equals(date, that.date) &&
-                Objects.equals(state, that.state);
+                Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, state);
+        return Objects.hash(id, date);
     }
 
     @OneToOne
     @JoinColumn(name = "id_message", referencedColumnName = "id")
-    @JsonManagedReference(value = "complain")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public MessagesEntity getMessage() {
         return message;
     }
 
     public void setMessage(MessagesEntity message) {
         this.message = message;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "state", referencedColumnName = "name")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
+    public StateComplainEntity getStateComplain() {
+        return stateComplain;
+    }
+
+    public void setStateComplain(StateComplainEntity stateComplain) {
+        this.stateComplain = stateComplain;
     }
 }

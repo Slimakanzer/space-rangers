@@ -1,8 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
@@ -64,7 +62,7 @@ public class ChatEntity {
     }
 
     @ManyToMany(mappedBy = "chats", fetch = FetchType.EAGER)
-    @JsonIgnore
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public Collection<UsersEntity> getUsers(){
         return users;
     }

@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/fraction")
@@ -45,12 +49,15 @@ public class FractionContorller {
     @ApiOperation("Get list of fractions")
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity getAllFractions(){
-        try{
-            return ResponseEntity.ok(fractionService.getListFractions());
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    public ResponseEntity getAllFractions(
+            @RequestParam(required = false) boolean sortByName,
+            @RequestParam(required = false) boolean sortByCountPeople
+    ){
+            Stream<FractionEntity> stream = fractionService.getListFractions().stream();
+            stream = (sortByName) ? stream.sorted(Comparator.comparing(FractionEntity::getNameFraction)) : stream;
+            stream = (sortByCountPeople) ? stream.sorted(Comparator.comparing(fractionEntity -> fractionEntity.getUsersFraction().size())) : stream;
+
+            return ResponseEntity.ok(stream.collect(Collectors.toList()));
     }
 
     @ApiOperation("Create fraction by user")
@@ -60,15 +67,9 @@ public class FractionContorller {
             @ApiIgnore  @AuthenticationPrincipal User user,
             @ApiParam("Fraction entity") @RequestBody FractionEntity fraction
             ){
-        try{
             FractionEntity fractionEntity = fractionService.createFraction(fraction, user);
 
             return ResponseEntity.ok(fractionEntity);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
 
@@ -78,11 +79,7 @@ public class FractionContorller {
     public ResponseEntity getFraction(
             @ApiParam("fraction id") @PathVariable int id
     ){
-        try{
             return ResponseEntity.ok(fractionService.getFraction(id));
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get fraction's tasks")
@@ -90,22 +87,24 @@ public class FractionContorller {
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFractionTasks(
             @ApiParam("fraction id") @PathVariable int id,
-            @ApiIgnore @AuthenticationPrincipal User user
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @RequestParam(required = false) boolean sortByName,
+            @RequestParam(required = false) boolean sortByType,
+            @RequestParam(required = false) boolean sortByState,
+            @RequestParam(required = false) boolean sortByPrivacy
     ){
-        try{
-
             FractionEntity fraction = fractionService.getFraction(id);
 
-            List<TaskEntity> tasks = fraction.getTasks()
+            Stream<TaskEntity> stream = fraction.getTasks()
                     .stream()
-                    .filter(e->filterService.taskFilter(fraction, e, user))
-                    .collect(Collectors.toList());
+                    .filter(e->filterService.taskFilter(fraction, e, user));
 
-            return ResponseEntity.ok(tasks);
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+            stream = (sortByName) ? stream.sorted(Comparator.comparing(TaskEntity::getName)) : stream;
+            stream = (sortByType) ? stream.sorted(Comparator.comparing(taskEntity -> taskEntity.getTypeTask().getName())) : stream;
+            stream = (sortByState) ? stream.sorted(Comparator.comparing(taskEntity -> taskEntity.getStateTask().getName())) : stream;
+            stream = (sortByPrivacy) ? stream.sorted(Comparator.comparing(taskEntity -> taskEntity.getStatePrivacy().getName())) : stream;
+
+            return ResponseEntity.ok(stream.collect(Collectors.toList()));
     }
 
 
@@ -121,7 +120,6 @@ public class FractionContorller {
             @ApiParam("fraction id") @PathVariable int id,
             @ApiParam("task entity") @RequestBody TaskEntity task
     ){
-        try{
             task.setId(null);
 
             try{
@@ -134,12 +132,6 @@ public class FractionContorller {
             }catch (NullPointerException e){
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
-
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
 
@@ -151,17 +143,12 @@ public class FractionContorller {
             @ApiParam("fraction id") @PathVariable int id,
             @ApiParam("task id") @PathVariable int idTask
     ){
-        try{
             FractionEntity fraction = fractionService.getFraction(id);
 
             TaskEntity taskEntity = fractionService.getFractionTask(idTask);
 
             if(filterService.taskFilter(fraction, taskEntity, user)) return ResponseEntity.ok(taskEntity);
             else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Update task states")
@@ -173,7 +160,6 @@ public class FractionContorller {
             @ApiParam("task id") @PathVariable int idTask,
             @ApiParam("Task entity") @RequestBody TaskEntity task
     ){
-        try{
             try{
                 FractionEntity fraction = fractionService.getFraction(id);
                 if(filterService.taskInFraction(fraction, task)) {
@@ -185,11 +171,6 @@ public class FractionContorller {
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
 
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("To join the fraction")
@@ -199,7 +180,6 @@ public class FractionContorller {
         @ApiIgnore @AuthenticationPrincipal User user,
         @ApiParam("fraction id") @PathVariable int id
     ){
-        try {
             FractionEntity fraction = fractionService.getFraction(id);
                 UsersEntity usersEntity = registrationService.getUser(user);
             if (filterService.userInFraction(fraction, user))
@@ -214,9 +194,6 @@ public class FractionContorller {
             }catch (NullPointerException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("To leave the fraction")
@@ -226,8 +203,6 @@ public class FractionContorller {
             @ApiIgnore @AuthenticationPrincipal User user,
             @ApiParam("fraction id") @PathVariable int id
     ){
-
-        try{
             FractionEntity fraction = fractionService.getFraction(id);
 
             try{
@@ -243,8 +218,48 @@ public class FractionContorller {
             }catch (NullPointerException e){
                 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+
+    @ApiOperation("Get fractions users")
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/{id}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getFractionsUsers(
+            @ApiIgnore @AuthenticationPrincipal User user,
+            @PathVariable int id,
+            @RequestParam(required = false) boolean sortByUsername,
+            @RequestParam(required = false) boolean sortByLevel,
+            @RequestParam(required = false) boolean sortByState
+    ){
+        FractionEntity fractionEntity = fractionService.getFraction(id);
+
+        Stream<UserFractionEntity> stream = fractionService.getListUsersInFraction(fractionEntity, user).stream();
+
+        stream = (sortByUsername) ? stream.sorted(Comparator.comparing(userFractionEntity -> userFractionEntity.getUser().getLogin())) : stream;
+        stream = (sortByLevel) ? stream.sorted(Comparator.comparing(userFractionEntity -> userFractionEntity.getUser().getLevel())) : stream;
+        stream = (sortByState) ? stream.sorted(Comparator.comparing(userFractionEntity -> userFractionEntity.getStateUserFraction().getName())): stream;
+
+
+        return ResponseEntity.ok(
+            stream.collect(Collectors.toList())
+        );
+    }
+
+    @ApiOperation("Accept user")
+    @Secured("ROLE_LEADER")
+    @RequestMapping(value = "/{id}/accept", method = RequestMethod.POST)
+    public ResponseEntity acceptUser(
+            @RequestBody UserFractionEntity userFractionEntity,
+            @AuthenticationPrincipal User user,
+            @PathVariable int id
+    ){
+        FractionEntity fractionEntity = fractionService.getFraction(id);
+
+        try {
+            fractionService.updateUser(fractionEntity, userFractionEntity, user);
+            return ResponseEntity.ok().build();
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
         }
+
     }
 }

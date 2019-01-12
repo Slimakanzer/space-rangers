@@ -1,7 +1,9 @@
 package com.spaceRangers.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -86,7 +88,7 @@ public class UserBattleEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser() {
         return user;
     }

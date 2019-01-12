@@ -93,23 +93,23 @@ public class ChatController {
             @ApiParam("Chat entity") @RequestBody ChatEntity chat,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-            try {
+        try {
 
-                UserAccountEntity usersEntity = registrationService.getUserAccount(user.getUsername());
-                UsersEntity users = usersEntity.getUser();
+            UserAccountEntity usersEntity = registrationService.getUserAccount(user.getUsername());
+            UsersEntity users = usersEntity.getUser();
 
-                chat.getUsers().add(users);
-                chat.setDate(new Date(new java.util.Date().getTime()));
+            chat.getUsers().add(users);
+            users.getChats().add(chat);
+            chat.setDate(new Date(new java.util.Date().getTime()));
 
-                chatService.createChat(chat);
+            chatService.createChat(chat);
 
-                profileUserService.updateUser(users);
+            profileUserService.updateUser(users);
 
-                return ResponseEntity.ok(chat);
-            }catch (Exception e){
-                e.printStackTrace();
-                return ResponseEntity.badRequest().build();
-            }
+            return ResponseEntity.ok(chat);
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
     }
 
@@ -126,7 +126,6 @@ public class ChatController {
             @ApiParam(name = "id chat", defaultValue = "1") @PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try {
             try {
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -140,10 +139,6 @@ public class ChatController {
             } catch (NoSuchElementException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
 
@@ -154,7 +149,6 @@ public class ChatController {
             @ApiParam(name = "id chat", defaultValue = "1")@PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try {
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -167,9 +161,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Create chat message")
@@ -183,7 +174,6 @@ public class ChatController {
         @ApiParam("Message entity") @RequestBody MessagesEntity messagesEntity,
         @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -202,9 +192,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Get chat's voting")
@@ -216,7 +203,6 @@ public class ChatController {
             @ApiParam(name = "chat id", defaultValue = "1") @PathVariable int id,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -231,9 +217,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
     }
 
@@ -249,7 +232,6 @@ public class ChatController {
             @ApiIgnore @AuthenticationPrincipal User user,
             @ApiParam("Voting entity") @RequestBody VotingEntity votingEntity
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -269,10 +251,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
     }
 
@@ -286,7 +264,6 @@ public class ChatController {
             @ApiParam("voting id")@PathVariable int idVoting,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -306,10 +283,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
     }
 
@@ -324,7 +297,6 @@ public class ChatController {
             @ApiParam("voting id") @PathVariable int idVoting,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -346,10 +318,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
     }
 
@@ -366,7 +334,6 @@ public class ChatController {
             @ApiParam("Result entity") @RequestBody ResultsEntity resultsEntity,
             @ApiIgnore @AuthenticationPrincipal User user
     ) {
-        try {
             try {
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -395,10 +362,6 @@ public class ChatController {
             } catch (NoSuchElementException e) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("get voting result by id result")
@@ -412,7 +375,6 @@ public class ChatController {
             @ApiParam(name = "result id", defaultValue = "1")@PathVariable int idResult,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -439,10 +401,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Update voting result")
@@ -459,7 +417,6 @@ public class ChatController {
             @ApiParam("Result entity") @RequestBody ResultsEntity resultsEntity1,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -491,10 +448,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
 
@@ -509,7 +462,6 @@ public class ChatController {
             @ApiParam("result id") @PathVariable int idResult,
             @ApiIgnore@AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -536,10 +488,6 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @ApiOperation("Create vote for result")
@@ -555,7 +503,6 @@ public class ChatController {
             @ApiParam("result id") @PathVariable int idResult,
             @ApiIgnore @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity users = registrationService.getUser(user);
                 ChatEntity chat = chatService.getChat(id);
@@ -594,9 +541,5 @@ public class ChatController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 }

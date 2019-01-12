@@ -1,8 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import org.omg.CORBA.UserException;
 
 import javax.persistence.*;
@@ -64,7 +62,7 @@ public class VoteEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_user", referencedColumnName = "id", updatable = false, insertable = false)
-    @JsonBackReference(value = "voteUser")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser() {
         return user;
     }

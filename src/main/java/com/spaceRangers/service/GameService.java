@@ -2,6 +2,7 @@ package com.spaceRangers.service;
 
 import com.spaceRangers.entities.*;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -100,7 +101,10 @@ public interface GameService {
      * @param ship
      * @return
      */
-    ShipEntity createShip(ShipEntity ship);
+    ShipEntity createShip(ShipEntity ship) throws Exception;
+
+    @Transactional
+    ShipEntity powerupShip(ShipEntity ship) throws Exception;
 
     /**
      * Обновление  корабля
@@ -199,5 +203,7 @@ public interface GameService {
      * @return
      */
     ResourceEntity updateResource(ResourceEntity resourceEntity);
+
+    Collection<TypeShipEntity> getShipTypes();
 
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserAccountRepository extends CrudRepository<UserAccountEntity, Integer> {
 
-    UserAccountEntity findUserAccountEntityByLogin(String login);
+    Optional<UserAccountEntity> findUserAccountEntityByLogin(String login);
 
     Optional<UserAccountEntity> findUserAccountEntityByMail(String mail);
 }

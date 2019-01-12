@@ -1,8 +1,6 @@
 package com.spaceRangers.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -30,6 +28,7 @@ public class UsersEntity {
     private Collection<ChatEntity> chats;
     private Collection<UserFractionEntity> usersFraction;
     private Collection<UserBattleEntity> usersBattle;
+    private Integer coins;
 
     public UsersEntity(){
         this.bases = new HashSet<>();
@@ -136,8 +135,8 @@ public class UsersEntity {
             joinColumns = {@JoinColumn(name = "id_user")},
             inverseJoinColumns = {@JoinColumn(name = "id_chat")}
     )
-    @JsonManagedReference
     @LazyCollection(LazyCollectionOption.FALSE)
+    @JsonIgnore
     public Collection<ChatEntity> getChats(){
         return chats;
     }
@@ -148,7 +147,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference(value = "voteResult")
+    @JsonIgnore
     public Collection<VoteEntity> getVotes(){
         return votes;
     }
@@ -159,7 +158,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
+    @JsonIgnore
     public Collection<BaseEntity> getBases() {
         return bases;
     }
@@ -170,7 +169,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
+    @JsonIgnore
     public Collection<PlanetEntity> getPlanets() {
         return planets;
     }
@@ -181,7 +180,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference("userShip")
+    @JsonIgnore
     public Collection<ShipEntity> getShips() {
         return ships;
     }
@@ -203,7 +202,7 @@ public class UsersEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_state", referencedColumnName = "id")
-    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public StateUserEntity getStateUser() {
         return stateUser;
     }
@@ -214,7 +213,7 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference
+    @JsonIgnore
     public Collection<UserBattleEntity> getUsersBattle() {
         return usersBattle;
     }
@@ -225,12 +224,22 @@ public class UsersEntity {
 
     @OneToMany(mappedBy = "user")
     @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonManagedReference(value = "userUserFraction")
+    @JsonIgnore
     public Collection<UserFractionEntity> getUsersFraction() {
         return usersFraction;
     }
 
     public void setUsersFraction(Collection<UserFractionEntity> usersFraction) {
         this.usersFraction = usersFraction;
+    }
+
+    @Basic
+    @Column(name = "coins")
+    public Integer getCoins() {
+        return coins;
+    }
+
+    public void setCoins(Integer coins) {
+        this.coins = coins;
     }
 }

@@ -7,7 +7,9 @@ import com.spaceRangers.service.BattleService;
 import com.spaceRangers.service.GameService;
 import com.spaceRangers.service.ProfileUserService;
 import com.spaceRangers.service.RegistrationService;
+import org.bouncycastle.cert.ocsp.Req;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,11 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/api/user")
@@ -44,15 +49,10 @@ public class UserController {
     public ResponseEntity getUser(
             @AuthenticationPrincipal User user
     ){
-        try {
             UsersEntity usersEntity = registrationService.getUser(user);
 
             if (filterService.isThisUser(usersEntity, user)) return ResponseEntity.ok(usersEntity);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
 
     }
 
@@ -60,18 +60,21 @@ public class UserController {
     @Secured("ROLE_USER")
     @RequestMapping(value = "/base", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUsersBase(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false) boolean sortByName,
+            @RequestParam(required = false) boolean sortBySystem,
+            @RequestParam(required = false) boolean sortByCountShips
     ){
-
-        try {
             UsersEntity usersEntity = registrationService.getUser(user);
 
-            return ResponseEntity.ok(usersEntity.getBases());
+            Stream<BaseEntity> stream = usersEntity.getBases().stream();
+
+            stream = (sortByName) ? stream.sorted(Comparator.comparing(BaseEntity::getNameBase)) : stream;
+            stream = (sortBySystem) ? stream.sorted(Comparator.comparing(baseEntity -> baseEntity.getSystem().getNameSystem())) : stream;
+            stream = (sortByCountShips) ? stream.sorted(Comparator.comparing(baseEntity -> baseEntity.getShips().size())) : stream;
 
 
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+            return ResponseEntity.ok(stream.collect(Collectors.toList()));
     }
 
     @Secured("ROLE_USER")
@@ -86,10 +89,8 @@ public class UserController {
             baseEntity.setUser(usersEntity);
             gameService.createBase(baseEntity);
             return ResponseEntity.ok(baseEntity);
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
 
@@ -99,17 +100,12 @@ public class UserController {
             @PathVariable int id,
             @AuthenticationPrincipal User user
     ){
-
-        try {
             UsersEntity usersEntity = registrationService.getUser(user);
 
             BaseEntity baseEntity = gameService.getUserBase(usersEntity, id);
             if (baseEntity == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
             return ResponseEntity.ok(baseEntity);
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @Secured("ROLE_USER")
@@ -120,7 +116,6 @@ public class UserController {
             @AuthenticationPrincipal User user
     ){
 
-        try {
             UsersEntity usersEntity = registrationService.getUser(user);
             baseEntity.setId(id);
 
@@ -131,24 +126,54 @@ public class UserController {
                 }
 
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
 
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/base/{id}/ships", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getBaseShips(
+            @PathVariable int id,
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false) boolean sortByType,
+            @RequestParam(required = false) boolean sortByName
+    ){
+        UsersEntity usersEntity = registrationService.getUser(user);
+
+        try {
+                BaseEntity baseEntity = gameService.getUserBase(usersEntity, id);
+                if (baseEntity == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+            Stream<ShipEntity> stream = baseEntity.getShips().stream();
+
+            stream = (sortByType) ? stream.sorted(Comparator.comparing(shipEntity -> shipEntity.getTypeShip().getName())) : stream;
+            stream = (sortByName) ? stream.sorted(Comparator.comparing(ShipEntity::getNameShip)) : stream;
+
+            return ResponseEntity.ok(stream.collect(Collectors.toList()));
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
         }
     }
 
     @Secured("ROLE_USER")
     @RequestMapping(value = "/ships", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getShips(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false) boolean sortByType,
+            @RequestParam(required = false) boolean sortByName,
+            @RequestParam(required = false) boolean sortByHp,
+            @RequestParam(required = false) boolean sortBySpeed,
+            @RequestParam(required = false) boolean sortByProtection
     ){
-        try{
-            return ResponseEntity.ok(registrationService.getUser(user).getShips());
 
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+            UsersEntity users = registrationService.getUser(user);
+            Stream<ShipEntity> stream = users.getShips().stream();
+
+            stream = (sortByType) ? stream.sorted(Comparator.comparing(shipEntity -> shipEntity.getTypeShip().getName())) : stream;
+            stream = (sortByName) ? stream.sorted(Comparator.comparing(ShipEntity::getNameShip)) : stream;
+            stream = (sortByHp) ? stream.sorted(Comparator.comparing(ShipEntity::getHp)) : stream;
+            stream = (sortBySpeed) ? stream.sorted(Comparator.comparing(ShipEntity::getSpeed)) : stream;
+            stream = (sortByProtection) ? stream.sorted(Comparator.comparing(ShipEntity::getProtection)) : stream;
+
+            return ResponseEntity.ok(stream.collect(Collectors.toList()));
 
     }
 
@@ -157,17 +182,23 @@ public class UserController {
     public ResponseEntity createShip(
             @AuthenticationPrincipal User user,
             @RequestBody ShipEntity shipEntity
-    ){
+    ) throws Exception {
+
         try {
             UsersEntity usersEntity = registrationService.getUser(user);
 
+
+            if(
+                    usersEntity.getCoins() < shipEntity.getTypeShip().getCost()
+            ) return ResponseEntity.status(HttpStatus.PAYMENT_REQUIRED).body("You don't have money");
+
             shipEntity.setUser(usersEntity);
             gameService.createShip(shipEntity);
-            return ResponseEntity.ok(shipEntity);
 
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            usersEntity.setCoins(usersEntity.getCoins()-shipEntity.getTypeShip().getCost());
+            return ResponseEntity.ok(shipEntity);
+        } catch (NoSuchFieldException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 
@@ -177,40 +208,33 @@ public class UserController {
             @PathVariable int id,
             @AuthenticationPrincipal User user
     ){
-        try{
-
             UsersEntity usersEntity = registrationService.getUser(user);
             ShipEntity shipEntity = gameService.getShip(usersEntity, id);
 
             return (shipEntity == null) ? ResponseEntity.status(HttpStatus.NOT_FOUND).build() : ResponseEntity.ok(shipEntity);
 
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
     }
 
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/ships/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/ships", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateShip(
             @AuthenticationPrincipal User user,
-            @RequestBody ShipEntity shipEntity,
-            @PathVariable int id
+            @RequestBody ShipEntity shipEntity
     ){
-        try {
             UsersEntity usersEntity = registrationService.getUser(user);
-            shipEntity.setId(id);
             if(filterService.isUsersShip(usersEntity, shipEntity)) {
-                shipEntity.setUser(usersEntity);
-                gameService.updateShip(shipEntity);
-                return ResponseEntity.ok(shipEntity);
+
+                try{
+
+                    shipEntity.setUser(usersEntity);
+                    gameService.updateShip(shipEntity);
+                    return ResponseEntity.ok(shipEntity);
+
+                }catch (DataIntegrityViolationException e){
+                    return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new String("To many powerup"));
+                }
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-
-        }catch (Exception e){
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @Secured("ROLE_USER")
@@ -218,7 +242,6 @@ public class UserController {
     public ResponseEntity getUsersBattle(
             @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 UsersEntity usersEntity = registrationService.getUser(user);
                 return ResponseEntity.ok(battleService.getBattlesUser(usersEntity));
@@ -226,9 +249,6 @@ public class UserController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @Secured("ROLE_USER")
@@ -237,7 +257,6 @@ public class UserController {
             @PathVariable int id,
             @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 BattleEntity battleEntity = battleService.getBattle(id);
                 if(filterService.isUsersBattle(user, battleEntity)) return ResponseEntity.ok(battleEntity);
@@ -246,9 +265,6 @@ public class UserController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @Secured("ROLE_USER")
@@ -257,7 +273,6 @@ public class UserController {
             @PathVariable int id,
             @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 BattleEntity battleEntity = battleService.getBattle(id);
                 if(filterService.isUsersBattle(user, battleEntity)){
@@ -269,9 +284,6 @@ public class UserController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @Secured("ROLE_USER")
@@ -281,7 +293,6 @@ public class UserController {
             @RequestBody ShipEntity shipEntity,
             @AuthenticationPrincipal User user
     ){
-        try{
             try{
                 BattleEntity battleEntity = battleService.getBattle(id);
                 if(filterService.isUsersBattle(user, battleEntity)){
@@ -295,10 +306,5 @@ public class UserController {
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
-
-
 }
