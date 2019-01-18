@@ -21,6 +21,8 @@
 
 <script>
     import axios from 'axios'
+    import {url } from "@/main";
+
     export default {
         name: "NewsPage",
         data:function () {
@@ -29,10 +31,10 @@
             news: null
           }
         },
-        created: function () {
+        mounted: function () {
           this.id = this.$route.params.id;
           axios
-            .get('http://localhost:8080/api/news/'+this.id)
+            .get(url+'/api/news/'+this.id)
             .then(response =>{
               this.news = response.data;
             })

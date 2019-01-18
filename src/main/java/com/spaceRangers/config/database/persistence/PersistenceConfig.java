@@ -1,6 +1,5 @@
 package com.spaceRangers.config.database.persistence;
 
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -24,9 +23,9 @@ import java.util.Properties;
 })
 @EnableJpaRepositories("com.spaceRangers.repository")
 public class PersistenceConfig{
-    private static final String PROP_HIBERNATE_DIALECT = "db.hibernate.dialect";
-    private static final String PROP_HIBERNATE_SHOW_SQL = "db.hibernate.show_sql";
-    private static final String PROP_HIBERNATE_HBM2DDL_AUTO = "db.hibernate.hbm2ddl.auto";
+    private static final String PROP_HIBERNATE_DIALECT = "hibernate.dialect";
+    private static final String PROP_HIBERNATE_SHOW_SQL = "hibernate.show_sql";
+    private static final String PROP_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";
 
     @Value("${db.driver}")
     private String driver;
@@ -39,6 +38,9 @@ public class PersistenceConfig{
 
     @Value("${db.password}")
     private String password;
+
+    @Value("${db.schema}")
+    private String schema;
 
     @Value("${db.hibernate.dialect}")
     private String dialect;
@@ -61,6 +63,7 @@ public class PersistenceConfig{
         dataSource.setUrl(url);
         dataSource.setUsername(username);
         dataSource.setPassword(password);
+        dataSource.setSchema(schema);
 
         return dataSource;
     }

@@ -61,9 +61,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         usersEntity.setId(user.getId());
         usersEntity.setUserAccount(user);
         usersEntity.setLevel(1);
-
+        usersEntity.setFirstName("Username");
+        usersEntity.setLastName("Username");
+        usersEntity.setCoins(2000);
+        usersEntity.setLogin(user.getLogin());
         userRepository.save(usersEntity);
-
         return usersEntity;
     }
 

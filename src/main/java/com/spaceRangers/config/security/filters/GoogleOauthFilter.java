@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -57,6 +58,8 @@ public class GoogleOauthFilter extends AbstractAuthenticationProcessingFilter {
 
                 String email = authInfo.get("email");
 
+                System.out.println("AAAAAAAAAAAAAAAA" + authInfo.toString());
+
                 UserAccountEntity userAccountEntity = registrationService.authentification(email);
 
                 List<SimpleGrantedAuthority> authorities = userAccountEntity
@@ -67,6 +70,17 @@ public class GoogleOauthFilter extends AbstractAuthenticationProcessingFilter {
 
                 User user = new User(userAccountEntity.getLogin(), userAccountEntity.getPassword(), authorities);
 
+                Cookie cookie = new Cookie("auth", "auth");
+                Cookie cookie2 = new Cookie("gauth", "gauth");
+                cookie.setPath("/");
+                cookie2.setPath("/");
+                cookie.setHttpOnly(false);
+                cookie2.setHttpOnly(false);
+                httpServletResponse.addCookie(cookie);
+                httpServletResponse.addCookie(cookie2);
+
+
+                System.out.println(httpServletRequest.getRequestURI());
                 return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 
             } catch (InvalidTokenException e) {

@@ -9,7 +9,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "complain", schema = "s242552", catalog = "course")
+@Table(name = "complain")
 public class ComplainEntity {
     private Integer id;
     private Date date;

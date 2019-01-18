@@ -7,8 +7,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_fraction", schema = "s242552", catalog = "course")
-@IdClass(UserFractionEntityPK.class)
+@Table(name = "user_fraction")
 public class UserFractionEntity {
     private Integer idFraction;
     private Integer idUser;
@@ -16,16 +15,6 @@ public class UserFractionEntity {
     private UsersEntity user;
     private FractionEntity fraction;
     private StateUserFractionEntity stateUserFraction;
-
-    @Id
-    @Column(name = "id_fraction", nullable = false)
-    public Integer getIdFraction() {
-        return idFraction;
-    }
-
-    public void setIdFraction(Integer idFraction) {
-        this.idFraction = idFraction;
-    }
 
     @Id
     @Column(name = "id_user", nullable = false)
@@ -37,8 +26,7 @@ public class UserFractionEntity {
         this.idUser = idUser;
     }
 
-    @Basic
-    @Column(name = "date", nullable = true)
+    @Column(name = "date", nullable = false)
     public Date getDate() {
         return date;
     }
@@ -74,16 +62,14 @@ public class UserFractionEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name = "id_fraction", referencedColumnName = "id", insertable = false, updatable = false)
-    @JsonBackReference(value = "fractionUserFraction")
+    @JoinColumn(name = "id_fraction", referencedColumnName = "id")
     public FractionEntity getFraction(){return fraction;}
 
     public void setFraction(FractionEntity fraction) {
         this.fraction = fraction;
     }
 
-    @ManyToOne
-    @JoinColumn(name = "id_user", referencedColumnName = "id", insertable = false, updatable = false)
+    @OneToOne(mappedBy = "userFraction")
     @JsonIdentityInfo(generator = ObjectIdGenerators.None.class)
     public UsersEntity getUser(){
         return user;

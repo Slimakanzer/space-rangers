@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "planet", schema = "s242552", catalog = "course")
+@Table(name = "planet")
 public class PlanetEntity {
     private Integer id;
     private String namePlanet;
@@ -25,6 +25,7 @@ public class PlanetEntity {
     private Collection<ResourceEntity> resources;
     private Integer locationPlanetZ;
     private Integer rplanet;
+    private String img;
 
     public PlanetEntity(){
         this.resources = new HashSet<>();
@@ -149,5 +150,15 @@ public class PlanetEntity {
 
     public void setRplanet(Integer rplanet) {
         this.rplanet = rplanet;
+    }
+
+    @Basic
+    @Column(name = "img")
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ship", schema = "s242552", catalog = "course")
+@Table(name = "ship")
 public class ShipEntity {
     private Integer id;
     private Integer hp;
@@ -25,6 +25,10 @@ public class ShipEntity {
     private StateShipEntity stateShip;
     private Collection<BattleEntity> battles;
     private TypeShipEntity typeShip;
+    private Integer locationShipZ;
+    private Float rotationShipX;
+    private Float rotationShipY;
+    private Float rotationShipZ;
 
     public ShipEntity(){
         battles = new HashSet<>();
@@ -120,7 +124,6 @@ public class ShipEntity {
         return Objects.hash(id, hp, nameShip, locationShipX, locationShipY, speed, protection);
     }
 
-
     @ManyToMany(mappedBy = "ships")
     @LazyCollection(LazyCollectionOption.FALSE)
     @JsonIgnore
@@ -185,5 +188,45 @@ public class ShipEntity {
 
     public void setTypeShip(TypeShipEntity typeShipByTypeShip) {
         this.typeShip = typeShipByTypeShip;
+    }
+
+    @Basic
+    @Column(name = "location_ship_z")
+    public Integer getLocationShipZ() {
+        return locationShipZ;
+    }
+
+    public void setLocationShipZ(Integer locationShipZ) {
+        this.locationShipZ = locationShipZ;
+    }
+
+    @Basic
+    @Column(name = "rotation_ship_x")
+    public Float getRotationShipX() {
+        return rotationShipX;
+    }
+
+    public void setRotationShipX(Float rotationShipX) {
+        this.rotationShipX = rotationShipX;
+    }
+
+    @Basic
+    @Column(name = "rotation_ship_y")
+    public Float getRotationShipY() {
+        return rotationShipY;
+    }
+
+    public void setRotationShipY(Float rotationShipY) {
+        this.rotationShipY = rotationShipY;
+    }
+
+    @Basic
+    @Column(name = "rotation_ship_z")
+    public Float getRotationShipZ() {
+        return rotationShipZ;
+    }
+
+    public void setRotationShipZ(Float rotationShipZ) {
+        this.rotationShipZ = rotationShipZ;
     }
 }

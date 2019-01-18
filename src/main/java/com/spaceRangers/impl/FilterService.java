@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,11 +30,7 @@ public class FilterService {
 
             UsersEntity usersEntity = registrationService.getUser(user);
 
-            List<UserFractionEntity> entityList = usersEntity
-                    .getUsersFraction()
-                    .stream()
-                    .filter(e -> e.getIdFraction().equals(task.getFraction().getId()))
-                    .collect(Collectors.toList());
+            List<UserFractionEntity> entityList = new ArrayList<>();
             UserFractionEntity userFractionEntity;
             if (entityList.size() == 0) {
                 userFractionEntity = null;
@@ -80,11 +77,7 @@ public class FilterService {
 
     public boolean userInFraction(FractionEntity fraction, User user){
         UsersEntity usersEntity = registrationService.getUser(user);
-        List<UserFractionEntity> list = usersEntity.getUsersFraction()
-                .stream()
-                .filter(e->e.getIdFraction().equals(fraction.getId()))
-                .collect(Collectors.toList());
-
+        List<UserFractionEntity> list= new ArrayList<>();
         if(list.size() == 0) return false;
         UserFractionEntity userFractionEntity = list.get(0);
         String stateName = userFractionEntity.getStateUserFraction().getName();

@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "ship_battle", schema = "s242552", catalog = "course")
+@Table(name = "ship_battle")
 @IdClass(ShipBattleEntityPK.class)
 public class ShipBattleEntity {
     private Integer idShip;

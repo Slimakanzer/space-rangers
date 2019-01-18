@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_account", schema = "s242552", catalog = "course")
+@Table(name = "user_account")
 @JsonIgnoreProperties("user")
 public class UserAccountEntity {
     private Integer id;

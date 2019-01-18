@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "vote", schema = "s242552", catalog = "course")
+@Table(name = "vote")
 @IdClass(VoteEntityPK.class)
 public class VoteEntity {
     private Integer idUser;

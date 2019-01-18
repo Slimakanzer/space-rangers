@@ -1,13 +1,16 @@
 package com.spaceRangers.entities;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Objects;
 
 public class UserFractionEntityPK implements Serializable {
     private Integer idFraction;
     private Integer idUser;
+    private Date date;
 
     @Column(name = "id_fraction", nullable = false)
     @Id
@@ -27,6 +30,16 @@ public class UserFractionEntityPK implements Serializable {
 
     public void setIdUser(Integer idUser) {
         this.idUser = idUser;
+    }
+
+    @Column(name = "date", nullable = false)
+    @Id
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     @Override

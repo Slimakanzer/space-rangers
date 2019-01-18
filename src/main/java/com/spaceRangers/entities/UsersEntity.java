@@ -5,12 +5,10 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
-@Table(name = "users", schema = "s242552", catalog = "course")
+@Table(name = "users")
 public class UsersEntity {
     private Integer id;
     private String login;
@@ -26,8 +24,8 @@ public class UsersEntity {
     private StateUserEntity stateUser;
     private Collection<VoteEntity> votes;
     private Collection<ChatEntity> chats;
-    private Collection<UserFractionEntity> usersFraction;
     private Collection<UserBattleEntity> usersBattle;
+    private UserFractionEntity userFraction;
     private Integer coins;
 
     public UsersEntity(){
@@ -36,7 +34,6 @@ public class UsersEntity {
         this.ships = new HashSet<>();
         this.votes = new HashSet<>();
         this.chats = new HashSet<>();
-        this.usersFraction = new HashSet<>();
         this.usersBattle = new HashSet<>();
     }
 
@@ -222,17 +219,6 @@ public class UsersEntity {
         this.usersBattle = usersBattle;
     }
 
-    @OneToMany(mappedBy = "user")
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonIgnore
-    public Collection<UserFractionEntity> getUsersFraction() {
-        return usersFraction;
-    }
-
-    public void setUsersFraction(Collection<UserFractionEntity> usersFraction) {
-        this.usersFraction = usersFraction;
-    }
-
     @Basic
     @Column(name = "coins")
     public Integer getCoins() {
@@ -241,5 +227,16 @@ public class UsersEntity {
 
     public void setCoins(Integer coins) {
         this.coins = coins;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "id", referencedColumnName = "id_user")
+    @JsonIgnore
+    public UserFractionEntity getUserFraction() {
+        return userFraction;
+    }
+
+    public void setUserFraction(UserFractionEntity userFraction) {
+        this.userFraction = userFraction;
     }
 }

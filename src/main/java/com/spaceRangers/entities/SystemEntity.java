@@ -7,12 +7,10 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
-@Table(name = "system", schema = "s242552", catalog = "course")
+@Table(name = "system")
 public class SystemEntity {
     private Integer id;
     private String nameSystem;
@@ -24,7 +22,7 @@ public class SystemEntity {
     public SystemEntity(){
         this.bases = new HashSet<>();
         this.battles = new HashSet<>();
-        this.planets = new HashSet<>();
+        this.planets = new TreeSet<>(Comparator.comparing(PlanetEntity::getLocationPlanetX));
         this.ships = new HashSet<>();
     }
 

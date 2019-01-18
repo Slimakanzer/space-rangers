@@ -1,11 +1,12 @@
 package com.spaceRangers.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spaceRangers.config.websocket.exceptions.NotEnoughMoneyException;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.impl.FilterService;
+import com.spaceRangers.repository.StateUserFractionRepository;
+import com.spaceRangers.repository.UserFractionRepository;
 import com.spaceRangers.service.*;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,12 +15,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import java.sql.SQLException;
-import java.util.Collection;
+
 import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -46,7 +44,13 @@ public class FractionContorller {
     @Autowired
     LeaderPlayerFractionService leaderPlayerFractionService;
 
-    @ApiOperation("Get list of fractions")
+    @Autowired
+    StateUserFractionRepository stateUserFractionRepository;
+
+    @Autowired
+    UserFractionRepository userFractionRepository;
+
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getAllFractions(
@@ -60,34 +64,40 @@ public class FractionContorller {
             return ResponseEntity.ok(stream.collect(Collectors.toList()));
     }
 
-    @ApiOperation("Create fraction by user")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createFracion(
-            @ApiIgnore  @AuthenticationPrincipal User user,
-            @ApiParam("Fraction entity") @RequestBody FractionEntity fraction
+            @AuthenticationPrincipal User user,
+            @RequestBody FractionEntity fraction
             ){
-            FractionEntity fractionEntity = fractionService.createFraction(fraction, user);
+            UsersEntity usersEntity = registrationService.getUser(user);
 
+        FractionEntity fractionEntity = null;
+        try {
+            fractionEntity = fractionService.createFraction(fraction, usersEntity);
             return ResponseEntity.ok(fractionEntity);
+        } catch (NotEnoughMoneyException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
 
-    @ApiOperation("Get fraction by id")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFraction(
-            @ApiParam("fraction id") @PathVariable int id
+            @PathVariable int id
     ){
             return ResponseEntity.ok(fractionService.getFraction(id));
     }
 
-    @ApiOperation("Get fraction's tasks")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFractionTasks(
-            @ApiParam("fraction id") @PathVariable int id,
-            @ApiIgnore @AuthenticationPrincipal User user,
+            @PathVariable int id,
+            @AuthenticationPrincipal User user,
             @RequestParam(required = false) boolean sortByName,
             @RequestParam(required = false) boolean sortByType,
             @RequestParam(required = false) boolean sortByState,
@@ -109,16 +119,16 @@ public class FractionContorller {
 
 
 
-    @ApiOperation("Create task for fraction")
+
     @Secured({
             "ROLE_LEADER",
             "ROLE_ADVISER"
     })
     @RequestMapping(value = "/{id}/tasks", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createTask(
-            @ApiIgnore @AuthenticationPrincipal User user,
-            @ApiParam("fraction id") @PathVariable int id,
-            @ApiParam("task entity") @RequestBody TaskEntity task
+            @AuthenticationPrincipal User user,
+            @PathVariable int id,
+            @RequestBody TaskEntity task
     ){
             task.setId(null);
 
@@ -135,13 +145,13 @@ public class FractionContorller {
     }
 
 
-    @ApiOperation("Get fraction task by id task")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/tasks/{idTask}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getTaskById(
-            @ApiIgnore @AuthenticationPrincipal User user,
-            @ApiParam("fraction id") @PathVariable int id,
-            @ApiParam("task id") @PathVariable int idTask
+            @AuthenticationPrincipal User user,
+            @PathVariable int id,
+            @PathVariable int idTask
     ){
             FractionEntity fraction = fractionService.getFraction(id);
 
@@ -151,14 +161,14 @@ public class FractionContorller {
             else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
-    @ApiOperation("Update task states")
+
     @Secured("ROLE_LEADER")
     @RequestMapping(value = "/{id}/tasks/{idTask}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateTask(
-            @ApiIgnore @AuthenticationPrincipal User user,
-            @ApiParam("fraction id") @PathVariable int id,
-            @ApiParam("task id") @PathVariable int idTask,
-            @ApiParam("Task entity") @RequestBody TaskEntity task
+            @AuthenticationPrincipal User user,
+             @PathVariable int id,
+             @PathVariable int idTask,
+            @RequestBody TaskEntity task
     ){
             try{
                 FractionEntity fraction = fractionService.getFraction(id);
@@ -173,17 +183,15 @@ public class FractionContorller {
 
     }
 
-    @ApiOperation("To join the fraction")
+
     @Secured("ROLE_USER")
-    @RequestMapping(value = "/{id}/join", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}/join", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity subscribeUser(
-        @ApiIgnore @AuthenticationPrincipal User user,
-        @ApiParam("fraction id") @PathVariable int id
+        @AuthenticationPrincipal User user,
+        @PathVariable int id
     ){
             FractionEntity fraction = fractionService.getFraction(id);
                 UsersEntity usersEntity = registrationService.getUser(user);
-            if (filterService.userInFraction(fraction, user))
-                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).build();
 
             try {
                 UserFractionEntity userFraction = fractionService.joinFraction(fraction, usersEntity);
@@ -196,35 +204,30 @@ public class FractionContorller {
             }
     }
 
-    @ApiOperation("To leave the fraction")
-    @Secured("ROLE_USER")
-    @RequestMapping(value = "/{id}/out", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity outFromFraction(
-            @ApiIgnore @AuthenticationPrincipal User user,
-            @ApiParam("fraction id") @PathVariable int id
-    ){
-            FractionEntity fraction = fractionService.getFraction(id);
 
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/out", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity outFromFraction(
+            @AuthenticationPrincipal User user
+    ){
             try{
                 UsersEntity usersEntity = registrationService.getUser(user);
+                FractionEntity fraction = usersEntity.getUserFraction().getFraction();
 
-                if(filterService.userInFraction(fraction, user)){
-                    UserFractionEntity userFractionEntity = fractionService.outFromFraction(fraction, usersEntity);
-                    if(userFractionEntity!=null) return ResponseEntity.ok(userFractionEntity);
-                }
+                boolean result = fractionService.outFromFraction(fraction, usersEntity);
 
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+                if (result)return ResponseEntity.ok().build();
+                else return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 
             }catch (NullPointerException e){
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
     }
 
-    @ApiOperation("Get fractions users")
     @Secured("ROLE_USER")
     @RequestMapping(value = "/{id}/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getFractionsUsers(
-            @ApiIgnore @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal User user,
             @PathVariable int id,
             @RequestParam(required = false) boolean sortByUsername,
             @RequestParam(required = false) boolean sortByLevel,
@@ -232,7 +235,8 @@ public class FractionContorller {
     ){
         FractionEntity fractionEntity = fractionService.getFraction(id);
 
-        Stream<UserFractionEntity> stream = fractionService.getListUsersInFraction(fractionEntity, user).stream();
+        UsersEntity usersEntity = registrationService.getUser(user);
+        Stream<UserFractionEntity> stream = fractionService.getListUsersInFraction(fractionEntity, usersEntity).stream();
 
         stream = (sortByUsername) ? stream.sorted(Comparator.comparing(userFractionEntity -> userFractionEntity.getUser().getLogin())) : stream;
         stream = (sortByLevel) ? stream.sorted(Comparator.comparing(userFractionEntity -> userFractionEntity.getUser().getLevel())) : stream;
@@ -244,22 +248,35 @@ public class FractionContorller {
         );
     }
 
-    @ApiOperation("Accept user")
+
     @Secured("ROLE_LEADER")
     @RequestMapping(value = "/{id}/accept", method = RequestMethod.POST)
     public ResponseEntity acceptUser(
             @RequestBody UserFractionEntity userFractionEntity,
-            @AuthenticationPrincipal User user,
             @PathVariable int id
     ){
         FractionEntity fractionEntity = fractionService.getFraction(id);
-
         try {
-            fractionService.updateUser(fractionEntity, userFractionEntity, user);
+            userFractionEntity.setStateUserFraction(stateUserFractionRepository.findStateUserFractionEntityByName("player"));
+            fractionService.updateUser(userFractionEntity);
+            return ResponseEntity.ok(userFractionEntity);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @Secured("ROLE_LEADER")
+    @RequestMapping(value = "/{id}/delete", method = RequestMethod.POST)
+    public ResponseEntity deleteUser(
+            @RequestBody UserFractionEntity userFractionEntity,
+            @PathVariable int id
+    ){
+        FractionEntity fractionEntity = fractionService.getFraction(id);
+        try {
+            userFractionRepository.delete(userFractionEntity);
             return ResponseEntity.ok().build();
         }catch (NoSuchElementException e){
             return ResponseEntity.notFound().build();
         }
-
     }
 }

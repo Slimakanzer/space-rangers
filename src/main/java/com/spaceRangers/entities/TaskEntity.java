@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "task", schema = "s242552", catalog = "course")
+@Table(name = "task")
 public class TaskEntity {
     private Integer id;
     private String name;
@@ -64,7 +64,6 @@ public class TaskEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_fraction", referencedColumnName = "id", nullable = false)
-    @JsonBackReference(value = "fractionTask")
     public FractionEntity getFraction() {
         return fraction;
     }

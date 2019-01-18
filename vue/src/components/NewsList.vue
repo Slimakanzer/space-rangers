@@ -33,6 +33,8 @@
 
 <script>
     import axios from 'axios'
+    import { url } from "@/main";
+
     export default {
         name: "NewsList",
         props:{
@@ -49,7 +51,7 @@
           else addedQuery = "?count="+this.count;
 
           axios
-            .get('http://localhost:8080/api/news'+addedQuery)
+            .get(url+'/api/news'+addedQuery)
             .then(response => {
               this.news = response.data;
             })

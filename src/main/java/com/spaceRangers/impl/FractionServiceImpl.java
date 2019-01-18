@@ -1,5 +1,7 @@
 package com.spaceRangers.impl;
 
+import com.spaceRangers.config.websocket.exceptions.NotEnoughMoneyException;
+import com.spaceRangers.config.websocket.exceptions.TypeError;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.*;
 import com.spaceRangers.service.FractionService;
@@ -26,6 +28,8 @@ public class FractionServiceImpl implements FractionService {
 
     @Autowired
     GroupsRepository groupsRepository;
+    @Autowired
+    PoliticsRepository politicsRepository;
 
     final
     TaskRepository taskRepository;
@@ -70,7 +74,7 @@ public class FractionServiceImpl implements FractionService {
     }
 
     @Override
-    public Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, User user) {
+    public Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, UsersEntity user) {
 
         Collection<UserFractionEntity> userFractionEntities = fractionEntity.getUsersFraction();
 
@@ -100,59 +104,40 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     @Transactional
-    public FractionEntity createFraction(FractionEntity fraction, User user) {
-        UserAccountEntity userAccountEntity = registrationService.getUserAccount(user.getUsername());
-        fraction.setId(null);
+    public FractionEntity createFraction(FractionEntity fraction, UsersEntity user) throws NotEnoughMoneyException {
 
+        if (user.getCoins() < 10000) throw new NotEnoughMoneyException("You dont have money", TypeError.NOT_ENOUGH_MONEY_CREATE_FRACTION);
+        user.setCoins(user.getCoins()- 10000);
+        userRepository.save(user);
+        fraction.setId(null);
+        fraction.setCountPlayer(1);
+        fraction.setPolitics(politicsRepository.findById(1).get());
         fractionRepository.save(fraction);
-        userAccountEntity.getGroups().add(groupsRepository.findGroupsEntityByName("leader"));
 
         UserFractionEntity userFractionEntity = new UserFractionEntity();
-        userFractionEntity.setIdUser(userAccountEntity.getId());
-        userFractionEntity.setUser(userAccountEntity.getUser());
-        userAccountEntity.getUser().getUsersFraction().add(userFractionEntity);
+        userFractionEntity.setIdUser(user.getId());
+        userFractionEntity.setUser(user);
         userFractionEntity.setFraction(fraction);
-        userFractionEntity.setIdFraction(fraction.getId());
-        fraction.getUsersFraction().add(userFractionEntity);
-
         userFractionEntity.setDate(new Date(new java.util.Date().getTime()));
 
         StateUserFractionEntity stateUserFraction = stateUserFractionRepository.findStateUserFractionEntityByName("leader");
 
         userFractionEntity.setStateUserFraction(stateUserFraction);
         userFractionRepository.save(userFractionEntity);
-
         return fraction;
     }
 
     @Override
     public boolean canCreateTasks(FractionEntity fraction, UsersEntity user) {
-        List<UserFractionEntity> list = user.getUsersFraction()
-                .stream()
-                .filter(e-> e.getIdFraction().equals(fraction.getId()))
-                .collect(Collectors.toList());
-
-
-        if(list.get(0).getStateUserFraction().getName().equals("owner")) return true;
 
         return false;
     }
 
     @Override
-    public StateUserFractionEntity roleUserInFraction(FractionEntity fraction, User user){
-        UsersEntity users = registrationService.getUser(user);
-        List<UserFractionEntity> userFraction = users.getUsersFraction().stream()
-                .filter(e->e.getIdFraction().equals(fraction.getId()))
-                .collect(Collectors.toList());
-
-
-        if(userFraction.size() == 0) return null;
-
-
-
-        StateUserFractionEntity  state = userFraction.get(0).getStateUserFraction();
-        return state;
-
+    public StateUserFractionEntity roleUserInFraction(FractionEntity fraction, UsersEntity user) {
+        if (fraction.getUsersFraction().contains(user.getUserFraction()))
+            return user.getUserFraction().getStateUserFraction();
+        return null;
     }
 
     @Override
@@ -169,14 +154,9 @@ public class FractionServiceImpl implements FractionService {
         UserFractionEntity userFractionEntity = new UserFractionEntity();
         userFractionEntity.setIdUser(user.getId());
         userFractionEntity.setUser(user);
-        user.getUsersFraction().add(userFractionEntity);
-        userFractionEntity.setIdFraction(fraction.getId());
         userFractionEntity.setFraction(fraction);
-        fraction.getUsersFraction().add(userFractionEntity);
-
         userFractionEntity.setStateUserFraction(stateUserFractionRepository.findStateUserFractionEntityByName("candidate"));
         userFractionEntity.setDate(new Date(new java.util.Date().getTime()));
-
         userFractionRepository.save(userFractionEntity);
         return userFractionEntity;
 
@@ -184,32 +164,16 @@ public class FractionServiceImpl implements FractionService {
 
     @Override
     @Transactional
-    public UserFractionEntity outFromFraction(FractionEntity fraction, UsersEntity user){
-        UserFractionEntity userFractionEntity = user.getUsersFraction()
-                .stream()
-                .filter(e->e.getIdFraction().equals(fraction.getId()))
-                .findAny().get();
-
-        if(userFractionEntity==null) return null;
-        userFractionEntity.setStateUserFraction(stateUserFractionRepository.findStateUserFractionEntityByName("left"));
-        userFractionRepository.save(userFractionEntity);
-
-        return userFractionEntity;
+    public boolean outFromFraction(FractionEntity fraction, UsersEntity user){
+        boolean result = fraction.getUsersFraction().remove(user.getUserFraction());
+        fraction.setCountPlayer(fraction.getCountPlayer()-1);
+        fractionRepository.save(fraction);
+        userFractionRepository.delete(user.getUserFraction());
+        return result;
     }
 
     @Transactional
-    public void updateUser(FractionEntity fractionEntity, UserFractionEntity userFractionEntity, User user) throws NoSuchElementException{
-
-        UserFractionEntityPK userFractionEntityPK = new UserFractionEntityPK();
-        userFractionEntityPK.setIdFraction(userFractionEntity.getIdFraction());
-        userFractionEntityPK.setIdUser(userFractionEntity.getIdUser());
-
-        Optional<UserFractionEntity> userFractionEntityOptional = userFractionRepository.findById(userFractionEntityPK);
-
-        if(userFractionEntityOptional.isPresent()){
-            UserFractionEntity userFractionEntity1 = userFractionEntityOptional.get();
-            userFractionEntity1.setStateUserFraction(userFractionEntity.getStateUserFraction());
-            userFractionRepository.save(userFractionEntity1);
-        }else throw new NoSuchElementException("Not found");
+    public void updateUser(UserFractionEntity userFractionEntity) throws NoSuchElementException{
+        userFractionRepository.save(userFractionEntity);
     }
 }

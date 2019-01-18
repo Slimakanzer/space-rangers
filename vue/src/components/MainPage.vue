@@ -1,5 +1,7 @@
 <template>
     <div>
+
+
       <div class="video_wrap">
         <video class="video_bg" autoplay="autoplay" loop="loop">
           <source src="/static/test.mp4" type="video/mp4"/>

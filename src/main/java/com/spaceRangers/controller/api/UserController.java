@@ -3,6 +3,8 @@ package com.spaceRangers.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.impl.FilterService;
+import com.spaceRangers.repository.ShipRepository;
+import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.BattleService;
 import com.spaceRangers.service.GameService;
 import com.spaceRangers.service.ProfileUserService;
@@ -13,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -44,6 +47,14 @@ public class UserController {
     @Autowired
     BattleService battleService;
 
+    @Autowired
+    ShipRepository shipRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getUser(
@@ -53,6 +64,30 @@ public class UserController {
 
             if (filterService.isThisUser(usersEntity, user)) return ResponseEntity.ok(usersEntity);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+
+    }
+
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateInfoUser(
+            @AuthenticationPrincipal User user,
+            @RequestBody UsersEntity usersEntityUpdate
+    ){
+        try {
+            UsersEntity usersEntity = registrationService.getUser(user);
+
+            usersEntity.setFirstName(usersEntityUpdate.getFirstName());
+            usersEntity.setLastName(usersEntityUpdate.getLastName());
+            usersEntity.setLogin(usersEntityUpdate.getLogin());
+
+            UsersEntity result = userRepository.save(usersEntity);
+
+            return ResponseEntity.ok(result);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
+
 
     }
 
@@ -78,6 +113,36 @@ public class UserController {
     }
 
     @Secured("ROLE_USER")
+    @RequestMapping(value = "/fraction", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getUsersFraction(
+            @AuthenticationPrincipal User user
+    ){
+        UsersEntity usersEntity = registrationService.getUser(user);
+        return ResponseEntity.ok(usersEntity.getUserFraction());
+    }
+
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/fraction", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean canAttack(
+            @AuthenticationPrincipal User user,
+            @RequestBody ShipEntity shipEntity
+    ){
+        UsersEntity usersEntity = registrationService.getUser(user);
+
+        if(usersEntity.getUserFraction() == null) return false;
+
+        ShipEntity shipEntity1 = shipRepository.findById(shipEntity.getId()).get();
+
+        if (shipEntity1.getUser().getUserFraction() == null) return false;
+
+        if (shipEntity1.getUser().getUserFraction().getStateUserFraction().getName().equals("candidate")) return false;
+        if (usersEntity.getUserFraction().getStateUserFraction().getName().equals("candidate")) return false;
+
+        return usersEntity.getUserFraction().getFraction().equals(shipEntity1.getUser().getUserFraction().getFraction());
+
+    }
+
+    @Secured("ROLE_USER")
     @RequestMapping(value = "/base", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createUsersBase(
             @AuthenticationPrincipal User user,
@@ -88,6 +153,9 @@ public class UserController {
 
             baseEntity.setUser(usersEntity);
             gameService.createBase(baseEntity);
+
+            System.out.println("CREATE BASE CONTROLLER");
+
             return ResponseEntity.ok(baseEntity);
         }catch (NullPointerException e){
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();

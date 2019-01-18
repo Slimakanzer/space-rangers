@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "group_authority", schema = "s242552", catalog = "course")
+@Table(name = "group_authority")
 public class GroupAuthorityEntity {
     private Integer id;
     private String name;

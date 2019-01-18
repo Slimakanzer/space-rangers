@@ -3,23 +3,22 @@ package com.spaceRangers.controller.api;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.impl.FilterService;
+import com.spaceRangers.repository.PlanetRepository;
 import com.spaceRangers.service.GameService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import com.spaceRangers.service.RegistrationService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.Collection;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/game")
@@ -31,7 +30,13 @@ public class GameController {
     @Autowired
     FilterService filterService;
 
-    @ApiOperation("Get ships")
+    @Autowired
+    RegistrationService registrationService;
+
+    @Autowired
+    PlanetRepository planetRepository;
+
+
     @RequestMapping(value = "/ships", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getShips(){
@@ -39,11 +44,11 @@ public class GameController {
 
     }
 
-    @ApiOperation("Get ship by id")
+
     @RequestMapping(value = "/ships/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getShip(
-            @ApiParam("ship id") @PathVariable int id
+          @PathVariable int id
     ){
             try {
                 ShipEntity shipEntity = gameService.getShip(id);
@@ -53,18 +58,18 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get bases")
+
     @RequestMapping(value = "/bases", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getBases(){
             return ResponseEntity.ok(gameService.getAllBases());
     }
 
-    @ApiOperation("Get base by id")
+
     @RequestMapping(value = "/bases/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @Secured("ROLE_USER")
     public ResponseEntity getBase(
-            @ApiParam("base id") @PathVariable int id
+             @PathVariable int id
     ){
             try {
                 BaseEntity baseEntity = gameService.getBase(id);
@@ -74,17 +79,16 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get systems")
     @RequestMapping(value = "/systems", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getSystems(){
             return ResponseEntity.ok(gameService.getAllSystems());
 
     }
 
-    @ApiOperation("Get system by id")
+
     @RequestMapping(value = "/systems/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getSystems(
-            @ApiParam("system id") @PathVariable int id
+            @PathVariable int id
     ){
             try {
                 SystemEntity systemEntity = gameService.getSystem(id);
@@ -94,26 +98,28 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get system planets")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/systems/{idSystem}/planets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getPlanets(
-            @ApiParam("system id") @PathVariable int idSystem
+             @PathVariable int idSystem
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
-                return ResponseEntity.ok(systemEntity.getPlanets());
+                List arrayList = Arrays.asList(systemEntity.getPlanets().toArray());
+                Collections.reverse(arrayList);
+                return ResponseEntity.ok(arrayList);
 
             }catch (NoSuchElementException e){
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
     }
 
-    @ApiOperation("Get planet by id")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/planets/{idPlanet}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getPlanet(
-            @ApiParam("planet id")@PathVariable int idPlanet
+            @PathVariable int idPlanet
     ){
             try{
                 PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
@@ -127,12 +133,70 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Create planet")
+
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/planets/{idPlanet}/attack", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity getShipsReady(
+            @PathVariable int idPlanet,
+            @AuthenticationPrincipal User user
+    ){
+        try{
+            PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
+            UsersEntity usersEntity = registrationService.getUser(user);
+            if(planetEntity != null){
+                Collection<ShipEntity> readyShips = new ArrayList<>();
+
+                usersEntity.getShips()
+                        .forEach(ship ->{
+
+                            double value = Math.sqrt(
+                                    Math.pow(ship.getLocationShipX() - planetEntity.getLocationPlanetX()/100000, 2)
+                                            +Math.pow(ship.getLocationShipY() - planetEntity.getLocationPlanetY()/100000, 2)
+                                            +Math.pow(ship.getLocationShipZ() - planetEntity.getLocationPlanetZ()/100000, 2));
+
+                            System.out.println(value);
+                            if (value < 400) readyShips.add(ship);
+                        });
+
+                AttackPlanet attackPlanet = new AttackPlanet();
+
+                if (readyShips.size() >=3) attackPlanet.setAttacked(true); else attackPlanet.setAttacked(false);
+
+                attackPlanet.setCountShips(readyShips.size());
+                return ResponseEntity.ok(attackPlanet);
+
+            }
+            return ResponseEntity.ok(HttpStatus.NOT_ACCEPTABLE);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @Secured("ROLE_USER")
+    @RequestMapping(value = "/planets/{idPlanet}/attack", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity attackPlanet(
+           @PathVariable int idPlanet,
+            @AuthenticationPrincipal User user
+    ){
+        try{
+            PlanetEntity planetEntity = gameService.getPlanet(idPlanet);
+            UsersEntity usersEntity = registrationService.getUser(user);
+
+            planetEntity.setUser(usersEntity);
+
+
+            return ResponseEntity.ok(planetRepository.save(planetEntity));
+        }catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/systems/{idSystem}/planets", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createPlanet(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("Planet entity") @RequestBody PlanetEntity planetEntity
+             @PathVariable int idSystem,
+            @RequestBody PlanetEntity planetEntity
     ){
             try {
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -146,13 +210,13 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Update planet")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updatePlanet(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("planet id") @PathVariable int idPlanet,
-            @ApiParam("Planet entity") @RequestBody PlanetEntity planetEntity
+            @PathVariable int idSystem,
+            @PathVariable int idPlanet,
+             @RequestBody PlanetEntity planetEntity
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -171,12 +235,12 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get planet resources")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}/resources", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getResources(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("planet id") @PathVariable int idPlanet
+             @PathVariable int idSystem,
+            @PathVariable int idPlanet
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -189,13 +253,13 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Create planet resource")
+
     @Secured("ROLE_ADMIN")
     @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}/resources", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity createResource(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("planet id") @PathVariable int idPlanet,
-            @ApiParam("Resource entity") @RequestBody ResourceEntity resourceEntity
+           @PathVariable int idSystem,
+            @PathVariable int idPlanet,
+            @RequestBody ResourceEntity resourceEntity
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -214,13 +278,13 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get resource by id")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}/resources/{idResource}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getResource(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("planet id") @PathVariable int idPlanet,
-            @ApiParam("resource id") @PathVariable int idResource
+            @PathVariable int idSystem,
+            @PathVariable int idPlanet,
+            @PathVariable int idResource
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -237,15 +301,15 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Update count of resource")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/systems/{idSystem}/planets/{idPlanet}/resources/{idResource}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity getResource(
-            @ApiParam("system id") @PathVariable int idSystem,
-            @ApiParam("planet id") @PathVariable int idPlanet,
-            @ApiParam("resource id") @PathVariable int idResource,
-            @ApiParam("Resource entity") @RequestBody ResourceEntity resourceEntity,
-            @ApiIgnore @AuthenticationPrincipal User user
+            @PathVariable int idSystem,
+            @PathVariable int idPlanet,
+            @PathVariable int idResource,
+            @RequestBody ResourceEntity resourceEntity,
+            @AuthenticationPrincipal User user
     ){
             try{
                 SystemEntity systemEntity = gameService.getSystem(idSystem);
@@ -268,7 +332,7 @@ public class GameController {
             }
     }
 
-    @ApiOperation("Get ships types")
+
     @Secured("ROLE_USER")
     @RequestMapping(value = "/ships/types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<TypeShipEntity>> getShipsTypes(){

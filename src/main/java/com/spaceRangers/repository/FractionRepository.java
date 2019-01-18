@@ -12,6 +12,4 @@ public interface FractionRepository extends JpaRepository<FractionEntity, Intege
     @Query(value = "select fraction from FractionEntity fraction where fraction.nameFraction = :name")
     FractionEntity getFractionByNameFraction(@Param("name") String name);
 
-    @Query("SELECT fraction from FractionEntity fraction join UserFractionEntity userFraction on fraction.id = userFraction.idFraction where userFraction.idUser = :idUser")
-    List<FractionEntity> getListFractionsUser(@Param("idUser") int idUser);
 }

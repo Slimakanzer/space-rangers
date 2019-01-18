@@ -13,17 +13,28 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "fraction", schema = "s242552", catalog = "course")
+@Table(name = "fraction")
 public class FractionEntity {
     private Integer id;
     private String nameFraction;
     private PoliticsEntity politics;
     private Collection<TaskEntity> tasks;
     private Collection<UserFractionEntity> usersFraction;
+    private Integer countPlayer;
 
     public FractionEntity(){
         this.tasks = new HashSet<>();
         this.usersFraction = new HashSet<>();
+    }
+
+    @Basic
+    @Column(name = "count_player")
+    public Integer getCountPlayer() {
+        return countPlayer;
+    }
+
+    public void setCountPlayer(Integer countPlayer) {
+        this.countPlayer = countPlayer;
     }
 
     @Id
@@ -73,7 +84,7 @@ public class FractionEntity {
     }
 
     @OneToMany(mappedBy = "fraction")
-    @JsonManagedReference(value = "fractionTask")
+    @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<TaskEntity> getTasks() {
         return tasks;
@@ -84,7 +95,7 @@ public class FractionEntity {
     }
 
     @OneToMany(mappedBy = "fraction")
-    @JsonManagedReference(value = "fractionUserFraction")
+    @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
     public Collection<UserFractionEntity> getUsersFraction() {
         return usersFraction;

@@ -11,9 +11,16 @@
           <b-nav-item :to="{ name: 'NewsList' }">Новости</b-nav-item>
         </b-navbar-nav>
 
-        <b-navbar-nav class="ml-auto">
-          <b-btn @click="show=true" >Log in</b-btn>
 
+        <b-navbar-nav class="ml-auto">
+
+
+          <b-btn @click="show=true" v-if="!user">Log in</b-btn>
+          <div v-else>
+            Добро пожаловать, <b>{{ user.firstName }} {{ user.lastName }}</b>
+            <b-btn :to="{ name: 'UserPage'}" variant="danger">На карту</b-btn>
+            <b-btn @click="onLogout" variant="danger">Logout</b-btn>
+          </div>
           <!-- Modal Component -->
           <b-modal
             v-model="show"
@@ -42,8 +49,8 @@
             </b-form>
 
             <b-alert :show="error" variant="danger" class="error-alert">
-              Ошибка авторизации
-            </b-alert>
+            Ошибка авторизации
+          </b-alert>
 
             <div slot="modal-footer" class="w-100">
               <b-btn class="float-right" variant="primary" @click="show=false">
@@ -55,11 +62,17 @@
         </b-navbar-nav>
 
       </b-navbar>
+
     </div>
 </template>
 
 <script>
     import axios from 'axios'
+    import {AUTH_LOGOUT, AUTH_REQUEST} from "@/vuex/actions/auth";
+    import {MAIN_PAGE_URL, USER_PAGE_URL} from "@/router/actions/paths";
+    import {GET_USER, AUTH_LOGOUT_USER} from "@/vuex/actions/user";
+    import { url } from "@/main";
+
     export default {
         name: "AppHeader",
         data: function(){
@@ -72,6 +85,23 @@
             error: false
           }
         },
+
+        computed:{
+          isAuthenticated(){
+            return this.$store.getters.isAuthenticated
+          },
+          user(){
+            return this.$store.getters.user
+          },
+        },
+
+        mounted: function(){
+            if(this.isAuthenticated){
+              this.$store.dispatch(GET_USER)
+            }
+        },
+
+
         methods: {
           onSubmit: function () {
             if(!(this.form.username || this.form.password)){
@@ -81,23 +111,32 @@
               params.append('username', this.form.username);
               params.append('password', this.form.password);
 
-              axios.post('http://localhost:8080/login', params, {
-                withCredentials: true
+            this.$store.dispatch(AUTH_REQUEST, params)
+              .then(response =>{
+                this.show = false
+                this.error = false
+                this.$store.dispatch(GET_USER)
+                this.$router.push(USER_PAGE_URL)
               })
-                .then(response =>{
-                  this.error=false;
-                })
-                .catch(error =>{
-                  console.log(error)
-                  this.error=true
-                })
-
+              .catch(error =>{
+                this.$router.push(MAIN_PAGE_URL)
+                this.error = true
+              })
 
           },
           onClickGoogle: function () {
-            window.location='http://localhost:8080/login/google'
-          }
+            window.location.replace(url+'/login/google')
+          },
 
+          onLogout: function(){
+
+            this.$store.dispatch(AUTH_LOGOUT)
+              this.$store.dispatch(AUTH_LOGOUT_USER)
+              .then(() =>{
+                this.$router.push(MAIN_PAGE_URL)
+                this.user = null
+              })
+          },
         }
     }
 </script>

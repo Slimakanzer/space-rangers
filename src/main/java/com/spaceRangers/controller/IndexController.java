@@ -29,40 +29,8 @@ public class IndexController{
     RegistrationService registrationService;
 
     @RequestMapping("/")
-    public String getIndex(@AuthenticationPrincipal Principal principal){
-        if(principal == null){
-            return "login";
-        }else {
-            return "test";
-        }
-    }
-
-    @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public String registrations(BindingResult bindingResult, Model model){
-
-        return "login";
-
-    }
-
-
-//    @RequestMapping(value = "/login/google")
-//    public void googleLogin(HttpServletRequest request, HttpServletResponse response){
-//        try {
-//            response.sendRedirect("http://localhost:8081/#/user");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @RequestMapping("/test")
-    public String getTest(){
-        return "test";
-    }
-
-    @RequestMapping("/denied")
-    public String getFailed(){
-        return "denied";
+    public String getIndex(){
+        return "index";
     }
 
 }

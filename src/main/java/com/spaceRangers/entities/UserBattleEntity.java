@@ -10,7 +10,7 @@ import java.sql.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "user_battle", schema = "s242552", catalog = "course")
+@Table(name = "user_battle")
 @IdClass(UserBattleEntityPK.class)
 public class UserBattleEntity {
     private Integer idUser;

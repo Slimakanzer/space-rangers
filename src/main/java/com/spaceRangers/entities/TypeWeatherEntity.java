@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "type_weather", schema = "s242552", catalog = "course")
+@Table(name = "type_weather")
 public class TypeWeatherEntity {
     private Integer id;
     private String name;

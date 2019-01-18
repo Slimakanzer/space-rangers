@@ -9,11 +9,12 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "state_ship", schema = "s242552", catalog = "course")
+@Table(name = "state_ship")
 public class StateShipEntity {
     private Integer id;
     private String name;
     private Collection<ShipEntity> ships;
+    private String nameNormal;
 
     public StateShipEntity(){
         this.ships = new HashSet<>();
@@ -61,5 +62,15 @@ public class StateShipEntity {
 
     public void setShips(Collection<ShipEntity> shipsById) {
         this.ships = shipsById;
+    }
+
+    @Basic
+    @Column(name = "name_normal")
+    public String getNameNormal() {
+        return nameNormal;
+    }
+
+    public void setNameNormal(String nameNormal) {
+        this.nameNormal = nameNormal;
     }
 }

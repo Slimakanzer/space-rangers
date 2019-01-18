@@ -1,13 +1,13 @@
 course.iml
 .idea/
 out/
-*.json
+package.json
 target/
 uml/
 
 
 vue/node_modules/
-vue/config/
-vue/build/
-vue/static/.*
+vue/dist/
 vue/.*
+vue/package-lock.json
+vue/static/.*

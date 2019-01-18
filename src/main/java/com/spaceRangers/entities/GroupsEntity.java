@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "groups", schema = "s242552", catalog = "course")
+@Table(name = "groups")
 public class GroupsEntity {
     private Integer id;
     private String name;

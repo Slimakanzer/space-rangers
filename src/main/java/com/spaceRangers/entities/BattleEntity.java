@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Objects;
 
 @Entity
-@Table(name = "battle", schema = "s242552", catalog = "course")
+@Table(name = "battle")
 public class BattleEntity {
     private Integer id;
     private String name;

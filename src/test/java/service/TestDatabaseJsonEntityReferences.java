@@ -117,7 +117,6 @@ public class TestDatabaseJsonEntityReferences {
 
             userFractionEntity.setDate(new Date(123123));
             userFractionEntity.setFraction(fractionEntity);
-            userFractionEntity.setIdFraction(fractionEntity.getId());
             fractionEntity.getUsersFraction().add(userFractionEntity);
             userFractionEntity.setUser(entityManager.find(UsersEntity.class, 1));
             userFractionEntity.setIdUser(1);

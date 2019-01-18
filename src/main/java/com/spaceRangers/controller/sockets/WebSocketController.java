@@ -1,8 +1,11 @@
 package com.spaceRangers.controller.sockets;
 
+import com.spaceRangers.entities.BaseEntity;
 import com.spaceRangers.entities.ShipEntity;
+import com.spaceRangers.entities.StateShipEntity;
 import com.spaceRangers.entities.UsersEntity;
 import com.spaceRangers.repository.ShipRepository;
+import com.spaceRangers.repository.StateShipRepository;
 import com.spaceRangers.repository.UserRepository;
 import com.spaceRangers.service.GameService;
 import com.spaceRangers.service.RegistrationService;
@@ -35,9 +38,12 @@ public class WebSocketController {
     @Autowired
     GameService gameService;
 
+    @Autowired
+    StateShipRepository stateShipRepository;
+
 
     @MessageMapping("/ship/move")
-    @SendTo("/topic/game")
+    @SendTo("/topic/move")
     public ShipEntity move(
             @Payload ShipEntity ship
     ){
@@ -45,6 +51,61 @@ public class WebSocketController {
         System.out.println("MOVE MESS");
         return shipRepository.save(ship);
     }
+
+
+    @MessageMapping("/ship/attack")
+    @SendTo("/topic/attack")
+    public ShipEntity attac(
+            @Payload ShipEntity ship
+    ){
+
+        System.out.println("ATTACk MESS");
+
+        if (ship.getHp() <= 0){
+            ship.setHp(0);
+            ship.setStateShip(stateShipRepository.findById(1).get());
+        }
+
+        return shipRepository.save(ship);
+    }
+
+    @MessageMapping("/ship/delete")
+    @SendTo("/topic/delete")
+    public ShipEntity delete(
+            @Payload ShipEntity ship
+    ){
+        System.out.println("DELETE MESS");
+        return ship;
+    }
+
+    @MessageMapping("/user/update")
+    @SendTo("/topic/user")
+    public boolean updateUserAccount(
+            @Payload Boolean bool
+    ){
+        System.out.println("UPDATE MESS");
+        return true;
+    }
+
+
+    @MessageMapping("/base/create")
+    @SendTo("/topic/base")
+    public BaseEntity createBase(
+            @Payload BaseEntity base
+    ){
+        System.out.println("CREATE BASE MESS");
+        return base;
+    }
+
+    @MessageMapping("/fraction/update")
+    @SendTo("/topic/fraction")
+    public int updateUserFraction(
+            @Payload int id
+    ){
+        System.out.println("UPDATE USER FRACTION MESS");
+        return id;
+    }
+
 
     @MessageMapping("/ship/boost")
     @SendTo("/topic/game")
@@ -64,7 +125,7 @@ public class WebSocketController {
     }
 
     @MessageMapping("/ship/create")
-    @SendTo("/topic/game")
+    @SendTo("/topic/create")
     public ShipEntity createShip(
             @Payload ShipEntity ship,
             Principal principal
@@ -82,8 +143,8 @@ public class WebSocketController {
 
     @MessageExceptionHandler
     @SendToUser("/topic/error")
-    public Throwable handleException(Throwable exception){
-        System.out.println("ERROR MESS");
+    public Exception handleException(Exception exception){
+        System.out.println("ERROR MESS"+ exception.getMessage());
         return exception;
     }
 

@@ -1,29 +1,34 @@
 package com.spaceRangers.config.web;
 
+import com.spaceRangers.impl.MoneyEarner;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.web.context.request.RequestContextListener;
-import org.springframework.web.context.support.ServletContextResource;
 import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.XmlViewResolver;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan({
         "com.spaceRangers.config.security",
         "com.spaceRangers.controller",
-        "com.spaceRangers.config.documentation",
         "com.spaceRangers.config.database",
         "com.spaceRangers.config.websocket",
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
+    @Autowired
+    MoneyEarner moneyEarner;
+
+    @PostConstruct
+    public void init(){
+        moneyEarner.startEarnMoney();
+    }
 
     @Bean
     ViewResolver internalViewResolver(){
@@ -39,8 +44,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
 
-        registry.addResourceHandler("resources/**")
-                .addResourceLocations("/static/");
+        registry.addResourceHandler("static/**")
+                .addResourceLocations("/WEB-INF/static/");
 
         registry.addResourceHandler("webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");

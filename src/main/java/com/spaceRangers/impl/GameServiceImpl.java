@@ -1,10 +1,13 @@
 package com.spaceRangers.impl;
 
+import com.spaceRangers.config.websocket.exceptions.NotEnoughMoneyException;
+import com.spaceRangers.config.websocket.exceptions.TypeError;
 import com.spaceRangers.entities.*;
 import com.spaceRangers.repository.*;
 import com.spaceRangers.service.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +30,12 @@ public class GameServiceImpl implements GameService {
 
     private final UserRepository userRepository;
 
+
     @Autowired
     private TypeShipRepository typeShipRepository;
+
+    @Autowired
+    StateShipRepository stateShipRepository;
 
     @Autowired
     SystemRepository systemRepository;
@@ -144,7 +151,14 @@ public class GameServiceImpl implements GameService {
     @Override
     @Transactional
     public BaseEntity createBase(BaseEntity base) {
+        UsersEntity usersEntity = base.getUser();
+        usersEntity.setCoins(usersEntity.getCoins() - 1500);
+        userRepository.save(usersEntity);
         base.setId(null);
+        base.setSystem(systemRepository.findById(1).get());
+        base.setLocationBaseX((int) Math.round(Math.random()*20000-10000));
+        base.setLocationBaseY((int) Math.round(Math.random()*20000-10000));
+        base.setLocationBaseZ((int) Math.round(Math.random()*20000-10000));
         baseRepository.save(base);
         return base;
     }
@@ -177,9 +191,18 @@ public class GameServiceImpl implements GameService {
             throw new NoSuchFieldException("Null field");
         }
 
-        if (ship.getUser().getCoins() < ship.getTypeShip().getCost()) throw new Exception("402 - you don't have money");
+        if (ship.getUser().getCoins() < ship.getTypeShip().getCost()) throw new NotEnoughMoneyException("You don't have money", TypeError.NOT_ENOUGH_MONEY_CREATE_SHIP);
 
+
+        ship.setStateShip(stateShipRepository.findById(2).get());
         ship.getUser().setCoins(ship.getUser().getCoins() - ship.getTypeShip().getCost());
+        ship.setLocationShipX(ship.getBase().getLocationBaseX()+70);
+        ship.setLocationShipY(ship.getBase().getLocationBaseY()+70);
+        ship.setLocationShipZ(ship.getBase().getLocationBaseZ()+70);
+        ship.setRotationShipX(0f);
+        ship.setRotationShipY(0f);
+        ship.setRotationShipZ(0f);
+
         userRepository.save(ship.getUser());
 
         ship.setSystem(ship.getBase().getSystem());
@@ -193,7 +216,7 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public ShipEntity powerupShip(ShipEntity ship) throws Exception {
-        if(ship.getUser().getCoins() < 20) throw new Exception("402 - you don't have money");
+        if(ship.getUser().getCoins() < 20) throw new NotEnoughMoneyException("You don't have money", TypeError.NOT_ENOUGH_MONEY_POWERUP);
 
         ship.getUser().setCoins(ship.getUser().getCoins() - 20);
         userRepository.save(ship.getUser());

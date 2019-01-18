@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Objects;
 
 @Entity
-@Table(name = "messages", schema = "s242552", catalog = "course")
+@Table(name = "messages")
 public class MessagesEntity {
     private Integer id;
     private Integer idUser;

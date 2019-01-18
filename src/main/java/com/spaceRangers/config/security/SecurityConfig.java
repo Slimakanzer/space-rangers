@@ -1,6 +1,5 @@
 package com.spaceRangers.config.security;
 
-import com.google.common.collect.ImmutableList;
 import com.spaceRangers.config.security.filters.GoogleOauthFilter;
 import com.spaceRangers.config.security.service.RestEntriyPoint;
 import com.spaceRangers.config.security.handlers.SuccessLoginHandler;
@@ -34,6 +33,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.RequestContextFilter;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
@@ -73,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         GoogleOauthFilter googleOauthFilter = new GoogleOauthFilter("/login/google");
         googleOauthFilter.setRestTemplate(googleRestTemplate);
         googleOauthFilter.setRegistrationService(registrationService);
+
         return googleOauthFilter;
     }
 
@@ -155,11 +156,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(ImmutableList.of("*"));
-        configuration.setAllowedMethods(ImmutableList.of("HEAD",
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("HEAD",
                 "GET", "POST", "PUT", "DELETE", "PATCH"));
         configuration.setAllowCredentials(true);
-        configuration.setAllowedHeaders(ImmutableList.of("*"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

@@ -6,6 +6,7 @@ import com.spaceRangers.service.StatisticService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service("statisticService")
@@ -46,7 +47,9 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public List<FractionEntity> getListFractionUsers(int idUser) {
-        return fractionRepository.getListFractionsUser(idUser);
+        List list = new ArrayList<>();
+        list.add(userRepository.findById(idUser).get().getUserFraction().getFraction());
+        return list;
     }
 
     @Override

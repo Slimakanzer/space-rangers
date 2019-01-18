@@ -1,5 +1,6 @@
 package com.spaceRangers.service;
 
+import com.spaceRangers.config.websocket.exceptions.NotEnoughMoneyException;
 import com.spaceRangers.entities.*;
 import javassist.NotFoundException;
 import org.springframework.security.core.userdetails.User;
@@ -17,7 +18,7 @@ public interface FractionService {
      */
     UserFractionEntity createUserFraction(UserFractionEntity userFraction);
 
-    FractionEntity createFraction(FractionEntity fraction, User user);
+    FractionEntity createFraction(FractionEntity fraction, UsersEntity user) throws NotEnoughMoneyException;
 
     /**
      *
@@ -44,7 +45,7 @@ public interface FractionService {
      * Получение списка пользователей, которые находятся в данной фракции
      * @return
      */
-    Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, User user);
+    Collection<UserFractionEntity> getListUsersInFraction(FractionEntity fractionEntity, UsersEntity user);
 
     /**
      * Получение задач, поставленных фракцией (Для обычных пользователей только их область видимости)
@@ -61,7 +62,7 @@ public interface FractionService {
      * @param user
      * @return
      */
-    StateUserFractionEntity roleUserInFraction(FractionEntity fraction, User user);
+    StateUserFractionEntity roleUserInFraction(FractionEntity fraction, UsersEntity user);
 
     /**
      * Получение задания по id
@@ -84,9 +85,9 @@ public interface FractionService {
      * @param user
      * @return
      */
-    UserFractionEntity outFromFraction(FractionEntity fraction, UsersEntity user);
+    boolean outFromFraction(FractionEntity fraction, UsersEntity user);
 
-    void updateUser(FractionEntity fractionEntity, UserFractionEntity userFractionEntity, User user) throws NoSuchElementException;
+    void updateUser(UserFractionEntity userFractionEntity) throws NoSuchElementException;
 
 
 
