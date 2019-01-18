@@ -58,8 +58,6 @@ public class GoogleOauthFilter extends AbstractAuthenticationProcessingFilter {
 
                 String email = authInfo.get("email");
 
-                System.out.println("AAAAAAAAAAAAAAAA" + authInfo.toString());
-
                 UserAccountEntity userAccountEntity = registrationService.authentification(email);
 
                 List<SimpleGrantedAuthority> authorities = userAccountEntity
