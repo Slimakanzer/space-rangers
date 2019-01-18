@@ -1,6 +1,6 @@
 # Front for Space Rangers
 
-> A Vue.js project with WebGL and vue-bootsrap
+> A vue-cli project with WebGL and vue-bootsrap
 
 ## Build Setup
 
